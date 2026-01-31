@@ -1,0 +1,24 @@
+Here's a rough order to do development
+
+- [ ] Choose Vite vs Svelte
+- [ ] Prepare at least one mxl
+- [ ] Display the mxl on desktop
+- [ ] Instrument selection modal - common instruments
+- [ ] Song selection modal - simple
+- [ ] Transpose song
+- [ ] Source mxl files
+- [ ] Deploy to prod
+- [ ] Custom instrument
+- [ ] Import user's mxl file
+- [ ] Mobile-vertical layout
+- [ ] Mobile horizontal layout
+- [ ] Tablet layout
+- [ ] Half page turns
+- [ ] Playback (duets for one person)
+- [ ] Larger ensemble size
+- [ ] Only display one part (play on two separate devices)
+- [ ] Range handling and suggestions
+- [ ] 
+- [ ] 
+- [ ] 
+- [ ] 

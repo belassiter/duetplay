@@ -9,6 +9,7 @@ DuetPlay is a browser-based tool that creates "instant duets" for any instrument
 ## Tech Stack
 * **Framework:** Vite + React (TypeScript).
     * *Reasoning:* Chosen for strict type safety and high reliability with AI code generation.
+    * *Alternate:* SvelteKit    
 * **UI Library:** Shadcn/UI (Tailwind CSS).
     * Use standard `Dialog` for instrument settings and `DataTable` for song selection.
 * **Rendering Engine:** **Verovio** (Wasm).
