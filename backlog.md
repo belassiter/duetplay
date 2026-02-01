@@ -3,9 +3,12 @@ Here's a rough order to do development
 - [X] Choose Vite vs Svelte
 - [X] Prepare at least one mxl
 - [X] Display the mxl on desktop web
-- [ ] Instrument selection modal - common instruments
+- [X] Instrument selection modal - common instruments
+- [ ] Display instrument name
 - [ ] Song selection modal - simple
 - [ ] Transpose song
+- [ ] Adjust part's octave
+- [ ] Instrument selection, show min/max range (notation?)
 - [ ] Source mxl files
 - [ ] Deploy to prod
 - [ ] Custom instrument
