@@ -6,6 +6,8 @@ const normalizeInterval = (interval: string): string => {
 
     let base = interval;
     let direction = 1;
+
+    // Check for negative sign first
     if (base.startsWith('-')) {
         direction = -1;
         base = base.substring(1);
@@ -13,6 +15,7 @@ const normalizeInterval = (interval: string): string => {
          base = base.substring(1);
     }
     
+    // Check for octave shifts
     let shiftOctaves = 0;
     if (base.endsWith('8va')) {
         shiftOctaves = 1;
@@ -25,45 +28,87 @@ const normalizeInterval = (interval: string): string => {
     // If base is empty (e.g. from "+8va"), treat as P1
     if (!base) base = 'P1';
     
-    // Add intervals using Tonal
-    try {
-        let result = base;
-        if (shiftOctaves > 0) {
-            const octInt = shiftOctaves === 1 ? 'P8' : 'P15';
-            const added = Interval.add(base, octInt);
-            // Handling possibility that Interval.add returns undefined/null for invalid inputs
-            result = added || base; 
+    // Construct valid Tonal string
+    // Tonal expects "M2", "-P5" etc.
+    // If we had octave shifts, we return standard interval with octaves, e.g. "M9", "P8"
+    // Hacky octave addition for now: P8 = 8va, P15 = 15ma.
+    if (shiftOctaves > 0) {
+        try {
+           const octInt = shiftOctaves === 1 ? 'P8' : 'P15';
+           // If base is P1, adding P8 gives P8. 
+           // If base is M2, adding P8 gives M9.
+           // Tonal Interval.add('M2', 'P8') -> 'M9'.
+           const added = Interval.add(base, octInt);
+           base = added || base; 
+        } catch (e) {
+            console.warn("Error adding octave to interval", e);
         }
-        
-        // Re-apply direction
-        if (direction === -1) {
-             // Invert or simplify? Interval.val(result) * -1?
-             // Tonal's simplified way: just prepend '-' if not there? 
-             // Note: Interval.add('M2', 'P8') -> 'M9'. '-M9' is valid.
-             return '-' + result;
-        }
-        return result;
-    } catch (e) {
-        console.warn(`Failed to normalize interval: ${interval}`, e);
-        return interval; // Fallback
     }
-};
+    
+    const tonalInterval = (direction === -1 ? '-' : '') + base;
+    return tonalInterval;
+}
 
-export const transposeMusicXML = (xmlString: string, rawInterval: string, targetClef?: string, targetStaff: string = '1'): string => {
-    const interval = normalizeInterval(rawInterval);
+// Helper to subtract intervals: Target - Source
+// Used for relative transposition logic.
+const getRelativeInterval = (targetTrans: string, sourceTrans: string): string => {
+   const iTarget = normalizeInterval(targetTrans);
+   const iSource = normalizeInterval(sourceTrans);
+   
+   // Use dummy calculation via C4
+   const noteSource = Note.transpose('C4', iSource);
+   const noteTarget = Note.transpose('C4', iTarget);
+   
+   return Interval.distance(noteSource, noteTarget);
+}
+
+export const transposeMusicXML = (
+    xmlString: string, 
+    targetTranspose: string, 
+    targetClef?: string, 
+    targetStaff: string = '1',
+    sourceTranspose: string = 'P1'
+): string => {
+    // Calculate relative interval
+    let interval = 'P1';
+    if (targetTranspose !== sourceTranspose) {
+        interval = getRelativeInterval(targetTranspose, sourceTranspose);
+    } else {
+        // Just normalize existing if P1?
+        interval = normalizeInterval('P1');
+    }
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "application/xml");
 
-    // MusicXML logic is different from MEI
-    // 1. Find Part 1 ("P1")
-    // Parts are defined in <part-list> -> <score-part id="P1">
-    // Then the music is in <part id="P1">
+    // DETERMINE TARGET PART vs STAFF
+    const partElements = Array.from(doc.getElementsByTagName('part')); 
     
-    // We assume the first part in the file is the one to transpose if P1 isn't standard?
-    // Usually P1 is standard for first part.
-    const part = doc.querySelector('part[id="P1"]') || doc.querySelector('part'); 
-    
-    if (!part) return xmlString; // Fail safe
+    let targetPart: Element | null = null;
+    let internalTargetStaff = '1';
+
+    if (partElements.length >= 2) {
+        // Multi-Part Score (e.g. Duet with P1, P2)
+        // targetStaff refers to the Part Index in the UI (1, 2)
+        const partIndex = parseInt(targetStaff) - 1;
+        if (partIndex >= 0 && partIndex < partElements.length) {
+            targetPart = partElements[partIndex];
+        }
+        // In a multi-part scenario, each part typically has 1 staff.
+        // So we target staff 1 of that specific part.
+        internalTargetStaff = '1'; 
+    } else if (partElements.length === 1) {
+        // Single Part Score (e.g. Piano)
+        // targetStaff refers to Staff Number within that part (1=RH, 2=LH)
+        targetPart = partElements[0];
+        internalTargetStaff = targetStaff;
+    } else {
+        // No parts found?
+        return xmlString;
+    }
+
+    if (!targetPart) return xmlString;
+    const part = targetPart; 
 
     // Attribute: <attributes><key><fifths>...</fifths></key></attributes>
     // Note: <note><pitch><step>C</step><alter>1</alter><octave>4</octave></pitch></note>
@@ -76,7 +121,7 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
     let sourceKeyRoot = 'C'; // Default
     
     // Find the Source Key for this specific staff
-    let sourceKeyNode = keys.find(k => k.getAttribute('number') === targetStaff);
+    let sourceKeyNode = keys.find(k => k.getAttribute('number') === internalTargetStaff);
     // Fallback: Global key (no number)
     if (!sourceKeyNode) sourceKeyNode = keys.find(k => !k.hasAttribute('number'));
     // Fallback: Any key (simplistic)
@@ -84,11 +129,6 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
 
     if (sourceKeyNode) {
         const fifths = parseInt(sourceKeyNode.getElementsByTagName('fifths')[0]?.textContent || '0');
-        // Convert fifths to Root
-        // 0 -> C
-        // 1 -> G
-        // -1 -> F
-        // -2 -> Bb
         sourceKeyRoot = Note.transposeFifths('C', fifths);
     }
     
@@ -103,19 +143,13 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
         const keyNumber = key.getAttribute('number');
 
         // Logic A: Key is explicitly for OTHER staff -> Skip
-        if (keyNumber && keyNumber !== targetStaff) return;
+        if (keyNumber && keyNumber !== internalTargetStaff) return;
         
         // Logic B: Key is Global (no number).
         // If we are targeting Staff 2, and key is global -> We must Split it?
-        // Or if we are targeting Staff 1, and key is global -> We must Split it?
-        // YES. If we transpose a global key, it affects BOTH staves. We don't want that.
-        // We only want to affect targetStaff.
-        
         if (!keyNumber) {
             // It's global. We need to split it so we can modify ONE copy.
-            // Create a copy for the "Other" staff (which keeps original key)
-            // Assuming 2 staves...
-            const otherStaff = targetStaff === '1' ? '2' : '1';
+            const otherStaff = internalTargetStaff === '1' ? '2' : '1';
             
             const otherKey = key.cloneNode(true) as Element;
             otherKey.setAttribute('number', otherStaff);
@@ -124,23 +158,19 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
             key.insertAdjacentElement('afterend', otherKey);
             
             // Assign current key to targetStaff
-            key.setAttribute('number', targetStaff);
-            
-            // Now 'key' is specific to our targetStaff.
+            key.setAttribute('number', internalTargetStaff);
         }
         
-        // Now update the Key (it matches targetStaff)
-        if (key.getAttribute('number') === targetStaff) { 
+        // Now update the Key (it matches internalTargetStaff)
+        if (key.getAttribute('number') === internalTargetStaff) { 
              const newFifths = Key.majorKey(targetKeyRoot).alteration;
              const fifthsEl = key.getElementsByTagName('fifths')[0];
              if (fifthsEl) fifthsEl.textContent = newFifths.toString();
         }
         
         // Inject <transpose> element to Attributes
-        // Only if it's the first key (simplification) or if we are iterating attributes.
-        // Wait, 'keys' iteration is local. We need access to the parent <attributes>.
         const attributes = key.parentElement;
-        if (attributes && key.getAttribute('number') === targetStaff) {
+        if (attributes && key.getAttribute('number') === internalTargetStaff) {
              // Check if <transpose> exists
              let transposeEl = attributes.getElementsByTagName('transpose')[0];
              if (!transposeEl) {
@@ -148,52 +178,16 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
                  attributes.appendChild(transposeEl);
              }
              
-             // Set diatonic/chromatic
-             // interval "M2" -> chromatic 2, diatonic 1.
-             // But we are transposing UP.
-             // If we write Trumpet part (M2 up), we usually want "Sounding Pitch" to be preserved?
-             // No, file provided by user is "Transposed Part".
-             // The <transpose> tag says:
-             // <diatonic>-1</diatonic><chromatic>-2</chromatic>
-             // This means "To get sounding pitch, go DOWN M2".
-             // So if we write Written Pitch (Up M2), we must add Transpose (-2).
-             
              // Clean transpose children
              while (transposeEl.firstChild) {
                  transposeEl.removeChild(transposeEl.firstChild);
              }
              
-             // Dynamic Transpose Tag Logic
-             // If Transposition is UP M2, we write -1 diatonic, -2 chromatic (Sounding pitch is lower)
-             // Tonal intervals: "M2" -> 2 semitones. "P1" -> 0.
-             // We need to invert the interval to describe "Sounding Pitch relative to Written".
-             // If we write UP, Sounding is DOWN.
-             
-             // Simple lookup or calculation?
-             // Tonal.Interval.semitones('M2') -> 2.
-             // Target Chromatic = -1 * semitones.
-             // Target Diatonic = -1 * (step distance).
-             // M2 step distance is 1 (C->D).
-             // P5 step distance is 4 (C->G).
-             // P8 step distance is 7.
-             
-             // Note.transpose('C', 'M2') -> 'D'. Step index C=0, D=1.
-             // Note.transpose('C', 'P5') -> 'G'. Step index 4.
-             // Note.transpose('C', '-P8') -> 'C'. Step index -7.
-             
-             // We can use Tonal to parse the interval.
-             // But actually, we just need to invert the operation.
-             // If interval is 'M2', we put Sounding pitch is 'M-2'.
-             
-             // Let's implement robust inversion for the XML tag
+             // Dynamic Transpose Tag Logic using 'interval' variable
              const semitones = Note.transpose('C4', interval).endsWith('4') 
                 ? Interval.semitones(Interval.distance('C4', Note.transpose('C4', interval))) // Simple interval
                 : Interval.semitones(interval) || 0;
              
-             // Diatonic steps:
-             // get interval size number. M2 -> 2. P5 -> 5.
-             // Diatonic difference = number - 1. M2 -> 1. P5 -> 4.
-             // If descending, make negative.
              const isDescending = interval.startsWith('-');
              const intervalNum = parseInt(interval.replace(/\D/g, '') || '1');
              const diaStep = (intervalNum - 1) * (isDescending ? -1 : 1);
@@ -215,41 +209,30 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
         if (targetClef) {
              const attributes = key.parentElement;
              if (attributes) {
-                 // Clefs can also be numbered. <clef number="1">.
-                 // We only want to update the clef for OUR staff.
                  const clefs = Array.from(attributes.getElementsByTagName('clef'));
-                 let clefEl = clefs.find(c => c.getAttribute('number') === targetStaff);
+                 let clefEl = clefs.find(c => c.getAttribute('number') === internalTargetStaff);
                  
-                 // If no numbered clef found, maybe it's global (which implies Staff 1 usually, or implicit).
-                 // If target is 1 and we find unnumbered, use it.
-                 // If target is 2 and we find unnumbered, check if there's another one?
-                 if (!clefEl && targetStaff === '1') {
+                 // If no numbered clef found
+                 if (!clefEl && internalTargetStaff === '1') {
                      clefEl = clefs.find(c => !c.hasAttribute('number'));
                  }
                  
                  // If still not found, we create it
                  if (!clefEl) {
                      clefEl = doc.createElement('clef');
-                     clefEl.setAttribute('number', targetStaff);
+                     clefEl.setAttribute('number', internalTargetStaff);
                      attributes.appendChild(clefEl);
                  }
                  
                  // Update sign/line
-                 // Treble: G 2. Bass: F 4. Alto: C 3. Tenor: C 4.
                  let sign = 'G';
                  let line = '2';
-                 // Clef Octave Change unused for now, potentially for Tenor voice or Piccolo
-                 // const clefOctaveChange = 0;
                  
                  if (targetClef === 'bass') { sign = 'F'; line = '4'; }
                  else if (targetClef === 'alto') { sign = 'C'; line = '3'; }
                  else if (targetClef === 'tenor') { sign = 'C'; line = '4'; }
                  else if (targetClef === 'treble') { sign = 'G'; line = '2'; }
                  
-                 // Handle specific instrument logic if encoded in clef string?
-                 // No, standard clefs only for now.
-                 
-                 // Clear children
                  while (clefEl.firstChild) clefEl.removeChild(clefEl.firstChild);
                  
                  const signEl = doc.createElement('sign');
@@ -290,7 +273,7 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
             const staffEl = note.getElementsByTagName('staff')[0];
             const noteStaff = staffEl ? staffEl.textContent : '1';
             
-            if (noteStaff !== targetStaff) return;
+            if (noteStaff !== internalTargetStaff) return;
 
             const pitch = note.getElementsByTagName('pitch')[0];
             if (!pitch) return; // unpitched (rest)
@@ -332,7 +315,6 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
             else if (dstAccidStr === 'b') newAlter = -1;
             else if (dstAccidStr === '##') newAlter = 2;
             else if (dstAccidStr === 'bb') newAlter = -2;
-            // else 0
             
             // Write Back
             stepEl.textContent = dstStep;
@@ -350,7 +332,6 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
             } else {
                 // New Alter is 0 (Natural)
                 if (alterEl) {
-                    // Remove to standardize on natural default
                     pitch.removeChild(alterEl);
                 }
             }
@@ -401,4 +382,3 @@ export const transposeMusicXML = (xmlString: string, rawInterval: string, target
 
     return new XMLSerializer().serializeToString(doc);
 };
-

@@ -1,3 +1,64 @@
+# 2026-02-01 07:50
+- Bug Fix and UI Enhancement:
+    - **Multi-Part XML Support**: 
+        - Fixed critical bug in `xmlTranspose.ts` where Part 2 transposition failed in multi-part files (like `Get Around.musicxml`). 
+        - Updated logic to correctly map `targetStaff` index to XML `<part>` elements when multiple parts exist.
+        - Added regression test `xmlTransposeMultiPart.test.ts` to verify multi-part transposition independence.
+    - **UI Labels**:
+        - Enhanced `SidePanel.tsx` to display original instrument context (e.g., "(original is Trumpet)") in the label header.
+        - Cleaned up duplicate function definitions in `SidePanel.tsx` causing lint errors.
+    - **Quality Assurance**: Verified all tests pass and build succeeds.
+
+# 2026-02-01 07:45
+- Transposition Logic and Instrument Management:
+    - **Relative Transposition**: Implemented Source-to-Target transposition logic (`Shift = Target - Source`).
+        - Updated `xmlTranspose.ts` to calculate relative interval using Tonal.
+        - Updated `App.tsx` to handle `originalInstruments` state relative to `songs.json` data.
+        - Ensures that if a source XML is already transposed (e.g. Bass Clarinet), display is correct without double-transposition, AND switching to Concert Pitch (e.g. Cello) correctly shifts downward.
+    - **Instrument Selection**:
+        - Updated `InstrumentSelector.tsx` to display ~8 items (`max-h-[300px]`).
+        - `App.tsx` now pre-selects instruments defined in `songs.json` upon loading a song.
+    - **Manifest Generation**:
+        - Updated `scripts/generate-manifest.js` to strictly preserve existing instruments in `songs.json` if present, preventing overwrite by XML metadata.
+    - **Validation**: Verified build and tests pass.
+
+# 2026-02-01 07:30
+- UI and Behavior Enhancements:
+    - **Sheet Music View**: Maximized width to 100% and added keyboard scrolling (Space, PageUp/Down).
+    - **Side Panel**: Set fixed width to 40%.
+    - **Branding**: Updated app title to "DuetPlay" in header and browser tab. Removed song title from header.
+    - **Styling**: Standardized "Select Song" and "Select Instruments" buttons (Blue). Replaced Instrument icon with Saxophone emoji (🎷).
+    - **Song Selector**: Implemented multi-select filters for Style and Difficulty with a custom dropdown UI. Right-aligned filter controls.
+    - **Testing**: Updated tests to reflect branding changes. Verified linting and build.
+
+# 2026-02-01 07:15
+- UI Refinements for Song Selection:
+    - Updated `SongSelectorPanel.tsx` to support column sorting (Title, Composer, Arranger).
+    - Adjusted panel width to 75% for better visibility.
+    - Improved table formatting: consistent font sizes, line breaks for parts list.
+    - Updated `App.tsx` layout: Removed hamburger menu, added dedicated "Select Song" button next to "Select Instruments".
+    - Fixed linting errors (unused imports, type safety).
+    - Verified all tests pass.
+
+# 2026-02-01 07:00
+- Implemented Song Selection and Metadata Management:
+    - Created `scripts/generate-manifest.js` to automatically extract metadata (Title, Composer, Instruments) from `.mxl`/`.musicxml` files at build time.
+        - Supports zip extraction for `.mxl`.
+        - Merges with existing `songs.json` to preserve manual edits (difficulty/style).
+        - Defaults unknown fields to empty string for cleaner UI.
+    - Implemented `SongSelectorPanel.tsx`:
+        - Left-side slide-out panel "contemporary" styling.
+        - Searchable/Filterable Table (Title, Composer, Style, Difficulty).
+        - Displays extracted Part/Instrument names.
+    - Refactored `App.tsx`:
+        - Added Menu button to top-left.
+        - Dynamic Title handling (replaces static "DuetPlay" with selected song title).
+        - Extracted `loadScore` logic for reuse.
+        - Added integration with new `Song` type and data source.
+    - Updated Tests:
+        - Fixed `App.test.tsx` and `App_transpose.test.tsx` to handle `fetch` API and new UI elements.
+        - Verified `npm test` and `npm run build` pass.
+
 # 2026-01-31 09:55
 - Fixed Transposition logic issues and Cross-Talk between Parts:
     - Fixed Key Signature detection in `xmlTranspose.ts`. When transposing Part 2 (Staff 2), the logic previously picked up the first Key found (which might have been Part 1's newly transposed key), leading to Part 2 stacking transpositions incorrectly (e.g. Alto + Bari = 4 sharps). It now specifically targets the key for the active staff or the global key.
@@ -75,8 +136,8 @@
     - Removed use of `accid` attribute on `<note>` elements (MEI-specific, invalid in MusicXML).
     - Implemented logic to inject `<accidental>` Child Elements (e.g., `<accidental>sharp</accidental>`) when the transposed note's accidental differs from the new key signature.
     - Added `<transpose>` metadata to the XML attributes to inform viewers of the transposition interval.
-- Cleaned up duplicate code blocks in `xmlTranspose.ts` resulting from previous edits.
-- Updated unit tests to verify chromatic transposition logic using cases that strictly require explicit accidentals (e.g., F# in C Major -> G# in D Major).
+    - Cleaned up duplicate code blocks in `xmlTranspose.ts` resulting from previous edits.
+    - Updated unit tests to verify chromatic transposition logic using cases that strictly require explicit accidentals (e.g., F# in C Major -> G# in D Major).
 
 # 2026-01-31 04:30
 - Fixed logic in `xmlTranspose.ts` to correctly handle multi-staff parts (Grand Staff).

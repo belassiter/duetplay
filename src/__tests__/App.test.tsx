@@ -43,12 +43,14 @@ describe('App', () => {
         
         // Mock fetch
         window.fetch = vi.fn().mockResolvedValue({
+            ok: true,
             arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
         });
     });
 
-    it('renders the title', async () => {
+    it('renders the app title', async () => {
         render(<App />);
+        // Default song title
         expect(screen.getByText('DuetPlay')).toBeInTheDocument();
         // Wait for async effects to settle to avoid "not wrapped in act" warnings
         await waitFor(() => expect(mockSetOptions).toHaveBeenCalled());

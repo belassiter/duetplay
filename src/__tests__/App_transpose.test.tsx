@@ -44,6 +44,7 @@ describe('App Transpose', () => {
         
         // Mock fetch
         window.fetch = vi.fn().mockResolvedValue({
+            ok: true,
             arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
         });
     });

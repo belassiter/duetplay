@@ -1,0 +1,54 @@
+[
+  {
+    "id": "bach_invention_11",
+    "filename": "bach_invention_11.mxl",
+    "title": "Invention #11",
+    "composer": "J.S. Bach",
+    "arranger": "",
+    "instruments": [
+      "Piano (right hand)",
+      "Piano (left hand)"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "happy_birthday_dennis",
+    "filename": "happy_birthday_dennis.mxl",
+    "title": "Happy Birthday, Dennis",
+    "composer": "Patty Hill & Mildred J. Hill (disputed)",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet",
+      "Tenor Sax"
+    ],
+    "difficulty": "Easy",
+    "style": "Jazz"
+  },
+  {
+    "id": "hey_jude_hayden",
+    "filename": "hey_jude_hayden.mxl",
+    "title": "Hey, Jude",
+    "composer": "Lennon/McCartney",
+    "arranger": "Arr. Bruce Adolphe, adapted Brian Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet",
+      "Bass Clarinet"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "i_get_around",
+    "filename": "i_get_around.mxl",
+    "title": "I Get Around",
+    "composer": "Brian Wilson & Mike Love",
+    "arranger": "",
+    "instruments": [
+      "Trombone",
+      "Bass Clarinet"
+    ],
+    "difficulty": "Medium",
+    "style": "Pop"
+  }
+]

@@ -5,7 +5,9 @@ import { transposeMusicXML } from './utils/xmlTranspose';
 import JSZip from 'jszip';
 import './App.css'
 import SidePanel from './components/SidePanel';
+import SongSelectorPanel from './components/SongSelectorPanel';
 import { instruments } from './constants/instruments';
+import type { Song } from './types/song';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
@@ -16,7 +18,9 @@ function App() {
   // Instrument State
   const [instrument1, setInstrument1] = useState<string>('none');
   const [instrument2, setInstrument2] = useState<string>('none');
+  const [originalInstruments, setOriginalInstruments] = useState<{ part1: string, part2: string }>({ part1: 'none', part2: 'none' });
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(1000);
@@ -76,19 +80,42 @@ function App() {
                 
                 // Get Instrument Defs
                 const inst1 = instruments.find(i => i.value === instrument1);
+                const orig1 = instruments.find(i => i.value === originalInstruments.part1);
                 
                 let processedXML = xmlText;
                 
-                if (inst1 && inst1.value !== 'none') {
+                if (inst1 && inst1.value !== 'none' && inst1.value !== originalInstruments.part1) {
                     // Apply transposition to Part 1 / Staff 1
-                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1');
+                    // We need relative transposition: from Original -> Target.
+                    // If no original is known (or none), we assume C (Piano/Flute/Violin etc) or simply use target transpose logic if original was untransposed.
+                    
+                    // Actually, existing logic likely assumes source is C.
+                    // If source is Trumpet (Bb), transpose is -2.
+                    // If target is Alto Sax (Eb), transpose is +9 from C (Wait, Alto is Eb, sounds M6 lower, so -9).
+                    
+                    // Let's pass the raw steps difference to a modified transpose function or handle it here?
+                    // Currently transposeMusicXML takes 'interval' string which Tonal parses.
+                    
+                    // We need to calculate the interval from Source to Target.
+                    // Since specific interval math is complex with strings like "-M2", "-P5", 
+                    // we might need a better way if we want full relative support.
+                    
+                    // HOWEVER, if 'originalInstruments.part1' is 'none' (default), we treat source as Concert C.
+                    // If 'originalInstruments.part1' is 'bb_trumpet', we treat source as Bb.
+                    
+                    // Let's defer strict interval math and just pass both to transposeMusicXML if we update it?
+                    // OR: update transposeMusicXML to accept sourceTranspose and targetTranspose.
+                    
+                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1', orig1?.transpose || 'P1');
                 }
                 
                 // Get Inst 2
                 const inst2 = instruments.find(i => i.value === instrument2);
-                if (inst2 && inst2.value !== 'none') {
+                const orig2 = instruments.find(i => i.value === originalInstruments.part2);
+
+                if (inst2 && inst2.value !== 'none' && inst2.value !== originalInstruments.part2) {
                      // Apply to Part 2 / Staff 2
-                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2');
+                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2', orig2?.transpose || 'P1');
                 }
                 
                 verovioToolkit.loadData(processedXML);
@@ -114,24 +141,28 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, instrument1, instrument2]);
+  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments]);
 
 
-  useEffect(() => {
-    if (!loading && verovioToolkit && !fileDataRef.current) {
-      const fetchScore = async () => {
+  const loadScore = useCallback(async (filename: string) => {
         setStatus('Loading score...');
         try {
-            const response = await fetch('/bach_invention_11.mxl');
+            const response = await fetch(`/${filename}`); // Public folder access
+            if (!response.ok) throw new Error(`Fetch error: ${response.statusText}`);
             const data = await response.arrayBuffer();
             fileDataRef.current = data;
             renderScore();
         } catch (e) {
             console.error(e);
             setStatus('Error loading file');
+            setIsRendering(false);
         }
-      };
-      fetchScore();
+  }, [renderScore]);
+
+  // Initial Load
+  useEffect(() => {
+    if (!loading && verovioToolkit && !fileDataRef.current) {
+        loadScore('bach_invention_11.mxl');
     } else if (!loading && verovioToolkit && fileDataRef.current) {
         // Debounce re-render slightly for UX
         const timeoutId = setTimeout(() => {
@@ -139,18 +170,80 @@ function App() {
         }, 100);
         return () => clearTimeout(timeoutId);
     }
-  }, [loading, verovioToolkit, renderScore]);
+  }, [loading, verovioToolkit, renderScore, loadScore]);
+
+  // Handle Keyboard Scrolling
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (!containerRef.current) return;
+        
+        // Only scroll if we are not in an input field
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') {
+            return;
+        }
+
+        const scrollAmount = containerRef.current.clientHeight * 0.9; // 90% of page height
+
+        if (e.code === 'Space' || e.code === 'PageDown') {
+            e.preventDefault();
+            containerRef.current.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+        } else if (e.code === 'PageUp') {
+            e.preventDefault();
+            containerRef.current.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+        }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const mapInstrumentNameToValue = useCallback((name: string): string => {
+      if (!name) return 'none';
+      const cleanName = name.trim().toLowerCase();
+      const inst = instruments.find(i => 
+          i.name.toLowerCase() === cleanName || 
+          i.value.toLowerCase() === cleanName || 
+          i.label.toLowerCase().includes(cleanName)
+      );
+      return inst ? inst.value : 'none';
+  }, []);
+
+  const handleSongSelect = (song: Song) => {
+      setIsSongPanelOpen(false);
+      
+      const p1Val = song.instruments[0] ? mapInstrumentNameToValue(song.instruments[0]) : 'none';
+      const p2Val = song.instruments[1] ? mapInstrumentNameToValue(song.instruments[1]) : 'none';
+
+      setInstrument1(p1Val);
+      setInstrument2(p2Val);
+      setOriginalInstruments({ part1: p1Val, part2: p2Val });
+      
+      loadScore(song.filename);
+  };
 
   return (
-    <div className="p-4 max-w-screen-xl mx-auto flex flex-col h-screen">
+    <div className="p-4 w-full mx-auto flex flex-col h-screen">
       <div className="flex justify-between items-center mb-2 gap-2">
-          <h1 className="text-2xl font-bold">DuetPlay</h1>
+          <div className="flex items-center gap-4">
+               <h1 className="text-xl md:text-2xl font-bold truncate max-w-[200px] md:max-w-md" title="DuetPlay">
+                   DuetPlay
+               </h1>
+          </div>
+          
           <div className="flex gap-2">
             <button 
-                onClick={() => setIsSidePanelOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700"
+                onClick={() => setIsSongPanelOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
             >
                 <Music size={16} />
+                Select Song
+            </button>
+            <button 
+                onClick={() => setIsSidePanelOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+            >
+                <span className="text-lg leading-none">🎷</span>
                 Select Instruments
             </button>
           </div>
@@ -161,10 +254,16 @@ function App() {
         onClose={() => setIsSidePanelOpen(false)}
         instrument1={instrument1}
         instrument2={instrument2}
+        originalInstruments={originalInstruments}
         onInstrument1Change={setInstrument1}
         onInstrument2Change={setInstrument2}
       />
 
+      <SongSelectorPanel
+          isOpen={isSongPanelOpen}
+          onClose={() => setIsSongPanelOpen(false)}
+          onSelectSong={handleSongSelect}
+      />
       
       {status && <div className="text-sm text-gray-500 mb-2">{status}</div>}
       
@@ -174,7 +273,7 @@ function App() {
         </div>
       )}
       
-      <div ref={containerRef} className="w-full flex-1 overflow-hidden">
+      <div ref={containerRef} className="w-full flex-1 overflow-auto">
           {!loading && svg && (
             <div
               className="border border-gray-300 p-2 shadow-sm rounded bg-white h-auto"

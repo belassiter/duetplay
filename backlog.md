@@ -5,7 +5,8 @@ Here's a rough order to do development
 - [X] Display the mxl on desktop web
 - [X] Instrument selection modal - common instruments
 - [ ] Display instrument name
-- [ ] Song selection modal - simple
+- [X] Song selection modal - simple
+- [ ] Consider original transposition in mxl file
 - [ ] Transpose song
 - [ ] Adjust part's octave
 - [ ] Instrument selection, show min/max range (notation?)

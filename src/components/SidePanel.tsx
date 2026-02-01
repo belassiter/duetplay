@@ -1,12 +1,14 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import InstrumentSelector from './InstrumentSelector';
+import { instruments } from '../constants/instruments';
 
 interface SidePanelProps {
     isOpen: boolean;
     onClose: () => void;
     instrument1: string;
     instrument2: string;
+    originalInstruments?: { part1: string, part2: string };
     onInstrument1Change: (val: string) => void;
     onInstrument2Change: (val: string) => void;
 }
@@ -16,6 +18,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
     onClose, 
     instrument1, 
     instrument2, 
+    originalInstruments,
     onInstrument1Change, 
     onInstrument2Change 
 }) => {
@@ -30,6 +33,19 @@ const SidePanel: React.FC<SidePanelProps> = ({
         setActiveSelector(prev => prev === selector ? 'none' : selector);
     };
 
+    const getLabel = (part: 'part1' | 'part2') => {
+        const base = part === 'part1' ? "Part 1 Instrument" : "Part 2 Instrument";
+        const origVal = originalInstruments ? originalInstruments[part] : 'none';
+        
+        if (origVal && origVal !== 'none') {
+            const inst = instruments.find(i => i.value === origVal);
+            if (inst) {
+                 return `${base} (original is ${inst.name})`;
+            }
+        }
+        return base;
+    };
+
     return (
         <>
             {/* Backdrop */}
@@ -41,7 +57,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${
+            <div className={`fixed top-0 right-0 h-full w-[40%] bg-white shadow-xl transform transition-transform duration-300 z-50 ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
                 <div className="flex justify-between items-center p-4 border-b">
@@ -53,7 +69,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                 
                 <div className="p-4">
                     <InstrumentSelector 
-                        label="Part 1 Instrument" 
+                        label={getLabel('part1')}
                         selectedValue={instrument1}
                         onSelect={onInstrument1Change}
                         isOpen={activeSelector === 'part1'}
@@ -61,7 +77,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     />
                     
                     <InstrumentSelector 
-                        label="Part 2 Instrument" 
+                        label={getLabel('part2')}
                         selectedValue={instrument2}
                         onSelect={onInstrument2Change}
                         isOpen={activeSelector === 'part2'}
