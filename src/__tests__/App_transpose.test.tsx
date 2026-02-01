@@ -73,7 +73,7 @@ describe('App Transpose', () => {
         await user.type(searchInput, 'Trumpet');
 
         // 4. Click result "Bb Trumpet"
-        const trumpetOption = await screen.findByText(/Bb Trumpet/i);
+        const trumpetOption = await screen.findByText("Bb Trumpet (sounds -M2, treble clef)");
         await user.click(trumpetOption);
 
         // 5. Expect loadData to be called with updated XML

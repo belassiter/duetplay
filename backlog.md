@@ -4,24 +4,25 @@ Here's a rough order to do development
 - [X] Prepare at least one mxl
 - [X] Display the mxl on desktop web
 - [X] Instrument selection modal - common instruments
-- [ ] Display instrument name
+- [X] Display instrument name
 - [X] Song selection modal - simple
-- [ ] Consider original transposition in mxl file
+- [X] Consider original transposition in mxl file
+- [ ] Zoom buttons
 - [ ] Transpose song
 - [ ] Adjust part's octave
 - [ ] Instrument selection, show min/max range (notation?)
 - [ ] Source mxl files
 - [ ] Deploy to prod
 - [ ] Custom instrument
-- [ ] Import user's mxl file
 - [ ] Mobile-vertical layout
 - [ ] Mobile horizontal layout
 - [ ] Tablet layout
+- [ ] Import user's mxl file
 - [ ] Half page turns
-- [ ] Playback (duets for one person)
 - [ ] Larger ensemble size
 - [ ] Only display one part (play on two separate devices)
 - [ ] Range handling and suggestions
+- [ ] Playback (duets for one person)
 - [ ] 
 - [ ] 
 - [ ] 

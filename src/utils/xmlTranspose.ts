@@ -67,7 +67,8 @@ export const transposeMusicXML = (
     targetTranspose: string, 
     targetClef?: string, 
     targetStaff: string = '1',
-    sourceTranspose: string = 'P1'
+    sourceTranspose: string = 'P1',
+    targetPartName?: string
 ): string => {
     // Calculate relative interval
     let interval = 'P1';
@@ -109,6 +110,91 @@ export const transposeMusicXML = (
 
     if (!targetPart) return xmlString;
     const part = targetPart; 
+
+    // Check for multi-staff part (Grand Staff)
+    let partHasMultipleStaves = false;
+    const stavesTags = Array.from(part.getElementsByTagName('staves'));
+    if (stavesTags.some(s => parseInt(s.textContent || '1') > 1)) {
+        partHasMultipleStaves = true;
+    }
+
+    // --- Update Part Name in Metadata if provided ---
+    if (targetPartName) {
+        const partId = part.getAttribute('id');
+        if (partId) {
+            // Robust search using getElementsByTagName instead of querySelector
+            const scoreParts = Array.from(doc.getElementsByTagName('score-part'));
+            const scorePart = scoreParts.find(sp => sp.getAttribute('id') === partId);
+
+            if (scorePart) {
+                // Update Full Name
+                let partNameEl = scorePart.getElementsByTagName('part-name')[0];
+                if (!partNameEl) {
+                    partNameEl = doc.createElement('part-name');
+                    scorePart.appendChild(partNameEl);
+                }
+                
+                // Clear attributes (like print-object="no") BEFORE setting content
+                while (partNameEl.attributes.length > 0) {
+                    partNameEl.removeAttribute(partNameEl.attributes[0].name);
+                }
+
+                if (partHasMultipleStaves) {
+                    // GRAND STAFF STRATEGY: 
+                    // Since staff-details/label is not rendering reliably in all contexts,
+                    // we will manage the <part-name> differently.
+                    // If targetStaff is '1', we Replace.
+                    // If targetStaff is '2', we Append (if previous text exists and is not same)
+                    // Note: This modifies the single label for the bracket system.
+
+                    if (internalTargetStaff === '1') {
+                         partNameEl.textContent = targetPartName;
+                    } else if (internalTargetStaff === '2') {
+                        // Avoid duplicates if user selects same instrument or re-runs
+                        const currentText = partNameEl.textContent || '';
+                        if (currentText && !currentText.includes(targetPartName)) {
+                            // If currentText is generic "Piano", overwrite it? 
+                            // Or append "Trumpet / Trombone" logic.
+                            // If currentText is "Piano", maybe we just want "TargetName".
+                            if (currentText.toLowerCase().includes('piano')) {
+                                // If staff 1 wasn't changed (still Piano), we might just want "Piano / Tuba".
+                                partNameEl.textContent = currentText + ' / ' + targetPartName;
+                            } else {
+                                // Staff 1 was likely changed to "Trumpet".
+                                partNameEl.textContent = currentText + ' / ' + targetPartName;
+                            }
+                        } else if (!currentText) {
+                            partNameEl.textContent = targetPartName;
+                        }
+                    } else {
+                         partNameEl.textContent = targetPartName;
+                    }
+                } else {
+                    // STANDARD STRATEGY
+                    partNameEl.textContent = targetPartName;
+                }
+
+                // Update Abbreviation - Hide on subsequent systems (User Request)
+                let partAbbrEl = scorePart.getElementsByTagName('part-abbreviation')[0];
+                if (!partAbbrEl) {
+                    partAbbrEl = doc.createElement('part-abbreviation');
+                    scorePart.appendChild(partAbbrEl);
+                }
+                
+                partAbbrEl.textContent = ''; 
+                while (partAbbrEl.attributes.length > 0) {
+                    partAbbrEl.removeAttribute(partAbbrEl.attributes[0].name);
+                }
+
+                // Remove display overrides
+                const displayNames = Array.from(scorePart.getElementsByTagName('part-name-display'));
+                displayNames.forEach(el => el.remove());
+                
+                const displayAbbrs = Array.from(scorePart.getElementsByTagName('part-abbreviation-display'));
+                displayAbbrs.forEach(el => el.remove());
+            }
+        }
+    }
 
     // Attribute: <attributes><key><fifths>...</fifths></key></attributes>
     // Note: <note><pitch><step>C</step><alter>1</alter><octave>4</octave></pitch></note>

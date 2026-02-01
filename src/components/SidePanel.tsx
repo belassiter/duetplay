@@ -11,6 +11,7 @@ interface SidePanelProps {
     originalInstruments?: { part1: string, part2: string };
     onInstrument1Change: (val: string) => void;
     onInstrument2Change: (val: string) => void;
+    isMobile?: boolean;
 }
 
 const SidePanel: React.FC<SidePanelProps> = ({ 
@@ -20,7 +21,8 @@ const SidePanel: React.FC<SidePanelProps> = ({
     instrument2, 
     originalInstruments,
     onInstrument1Change, 
-    onInstrument2Change 
+    onInstrument2Change,
+    isMobile
 }) => {
     const [activeSelector, setActiveSelector] = React.useState<'none' | 'part1' | 'part2'>('none');
 
@@ -57,7 +59,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 right-0 h-full w-[40%] bg-white shadow-xl transform transition-transform duration-300 z-50 ${
+            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-[60%]' : 'w-[40%]'} bg-white shadow-xl transform transition-transform duration-300 z-50 ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
                 <div className="flex justify-between items-center p-4 border-b">

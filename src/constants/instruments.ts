@@ -6,6 +6,7 @@ export interface Instrument {
     label: string;
     range?: [string, string];
     family?: string;
+    aliases?: string[];
 }
 
 export const instruments: Instrument[] = [
@@ -17,7 +18,7 @@ export const instruments: Instrument[] = [
     { name: 'Alto Flute', label: 'Alto Flute (sounds -P4, treble clef)', value: 'alto_flute', transpose: 'P4', clef: 'treble' },
     { name: 'Bass Flute', label: 'Bass Flute (sounds -8va, treble clef)', value: 'bass_flute', transpose: 'P8', clef: 'treble' },
     { name: 'Eb Clarinet', label: 'Eb Clarinet (sounds +m3, treble clef)', value: 'eb_clarinet', transpose: '-m3', clef: 'treble' },
-    { name: 'Bb Clarinet', label: 'Bb Clarinet (sounds -M2, treble clef)', value: 'bb_clarinet', transpose: 'M2', clef: 'treble' },
+    { name: 'Bb Clarinet', label: 'Bb Clarinet (sounds -M2, treble clef)', value: 'bb_clarinet', transpose: 'M2', clef: 'treble', aliases: ['Clarinet'] },
     { name: 'A Clarinet', label: 'A Clarinet (sounds -m3, treble clef)', value: 'a_clarinet', transpose: 'm3', clef: 'treble' },
     { name: 'Bass Clarinet', label: 'Bass Clarinet (sounds -M9, treble clef)', value: 'bass_clarinet', transpose: 'M9', clef: 'treble' },
     { name: 'Contra-alto Clarinet', label: 'Contra-alto Clarinet (sounds -M6-8va, treble clef)', value: 'contra_alto_clarinet', transpose: 'M6+8va', clef: 'treble' },
@@ -32,7 +33,7 @@ export const instruments: Instrument[] = [
     { name: 'Bari Sax', label: 'Bari Sax (sounds -M13, treble clef)', value: 'bari_sax', transpose: 'M6+8va', clef: 'treble' }, // M13 is M6+8va
     { name: 'Bass Sax', label: 'Bass Sax (sounds -M16, treble clef)', value: 'bass_sax', transpose: 'M9+8va', clef: 'treble' },
     { name: 'C Trumpet', label: 'C Trumpet', value: 'c_trumpet', transpose: 'P1', clef: 'treble' },
-    { name: 'Bb Trumpet', label: 'Bb Trumpet (sounds -M2, treble clef)', value: 'bb_trumpet', transpose: 'M2', clef: 'treble' },
+    { name: 'Bb Trumpet', label: 'Bb Trumpet (sounds -M2, treble clef)', value: 'bb_trumpet', transpose: 'M2', clef: 'treble', aliases: ['Trumpet'] },
     { name: 'Horn in F', label: 'Horn in F (sounds -P5, treble clef)', value: 'horn_f', transpose: 'P5', clef: 'treble' },
     { name: 'Trombone', label: 'Trombone', value: 'trombone', transpose: 'P1', clef: 'bass' },
     { name: 'Bass Trombone', label: 'Bass Trombone', value: 'bass_trombone', transpose: 'P1', clef: 'bass' },

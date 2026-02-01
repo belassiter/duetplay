@@ -73,11 +73,13 @@ interface SongSelectorPanelProps {
     isOpen: boolean;
     onClose: () => void;
     onSelectSong: (song: Song) => void;
+    isMobile?: boolean;
+    isLandscape?: boolean;
 }
 
 const songs = songsData as Song[];
 
-const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, onSelectSong }) => {
+const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, onSelectSong, isMobile, isLandscape }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [styleFilters, setStyleFilters] = useState<string[]>([]);
     const [difficultyFilters, setDifficultyFilters] = useState<string[]>([]);
@@ -143,10 +145,10 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 left-0 h-full w-[75%] max-w-[75vw] bg-white shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
+            <div className={`fixed top-0 left-0 h-full ${isMobile ? 'w-full max-w-full' : 'w-[75%] max-w-[75vw]'} bg-white shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
                 isOpen ? 'translate-x-0' : '-translate-x-full'
             }`}>
-                <div className="flex justify-between items-center p-4 border-b bg-gray-50">
+                <div className={`flex justify-between items-center ${isMobile && isLandscape ? 'p-2' : 'p-4'} border-b bg-gray-50`}>
                     <div className="flex items-center gap-2">
                         <Music2 className="text-blue-600" />
                         <h2 className="text-lg font-bold text-gray-800">Select Song</h2>
@@ -157,8 +159,8 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                 </div>
                 
                 {/* Search & Filter Bar */}
-                <div className="p-4 border-b flex flex-col gap-4">
-                    <div className="relative w-full">
+                <div className={`${isMobile && isLandscape ? 'p-2 gap-2 flex-row items-center' : 'p-4 flex-col gap-4'} border-b flex`}>
+                    <div className={`relative ${isMobile && isLandscape ? 'flex-1' : 'w-full'}`}>
                         <Search className="absolute left-3 top-3 text-gray-400" size={18} />
                         <input
                             type="text"
@@ -168,7 +170,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />
                     </div>
-                    <div className="flex gap-4 justify-end">
+                    <div className={`flex gap-4 ${isMobile && isLandscape ? 'items-center' : 'justify-end'}`}>
                         <MultiSelectDropdown 
                             label="Styles"
                             options={styles as string[]}
@@ -200,26 +202,30 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                         <thead>
                             <tr className="border-b-2 border-gray-200 text-sm text-gray-600 uppercase tracking-wider sticky top-0 bg-white shadow-sm">
                                 <th 
-                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors w-[30%]"
                                     onClick={() => handleSort('title')}
                                 >
                                     Title {getSortIcon('title')}
                                 </th>
+                                {(!isMobile || isLandscape) && (
                                 <th 
-                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors w-[20%]"
                                     onClick={() => handleSort('composer')}
                                 >
-                                    Composer {getSortIcon('composer')}
+                                    {isMobile && isLandscape ? 'Composer / Arranger' : 'Composer'} {getSortIcon('composer')}
                                 </th>
+                                )}
+                                {!isMobile && (
                                 <th 
-                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                                    className="p-3 cursor-pointer hover:bg-gray-100 transition-colors w-[20%]"
                                     onClick={() => handleSort('arranger')}
                                 >
                                     Arranger {getSortIcon('arranger')}
                                 </th>
-                                <th className="p-3">Style</th>
-                                <th className="p-3">Difficulty</th>
-                                <th className="p-3">Parts</th>
+                                )}
+                                <th className="p-3 w-[10%]">Style</th>
+                                <th className="p-3 w-[10%]">Difficulty</th>
+                                <th className="p-3 w-[20%]">Parts</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm text-gray-700">
@@ -231,16 +237,34 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                         className="border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
                                     >
                                         <td className="p-3 font-medium text-gray-900 align-top">{song.title}</td>
-                                        <td className="p-3 align-top">{song.composer}</td>
-                                        <td className="p-3 text-gray-500 align-top">{song.arranger}</td>
-                                        <td className="p-3 align-top">
+
+                                        {(!isMobile || isLandscape) && (
+                                        <td className="p-3 align-top max-w-[180px]">
+                                            {isMobile && isLandscape ? (
+                                              <>
+                                                <div className="truncate font-medium" title={song.composer}>{song.composer}</div>
+                                                <div className="truncate text-xs text-gray-500" title={song.arranger}>{song.arranger}</div>
+                                               </>
+                                            ) : (
+                                                <div className="truncate" title={song.composer}>{song.composer}</div>
+                                            )}
+                                        </td>
+                                        )}
+
+                                        {!isMobile && (
+                                        <td className="p-3 text-gray-500 align-top max-w-[180px]">
+                                            <div className="truncate" title={song.arranger}>{song.arranger}</div>
+                                        </td>
+                                        )}
+
+                                        <td className="p-3 align-top whitespace-nowrap">
                                             {song.style && (
                                                 <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
                                                     {song.style}
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="p-3 align-top">
+                                        <td className="p-3 align-top whitespace-nowrap">
                                             {song.difficulty && (
                                                 <span className={`px-2 py-1 rounded-full text-xs ${
                                                     song.difficulty.toLowerCase().includes('easy') ? 'bg-green-100 text-green-800' :
@@ -251,9 +275,9 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="p-3 text-gray-700 align-top">
+                                        <td className="p-3 text-gray-700 align-top max-w-[180px]">
                                             {song.instruments.map((inst, i) => (
-                                                <div key={i}>{inst}{i < song.instruments.length - 1 ? ',' : ''}</div>
+                                                <div key={i} className="truncate" title={inst}>{inst}</div>
                                             ))}
                                         </td>
                                     </tr>

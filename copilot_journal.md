@@ -1,3 +1,133 @@
+# 2026-02-01 11:00
+- Mobile UX & Modal Refinements:
+    - **Zoom Controls**:
+        - Increased Reset button size by 50% (icon `12->18`, padding `p-1->p-1.5`) for better touch target.
+    - **Mobile Detection Logic**:
+        - Enhanced `isMobile` check to include landscape phones: `width < 768 || (isLandscape && height < 600)`.
+    - **Modals Layout**:
+        - **Instrument Selector**:
+            - Set width to 60% on Mobile (Vertical/Generic), 40% on Desktop.
+        - **Song Selector**:
+            - Set width to 100% on Mobile (both orientations).
+            - **Mobile Vertical**: Hidden Composer and Arranger columns.
+            - **Mobile Horizontal (Landscape)**:
+                - Combined Composer & Arranger into a single column.
+                - Compact Header: Search bar and Filters combined on one line with reduced padding.
+    - **Refactoring**: Passed `isMobile` and `isLandscape` context to `SongSelectorPanel` and `SidePanel`.
+
+# 2026-02-01 10:45
+- Mobile UI & Landscape Logic Optimization:
+  - **Mobile Landscape Support**:
+    - Added `isLandscape` state to `App.tsx` matching `window.innerWidth > window.innerHeight`.
+    - Implemented dynamic `baseScale` calculation in `renderScore`:
+      - **Desktop**: 55 (Default)
+      - **Mobile Portrait**: 40
+      - **Mobile Landscape**: 24 (effectively 60% of portrait scale)
+    - Updated `useEffect` and `renderScore` dependencies to react to orientation changes properly.
+  - **Mobile Header Styling**:
+    - Adjusted padding (`p-1 md:p-2`, `mb-1 md:mb-2`) for a tighter mobile layout.
+    - Changed controls alignment to `justify-end` on mobile, grouping Zoom, Song, and Instrument buttons to the right.
+  - **Mobile Padding**:
+    - Significantly reduced side padding in `safeWidth` calculation (`isMobile ? 2 : 20`) to maximize score visibility on small screens.
+
+# 2026-02-01 10:20
+- UI and Logic Refinements:
+    - **Grand Staff Labeling Logic**:
+        - Reverted strict Grand Staff "clearing" logic which caused labels to disappear.
+        - Implemented a "Replace / Append" strategy `xmlTranspose.ts`.
+            - If overwriting Staff 1 (`Part Name`), simply replaces the text.
+            - If overwriting Staff 2, appends " / NewText" (smartly detecting if "Piano" should be kept or replaced). This ensures both instruments in a Grand Staff (e.g., Trumpet and Trombone on a piano score) are represented in the label without disappearing.
+    - **Zoom Controls**:
+        - **Constraints**: 
+            - Mobile: Hard-limited range to `50% - 150%`. Added `useEffect` to cap existing values if resizing to mobile.
+            - Desktop: Maintained `50% - 250%`.
+        - **Reset Button**: Added a dedicated `RotateCcw` button inside the zooom container to instantly reset to 100%.
+    - **Validation**: Lint, Test, and Build passed.
+
+# 2026-02-01 10:00
+- Mobile Optimization and Responsive Scaling:
+    - **Adaptive Zoom Scale**:
+        - Implemented device detection (`window.innerWidth < 768`) to determine `isMobile` state.
+        - Adjusted base render scale:
+            - **Desktop**: Increased from `40` to `55` to make 100% zoom larger (fixing the "too small" regression).
+            - **Mobile**: Kept at `40` to maintain the user-approved existing size for narrow screens.
+    - **Responsive Header**:
+        - **Title**: Hidden on mobile (`hidden md:flex`) to save horizontal space.
+        - **Buttons**:
+            - Text ("Select Song", "Select Instruments") is now hidden on mobile (`hidden md:inline`).
+            - Buttons display only icons (Music Note / Saxophone) on narrow screens to fit on one line.
+        - **Zoom Slider**:
+            - Made slider width flexible (`w-full md:w-32`) to occupy available space.
+            - Container uses `flex-1` on mobile to expand.
+    - **Validation**: Lint, Test, and Build passed.
+
+# 2026-02-01 09:40
+- UI Polish and Responsive Fixes:
+    - **Song Selector**:
+        - Increased Composer/Arranger column widths to `20%` (table header) and `180px` (max-width for truncation).
+    - **Zoom Controls**:
+        - **Visual Indicator**: Added a subtle vertical tick mark at the 25% position (corresponding to 100% zoom on the 50-250 scale) behind the slider track.
+        - **Font**: Removed `font-mono` from the percentage display; now uses the default UI font with `text-gray-700` to match buttons.
+        - **Responsiveness**:
+            - Enabled `flex-wrap` on the header containers to allow controls to flow to a new line on narrow screens.
+            - Removed `hidden md:flex` from the Zoom control, ensuring it remains visible (and accessible) on mobile devices, wrapping below text if needed.
+    - **Validation**: Lint, Test, and Build passed.
+
+# 2026-02-01 09:20
+- UI Refinements and Zoom Fixes:
+    - **Zoom Logic**: Reordered Verovio initialization in `App.tsx` (`renderScore`). Moved `setOptions` to execute *before* `loadData`. This ensures layout parameters (like `pageWidth` calculated from zoom scale) are established before the music data is loaded, fixing "jamming" issues at high magnification.
+    - **Zoom UI**: Replaced the plain range input with a styled custom component (hidden on mobile, specific width on desktop, blue accent color, "Zoom" label).
+    - **Song Selector Columns**:
+        - Applied explicit percentage widths to table headers.
+        - Implemented truncation for usage-heavy columns:
+            - **Composer/Arranger**: Max width + truncation + tooltip.
+            - **Parts**: Truncated list + tooltip.
+            - **Style/Difficulty**: `whitespace-nowrap` to prevent wrapping.
+    - **Validation**: Lint, Test, and Build passed.
+
+# 2026-02-01 09:00
+- Implemented Requested UI and Logic Improvements:
+    - **Grand Staff Part Labeling**:
+        - Enhanced `xmlTranspose.ts` to detect multi-staff parts (like Piano).
+        - Instead of renaming the entire Part (which duplicates the name on the brace), the logic now injects `<staff-details><staff-label>` for the specific target staff.
+        - Clears the central `<part-name>` to prevent conflicting or redundant labels.
+    - **Part Name Display Frequency**:
+        - Modified `xmlTranspose.ts` to set `<part-abbreviation>` to an empty string. This ensures the full instrument name appears on the first system, but is hidden (or empty) on subsequent systems.
+    - **Instrument Aliases**:
+        - Updated `src/constants/instruments.ts` to include an `aliases` array.
+        - Added "Trumpet" for Bb Trumpet and "Clarinet" for Bb Clarinet.
+        - Updated `mapInstrumentNameToValue` in `App.tsx` to prioritize alias matches over partial label matches.
+    - **Zoom Slider**:
+        - Added a Zoom Slider to the toolbar (range 50% - 250%).
+        - Connected this to Verovio's `scale` option (Base 40 * Zoom / 100).
+    - **Styling Adjustments**:
+        - Removed outer padding `p-4` -> `p-0`.
+        - Reduced inner container padding `p-2` -> `p-1`.
+    - **Validation**:
+        - Updated `App_transpose.test.tsx` to be more specific.
+        - Ran `npm run lint`, `npm test`, and `npm run build`. All passed.
+
+# 2026-02-01 08:00
+- Fix for Part Name Display: Robust XML Selection
+    - **Issue**: Previous `querySelector` logic for finding `<score-part>` elements was fragile due to potential namespacing or structure variations in some MusicXML files (like `Get Around.musicxml`).
+    - **Fix**: Updated `xmlTranspose.ts` to use `getElementsByTagName('score-part')` iteration for robust cross-browser ID matching.
+    - **Enhancement**: Implemented logic to strip all attributes (including `print-object`) from the `<part-name>` element before setting the new name, ensuring Verovio displays it even if it was previously hidden.
+    - **Validation**: Verified tests pass and build succeeds.
+
+# 2026-02-01 07:55
+- Feature Information Update: Correct Instrument Names in Score
+    - **Part Renaming**:
+        - Updated `xmlTranspose.ts` to accept an optional `targetPartName` parameter.
+        - Implemented logic to locate the `<score-part>` definition corresponding to the transposed part and update its `<part-name>`.
+        - Added logic to remove any existing `<part-name-display>` or `<part-abbreviation-display>` elements to ensure the new name is rendered by Verovio.
+        - Generates a simple abbreviation (first 5 chars) for `<part-abbreviation>`.
+    - **Integration**:
+        - Updated `App.tsx` to pass the selected instrument's friendly `name` (e.g., "Alto Saxophone") to `transposeMusicXML` when applying changes.
+    - **Validation**:
+        - Verified via `npm run lint`, `npm test`, and `npm run build`.
+    - **Result**:
+        - When a user selects an instrument, the sheet music part name overwrites the original XML part name, displaying the correct instrument label and removing confusing original text.
+
 # 2026-02-01 07:50
 - Bug Fix and UI Enhancement:
     - **Multi-Part XML Support**: 

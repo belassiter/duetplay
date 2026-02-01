@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
-import { Loader2, Music } from 'lucide-react';
+import { Loader2, Music, RotateCcw } from 'lucide-react';
 import { transposeMusicXML } from './utils/xmlTranspose';
 import JSZip from 'jszip';
 import './App.css'
@@ -21,9 +21,12 @@ function App() {
   const [originalInstruments, setOriginalInstruments] = useState<{ part1: string, part2: string }>({ part1: 'none', part2: 'none' });
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(1000);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isLandscape, setIsLandscape] = useState<boolean>(false);
   const fileDataRef = useRef<ArrayBuffer | null>(null);
 
   // Handle Resize
@@ -32,6 +35,13 @@ function App() {
         if (containerRef.current) {
             setContainerWidth(containerRef.current.clientWidth);
         }
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLand = width > height;
+        
+        setIsLandscape(isLand);
+        // Mobile: Small width OR (Landscape AND small height)
+        setIsMobile(width < 768 || (isLand && height < 600));
     };
 
     window.addEventListener('resize', handleResize);
@@ -40,15 +50,35 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const renderScore = useCallback(async () => {
+    // Cap zoom on mobile
+    useEffect(() => {
+        if (isMobile && zoomLevel > 150) {
+            setZoomLevel(150);
+        }
+    }, [isMobile, zoomLevel]);
+
+    const renderScore = useCallback(async () => {
       if (!verovioToolkit || !fileDataRef.current) return;
       
       setIsRendering(true);
       setStatus('Rendering...');
       
       try {
-            const scale = 40; 
-            const safeWidth = Math.max(containerWidth - 20, 100);
+            // Adaptive Base Scale: 
+            // Mobile Portrait: 40 (standard)
+            // Mobile Landscape: 24 (60% of 40)
+            // Desktop: 55 (larger, fixes "jamming" and fills space better)
+            let baseScale = 55;
+            if (isMobile) {
+                baseScale = isLandscape ? 24 : 40;
+            }
+
+            const scale = baseScale * (zoomLevel / 100); 
+            // Decrease padding on mobile side edges (safeWidth)
+            // Desktop: 20 (10px padding each side)
+            // Mobile: 2 (1px padding each side approx)
+            const sidePadding = isMobile ? 2 : 20;
+            const safeWidth = Math.max(containerWidth - sidePadding, 100);
 
             // Always treat as XML now
             const zip = new JSZip();
@@ -106,7 +136,7 @@ function App() {
                     // Let's defer strict interval math and just pass both to transposeMusicXML if we update it?
                     // OR: update transposeMusicXML to accept sourceTranspose and targetTranspose.
                     
-                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1', orig1?.transpose || 'P1');
+                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1', orig1?.transpose || 'P1', inst1.name);
                 }
                 
                 // Get Inst 2
@@ -115,23 +145,25 @@ function App() {
 
                 if (inst2 && inst2.value !== 'none' && inst2.value !== originalInstruments.part2) {
                      // Apply to Part 2 / Staff 2
-                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2', orig2?.transpose || 'P1');
+                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2', orig2?.transpose || 'P1', inst2.name);
                 }
                 
+                // Set options BEFORE loading data to ensure layout is calculated correctly during load/render
+                verovioToolkit.setOptions({
+                    scale: scale,
+                    adjustPageHeight: true,
+                    pageWidth: Math.floor((safeWidth * 100) / scale),
+                    transpose: ''
+                });
+
                 verovioToolkit.loadData(processedXML);
             } else {
                 console.error("Could not find music xml file");
                 // Fallback to raw load if simpler (though likely fails for mxl)
                 verovioToolkit.loadZipDataBuffer(fileDataRef.current);
             }
-
-            verovioToolkit.setOptions({
-                scale: scale,
-                adjustPageHeight: true,
-                pageWidth: Math.floor((safeWidth * 100) / scale),
-                transpose: ''
-            });
             
+            // Render
             const svgData = verovioToolkit.renderToSVG(1, {});
             setSvg(svgData);
             setStatus('');
@@ -141,7 +173,7 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments]);
+  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape]);
 
 
   const loadScore = useCallback(async (filename: string) => {
@@ -204,6 +236,7 @@ function App() {
       const inst = instruments.find(i => 
           i.name.toLowerCase() === cleanName || 
           i.value.toLowerCase() === cleanName || 
+          (i.aliases && i.aliases.some(a => a.toLowerCase() === cleanName)) ||
           i.label.toLowerCase().includes(cleanName)
       );
       return inst ? inst.value : 'none';
@@ -223,28 +256,65 @@ function App() {
   };
 
   return (
-    <div className="p-4 w-full mx-auto flex flex-col h-screen">
-      <div className="flex justify-between items-center mb-2 gap-2">
-          <div className="flex items-center gap-4">
+    <div className="p-0 w-full mx-auto flex flex-col h-screen">
+      <div className="flex justify-between items-center mb-1 md:mb-2 gap-1 md:gap-2 p-1 md:p-2 relative flex-wrap md:flex-nowrap bg-white shadow-sm z-30">
+          <div className="flex items-center gap-4 hidden md:flex">
                <h1 className="text-xl md:text-2xl font-bold truncate max-w-[200px] md:max-w-md" title="DuetPlay">
                    DuetPlay
                </h1>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+            {/* Zoom Control */}
+            <div className="flex items-center gap-2 bg-white border border-gray-300 px-2 py-1.5 rounded shadow-sm h-[38px] relative flex-1 md:flex-none max-w-[240px] md:max-w-none">
+                
+                <span className="text-sm font-medium text-gray-700 hidden sm:inline mr-1">Zoom</span>
+                
+                {/* Reset Button */}
+                <button 
+                    onClick={() => setZoomLevel(100)}
+                    className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-blue-600 transition-colors"
+                    title="Reset Zoom to 100%"
+                >
+                     <RotateCcw size={18} className={zoomLevel === 100 ? "opacity-20" : "opacity-100"} />
+                     <span className="sr-only">Reset</span>
+                </button>
+
+                <div className="relative flex items-center flex-1 min-w-[80px]">
+                    <input 
+                        type="range" 
+                        min="50" 
+                        max={isMobile ? "150" : "250"}
+                        value={zoomLevel} 
+                        onChange={(e) => setZoomLevel(parseInt(e.target.value))}
+                        className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 relative z-10"
+                    />
+                    {/* Tick mark at 100% */}
+                    {/* Range 50-250 (span 200). 100 is 50/200 = 25% */}
+                    {/* Range 50-150 (span 100). 100 is 50/100 = 50% */}
+                    <div 
+                        className="absolute top-1/2 -translate-y-1/2 w-0.5 h-3 bg-gray-400 pointer-events-none z-0"
+                        style={{ left: isMobile ? '50%' : '25%' }} 
+                    />
+                </div>
+                <span className="text-xs text-gray-700 w-8 text-right font-variant-numeric tabular-nums">{zoomLevel}%</span>
+            </div>
+            
             <button 
                 onClick={() => setIsSongPanelOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap"
+                title="Select Song"
             >
-                <Music size={16} />
-                Select Song
+                <Music size={18} />
+                <span className="hidden md:inline">Select Song</span>
             </button>
             <button 
                 onClick={() => setIsSidePanelOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap"
+                title="Select Instruments"
             >
                 <span className="text-lg leading-none">🎷</span>
-                Select Instruments
+                <span className="hidden md:inline">Select Instruments</span>
             </button>
           </div>
       </div>
@@ -257,26 +327,29 @@ function App() {
         originalInstruments={originalInstruments}
         onInstrument1Change={setInstrument1}
         onInstrument2Change={setInstrument2}
+        isMobile={isMobile}
       />
+      
+      <SongSelectorPanel 
+        isOpen={isSongPanelOpen} 
+        onClose={() => setIsSongPanelOpen(false)}
+        onSelectSong={handleSongSelect}
+        isMobile={isMobile}
+        isLandscape={isLandscape}
+      />
+      
+      {status && <div className="text-sm text-gray-500 mb-2 px-2">{status}</div>}
 
-      <SongSelectorPanel
-          isOpen={isSongPanelOpen}
-          onClose={() => setIsSongPanelOpen(false)}
-          onSelectSong={handleSongSelect}
-      />
-      
-      {status && <div className="text-sm text-gray-500 mb-2">{status}</div>}
-      
       {(loading || isRendering) && (
         <div className="flex justify-center p-8">
             <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
         </div>
       )}
-      
+
       <div ref={containerRef} className="w-full flex-1 overflow-auto">
           {!loading && svg && (
             <div
-              className="border border-gray-300 p-2 shadow-sm rounded bg-white h-auto"
+              className="border border-gray-300 p-1 shadow-sm rounded bg-white h-auto"
               style={{ overflowX: 'hidden' }}
               dangerouslySetInnerHTML={{ __html: svg }}
             />
