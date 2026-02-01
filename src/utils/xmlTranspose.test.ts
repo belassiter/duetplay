@@ -59,6 +59,7 @@ describe('transposeMusicXML', () => {
     // F#4 in C Major (0 sharps) - Chromatic note
     const xml = `
       <part id="P1">
+        <measure>
           <attributes><key><fifths>0</fifths></key></attributes>
           <note>
             <pitch>
@@ -68,6 +69,7 @@ describe('transposeMusicXML', () => {
             </pitch>
             <accidental>sharp</accidental>
           </note>
+        </measure>
       </part>`;
       
     // Transpose M2 up to D Major (2 sharps: F#, C#)
@@ -89,10 +91,14 @@ describe('transposeMusicXML', () => {
     const xml = `
     <score-partwise>
       <part id="P1">
+        <measure>
          <note><pitch><step>C</step><octave>4</octave></pitch></note>
+        </measure>
       </part>
       <part id="P2">
+        <measure>
          <note><pitch><step>C</step><octave>4</octave></pitch></note>
+        </measure>
       </part>
     </score-partwise>
     `;

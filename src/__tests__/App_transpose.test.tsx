@@ -1,16 +1,31 @@
-﻿import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import App from '../App';
 import useVerovio from '../hooks/useVerovio';
 import userEvent from '@testing-library/user-event';
 
-// Mock the hook AND the new util
+// Mock the hook
 vi.mock('../hooks/useVerovio');
+
+// Mock JSZip
+vi.mock('jszip', () => {
+    return {
+        default: class {
+            loadAsync() {
+                return Promise.resolve({
+                    files: {
+                        'score.xml': {
+                            async: () => '<score-partwise><Measure><note>C4</note></Measure></score-partwise>'
+                        }
+                    }
+                });
+            }
+        }
+    }
+});
 
 describe('App Transpose', () => {
     const mockSetOptions = vi.fn();
-    const mockLoadZipDataBuffer = vi.fn();
-    const mockGetMEI = vi.fn().mockReturnValue('<mei>test</mei>');
     const mockLoadData = vi.fn();
     const mockRenderToSVG = vi.fn().mockReturnValue('<svg data-testid="score-svg"></svg>');
 
@@ -22,8 +37,6 @@ describe('App Transpose', () => {
             loading: false,
             verovioToolkit: {
                 setOptions: mockSetOptions,
-                loadZipDataBuffer: mockLoadZipDataBuffer,
-                getMEI: mockGetMEI,
                 loadData: mockLoadData,
                 renderToSVG: mockRenderToSVG
             }
@@ -31,46 +44,41 @@ describe('App Transpose', () => {
         
         // Mock fetch
         window.fetch = vi.fn().mockResolvedValue({
-            // Mock a ZIP file structure for JSZip
-            // Empty buffer fails JSZip... we need valid zip signature?
-            // Or we mock JSZip?
-            arrayBuffer: () => Promise.resolve(new ArrayBuffer(10)) 
-        });
-        
-        // Mock JSZip
-        vi.mock('jszip', () => {
-             return {
-                 default: class {
-                     loadAsync() {
-                         return Promise.resolve({
-                             files: {
-                                 'score.xml': {
-                                     async: (_type: string) => '<score-partwise>...</score-partwise>'
-                                 }
-                             }
-                         });
-                     }
-                 }
-             }
+            arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
         });
     });
 
-    it('transposes when trumpet button is clicked', async () => {
+    it('transposes when instrument is selected', async () => {
         const user = userEvent.setup();
         render(<App />);
         
         // Wait for initial load
         await waitFor(() => {
             expect(mockSetOptions).toHaveBeenCalled();
+            expect(mockLoadData).toHaveBeenCalled();
         });
 
-        // Click the trumpet button
-        const trumpetButton = await screen.findByText(/Part 1 = Trumpet/i);
-        await user.click(trumpetButton);
+        // 1. Open the Side Panel
+        const selectButton = screen.getByRole('button', { name: /Select Instruments/i });
+        await user.click(selectButton);
 
-        // Expect loadData to be called (XML mode)
+        // 2. Select Instrument
+        const triggers = screen.getAllByText('None');
+        const part1Trigger = triggers[0];
+        await user.click(part1Trigger);
+
+        // 3. Search for "Trumpet"
+        const searchInput = screen.getByPlaceholderText('Search instruments...');
+        await user.type(searchInput, 'Trumpet');
+
+        // 4. Click result "Bb Trumpet"
+        const trumpetOption = await screen.findByText(/Bb Trumpet/i);
+        await user.click(trumpetOption);
+
+        // 5. Expect loadData to be called with updated XML
+        // It might be called multiple times, we just want to ensure it was called eventually
         await waitFor(() => {
-             expect(mockLoadData).toHaveBeenCalled();
+            expect(mockLoadData.mock.calls.length).toBeGreaterThan(1);
         });
         
         await screen.findByTestId('score-svg');

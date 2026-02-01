@@ -1,18 +1,23 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Music } from 'lucide-react';
 import { transposeMusicXML } from './utils/xmlTranspose';
 import JSZip from 'jszip';
 import './App.css'
-
-type TransposeMode = 'none' | 'xml';
+import SidePanel from './components/SidePanel';
+import { instruments } from './constants/instruments';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
   const [svg, setSvg] = useState<string>('');
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('');
-  const [transposeMode, setTransposeMode] = useState<TransposeMode>('none');
+  
+  // Instrument State
+  const [instrument1, setInstrument1] = useState<string>('none');
+  const [instrument2, setInstrument2] = useState<string>('none');
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(1000);
   const fileDataRef = useRef<ArrayBuffer | null>(null);
@@ -41,40 +46,55 @@ function App() {
             const scale = 40; 
             const safeWidth = Math.max(containerWidth - 20, 100);
 
-            if (transposeMode === 'xml') {
-                const zip = new JSZip();
-                const zipContent = await zip.loadAsync(fileDataRef.current);
+            // Always treat as XML now
+            const zip = new JSZip();
+            const zipContent = await zip.loadAsync(fileDataRef.current);
+            
+            let scoreFile = '';
+            
+            // 1. Try reading META-INF/container.xml
+            const containerFile = zipContent.files['META-INF/container.xml'];
+            if (containerFile) {
+                const containerXML = await containerFile.async('string');
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(containerXML, 'application/xml');
+                const rootFile = doc.getElementsByTagName('rootfile')[0];
+                if (rootFile) {
+                    scoreFile = rootFile.getAttribute('full-path') || '';
+                }
+            }
+            
+            // 2. Fallback
+            if (!scoreFile || !zipContent.files[scoreFile]) {
+                    scoreFile = Object.keys(zipContent.files).find(name => 
+                    (name.endsWith('.xml') || name.endsWith('.musicxml')) && !name.includes('META-INF')
+                    ) || '';
+            }
+            
+            if (scoreFile && zipContent.files[scoreFile]) {
+                const xmlText = await zipContent.files[scoreFile].async('string');
                 
-                let scoreFile = '';
+                // Get Instrument Defs
+                const inst1 = instruments.find(i => i.value === instrument1);
                 
-                // 1. Try reading META-INF/container.xml
-                const containerFile = zipContent.files['META-INF/container.xml'];
-                if (containerFile) {
-                    const containerXML = await containerFile.async('string');
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(containerXML, 'application/xml');
-                    const rootFile = doc.getElementsByTagName('rootfile')[0];
-                    if (rootFile) {
-                        scoreFile = rootFile.getAttribute('full-path') || '';
-                    }
+                let processedXML = xmlText;
+                
+                if (inst1 && inst1.value !== 'none') {
+                    // Apply transposition to Part 1 / Staff 1
+                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1');
                 }
                 
-                // 2. Fallback: Search for .xml or .musicxml, ignoring META-INF
-                if (!scoreFile || !zipContent.files[scoreFile]) {
-                     scoreFile = Object.keys(zipContent.files).find(name => 
-                        (name.endsWith('.xml') || name.endsWith('.musicxml')) && !name.includes('META-INF')
-                     ) || '';
+                // Get Inst 2
+                const inst2 = instruments.find(i => i.value === instrument2);
+                if (inst2 && inst2.value !== 'none') {
+                     // Apply to Part 2 / Staff 2
+                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2');
                 }
                 
-                if (scoreFile && zipContent.files[scoreFile]) {
-                    const xmlText = await zipContent.files[scoreFile].async('string');
-                    const transposedXML = transposeMusicXML(xmlText, 'M2');
-                    verovioToolkit.loadData(transposedXML);
-                } else {
-                    console.error("Could not find music xml file in mxl");
-                    verovioToolkit.loadZipDataBuffer(fileDataRef.current);
-                }
+                verovioToolkit.loadData(processedXML);
             } else {
+                console.error("Could not find music xml file");
+                // Fallback to raw load if simpler (though likely fails for mxl)
                 verovioToolkit.loadZipDataBuffer(fileDataRef.current);
             }
 
@@ -94,7 +114,7 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, transposeMode]);
+  }, [verovioToolkit, containerWidth, instrument1, instrument2]);
 
 
   useEffect(() => {
@@ -113,6 +133,7 @@ function App() {
       };
       fetchScore();
     } else if (!loading && verovioToolkit && fileDataRef.current) {
+        // Debounce re-render slightly for UX
         const timeoutId = setTimeout(() => {
             renderScore();
         }, 100);
@@ -126,17 +147,24 @@ function App() {
           <h1 className="text-2xl font-bold">DuetPlay</h1>
           <div className="flex gap-2">
             <button 
-                onClick={() => setTransposeMode(prev => (prev === 'xml' ? 'none' : 'xml'))}
-                className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-                    transposeMode === 'xml' 
-                    ? 'bg-green-600 text-white hover:bg-green-700' 
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
+                onClick={() => setIsSidePanelOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700"
             >
-                Part 1 = Trumpet {transposeMode === 'xml' ? '(On)' : '(Off)'}
+                <Music size={16} />
+                Select Instruments
             </button>
           </div>
       </div>
+      
+      <SidePanel 
+        isOpen={isSidePanelOpen} 
+        onClose={() => setIsSidePanelOpen(false)}
+        instrument1={instrument1}
+        instrument2={instrument2}
+        onInstrument1Change={setInstrument1}
+        onInstrument2Change={setInstrument2}
+      />
+
       
       {status && <div className="text-sm text-gray-500 mb-2">{status}</div>}
       

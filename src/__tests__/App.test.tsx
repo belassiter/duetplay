@@ -6,9 +6,26 @@ import useVerovio from '../hooks/useVerovio';
 // Mock the hook
 vi.mock('../hooks/useVerovio');
 
+// Mock JSZip
+vi.mock('jszip', () => {
+    return {
+        default: class {
+            loadAsync() {
+                return Promise.resolve({
+                    files: {
+                        'score.xml': {
+                            async: () => '<score-partwise><Measure><note>C4</note></Measure></score-partwise>'
+                        }
+                    }
+                });
+            }
+        }
+    }
+});
+
 describe('App', () => {
     const mockSetOptions = vi.fn();
-    const mockLoadZipDataBuffer = vi.fn();
+    const mockLoadData = vi.fn();
     const mockRenderToSVG = vi.fn().mockReturnValue('<svg data-testid="score-svg"></svg>');
 
     beforeEach(() => {
@@ -19,7 +36,7 @@ describe('App', () => {
             loading: false,
             verovioToolkit: {
                 setOptions: mockSetOptions,
-                loadZipDataBuffer: mockLoadZipDataBuffer,
+                loadData: mockLoadData,
                 renderToSVG: mockRenderToSVG
             }
         });
@@ -36,8 +53,6 @@ describe('App', () => {
         // Wait for async effects to settle to avoid "not wrapped in act" warnings
         await waitFor(() => expect(mockSetOptions).toHaveBeenCalled());
     });
-
-
 
     it('calls verovio with correct options to show all measures', async () => {
         render(<App />);

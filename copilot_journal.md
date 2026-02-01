@@ -1,3 +1,48 @@
+# 2026-01-31 09:55
+- Fixed Transposition logic issues and Cross-Talk between Parts:
+    - Fixed Key Signature detection in `xmlTranspose.ts`. When transposing Part 2 (Staff 2), the logic previously picked up the first Key found (which might have been Part 1's newly transposed key), leading to Part 2 stacking transpositions incorrectly (e.g. Alto + Bari = 4 sharps). It now specifically targets the key for the active staff or the global key.
+    - Implemented Measure-Level Accidental Tracking in `xmlTranspose.ts`. Previous logic flattened all notes, losing measure context. Rewrote the core loop to iterate `Measure -> Notes`. This allows tracking accidentals within a measure to correctly inject natural signs closer to how notation rules require (cancelling previous accidentals).
+    - Removed explanatory text from `SidePanel.tsx` per user request.
+    - Updated `src/utils/xmlTranspose.test.ts` to use valid MusicXML structures (wrapped in `<measure>`) to support the new logic, and ensured tests pass.
+    - Verified `npm test` and `npm run build`.
+
+# 2026-01-31 09:45
+- Refined Instrument Selection and Transposition Engine:
+    - Addressed User Feedback on 6 key items including UI behavior, data structure, and octave transposition logic.
+    - Updated `src/constants/instruments.ts`:
+        - Defined strict `Instrument` interface with `name`, `label`, `value`, `transpose`, `clef`, `family`, `range`.
+        - Added dedicated `name` field for cleaner filtering (e.g., search "Clarinet" matches "Bb Clarinet" properly without matching label metadata).
+        - Updated transposition values to support "8va" syntax (e.g., `+8va`, `M6+8va`, `-15ma`) for instruments like Piccolo and Contrabass Clarinet.
+        - Fix: Piccolo transposition corrected to `-8va` (Concert -> Written shift).
+    - Updated `src/utils/xmlTranspose.ts`:
+        - Added `normalizeInterval` helper to parse custom `8va`/`15ma` syntax into Tonal-compatible intervals (e.g. `8va` -> `P8` with direction logic).
+        - Added `targetStaff` parameter (default '1') to support transposing Part 2 (often Staff 2 in piano scores) independently.
+        - Refined key signature splitting logic to correctly isolate global keys to the target staff before modifying.
+    - Updated `src/components/InstrumentSelector.tsx`:
+        - Implemented filtering by `inst.name` per user request.
+        - Added `isOpen` / `onToggle` props to allow parent control.
+    - Updated `src/components/SidePanel.tsx`:
+        - Implemented 'exclusive open' state so opening one dropdown closes the other.
+    - Updated `src/App.tsx`:
+        - Integrated dual transposition logic: calls `transposeMusicXML` for Part 1 (Staff 1) and Part 2 (Staff 2) sequentially.
+    - Verified with tests, lint, and build.
+
+# 2026-01-31 09:30
+- Implemented "Generic Instrument Selection" feature via MusicXML:
+    - Replaced the single "Trumpet" button with a comprehensive `SidePanel` and `InstrumentSelector` UI.
+    - Users can now select from over 30 instruments for Part 1 (with Part 2 placeholder), identifying them by name (e.g., "Clarinet in Bb", "Viola").
+    - Changes apply instantly using the existing XML transposition engine.
+    - Enhanced `xmlTranspose.ts` Logic:
+        - Added `targetClef` parameter to support instruments that require clef changes (e.g., Viola -> Alto Clef, Bassoon -> Bass Clef).
+        - Implemented XML `<clef>` injection/update logic (G2 for Treble, F4 for Bass, C3 for Alto, C4 for Tenor).
+        - Added dynamic `<transpose>` tag generation (diatonic/chromatic) based on the transposition interval, ensuring `verovio` handles playback/display semantics correctly for transposing instruments.
+        - Updated imports to use `Interval` from `tonal` for robust semitone calculations.
+    - Refactored Tests and Cleaned Up:
+        - Updated `App.test.tsx` to include `JSZip` mocks, avoiding crashes during XML extraction tests.
+        - Rewrote `App_transpose.test.tsx` to test the new UI flow: Open Panel -> Search Instrument -> Select -> Verify Reload.
+        - Fixed Tonal library usage in `xmlTranspose.ts` (`Note.interval` -> `Interval.distance`).
+        - Verified all tests pass and `npm run lint` is clean.
+
 # 2026-01-31 08:30
 - Removed MEI Transposition support.
     - Deleted `src/utils/meiTranspose.ts` and `src/utils/meiTranspose.test.ts`.
