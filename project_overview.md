@@ -9,7 +9,6 @@ DuetPlay is a browser-based tool that creates "instant duets" for any instrument
 ## Tech Stack
 * **Framework:** Vite + React (TypeScript).
     * *Reasoning:* Chosen for strict type safety and high reliability with AI code generation.
-    * *Alternate:* SvelteKit    
 * **UI Library:** Shadcn/UI (Tailwind CSS).
     * Use standard `Dialog` for instrument settings and `DataTable` for song selection.
 * **Rendering Engine:** **Verovio** (Wasm).
@@ -30,11 +29,8 @@ DuetPlay is a browser-based tool that creates "instant duets" for any instrument
     * Load instrument definitions from `src/config/instruments.json`.
     * When an instrument is selected, calculate the `transpose` value.
     * Pass this value to Verovio's option `{ transpose: X }`.
-3.  **Part Selection:**
-    * The app defaults to 2-part playback.
-    * If a MusicXML file has 4 staves (e.g., String Quartet), the user must be able to map "Part 1" to "Violin 1" and "Part 2" to "Cello."
 
 ## Immediate Next Steps
 1.  Scaffold the Vite project structure.
 2.  Install dependencies: `verovio`, `tonal`, `lucide-react`, `clsx`, `tailwind-merge`.
-3.  Set up the `public` folder with a sample MusicXML file (`test.xml`) and the `verovio.wasm` file.
+3.  Set up the `public` folder with a sample MusicXML file and the `verovio.wasm` file.

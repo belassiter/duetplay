@@ -1,8 +1,8 @@
 Here's a rough order to do development
 
-- [ ] Choose Vite vs Svelte
-- [ ] Prepare at least one mxl
-- [ ] Display the mxl on desktop
+- [X] Choose Vite vs Svelte
+- [X] Prepare at least one mxl
+- [X] Display the mxl on desktop web
 - [ ] Instrument selection modal - common instruments
 - [ ] Song selection modal - simple
 - [ ] Transpose song
