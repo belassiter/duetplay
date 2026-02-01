@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, ArrowUp, ArrowDown } from 'lucide-react';
 import InstrumentSelector from './InstrumentSelector';
 import { instruments } from '../constants/instruments';
 
@@ -12,7 +12,38 @@ interface SidePanelProps {
     onInstrument1Change: (val: string) => void;
     onInstrument2Change: (val: string) => void;
     isMobile?: boolean;
+    
+    // New Props
+    part1Octave: number;
+    onPart1OctaveChange: (val: number) => void;
+    part2Octave: number;
+    onPart2OctaveChange: (val: number) => void;
+    globalTranspose: number;
+    onGlobalTransposeChange: (val: number) => void;
 }
+
+const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: number) => void }) => (
+    <div className="flex items-center gap-2 mt-2 mb-6 text-sm text-gray-700">
+        <span className="font-medium mr-1">Adjust range:</span>
+        <button 
+           onClick={() => onChange(Math.max(value - 1, -5))}
+           className="p-1 border rounded hover:bg-gray-100 disabled:opacity-50 text-gray-600"
+           disabled={value <= -5}
+        >
+             <ArrowDown size={16} />
+        </button>
+        <button 
+           onClick={() => onChange(Math.min(value + 1, 5))}
+           className="p-1 border rounded hover:bg-gray-100 disabled:opacity-50 text-gray-600"
+           disabled={value >= 5}
+        >
+             <ArrowUp size={16} />
+        </button>
+        <span className="min-w-[80px] text-center font-medium">
+            {value > 0 ? '+' : ''}{value} {Math.abs(value) === 1 ? 'octave' : 'octaves'}
+        </span>
+    </div>
+);
 
 const SidePanel: React.FC<SidePanelProps> = ({ 
     isOpen, 
@@ -22,7 +53,13 @@ const SidePanel: React.FC<SidePanelProps> = ({
     originalInstruments,
     onInstrument1Change, 
     onInstrument2Change,
-    isMobile
+    isMobile,
+    part1Octave,
+    onPart1OctaveChange,
+    part2Octave,
+    onPart2OctaveChange,
+    globalTranspose,
+    onGlobalTransposeChange
 }) => {
     const [activeSelector, setActiveSelector] = React.useState<'none' | 'part1' | 'part2'>('none');
 
@@ -78,6 +115,8 @@ const SidePanel: React.FC<SidePanelProps> = ({
                         onToggle={() => handleToggle('part1')}
                     />
                     
+                    <OctaveControl value={part1Octave} onChange={onPart1OctaveChange} />
+
                     <InstrumentSelector 
                         label={getLabel('part2')}
                         selectedValue={instrument2}
@@ -85,6 +124,34 @@ const SidePanel: React.FC<SidePanelProps> = ({
                         isOpen={activeSelector === 'part2'}
                         onToggle={() => handleToggle('part2')}
                     />
+
+                    <OctaveControl value={part2Octave} onChange={onPart2OctaveChange} />
+                    
+                    <hr className="my-6 border-gray-200" />
+                    
+                    <div className="mb-4">
+                        <div className="flex justify-between items-center mb-2">
+                             <label className="text-sm font-bold text-gray-800">Adjust key:</label>
+                             <span className="text-sm font-medium text-blue-600 w-12 text-right">
+                                {globalTranspose > 0 ? '+' : ''}{globalTranspose}
+                             </span>
+                        </div>
+                        <input 
+                            type="range" 
+                            min="-12" 
+                            max="12" 
+                            step="1"
+                            value={globalTranspose}
+                            onChange={(e) => onGlobalTransposeChange(parseInt(e.target.value))}
+                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 mt-1 px-1">
+                            <span>-12</span>
+                            <span>0</span>
+                            <span>+12</span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </>

@@ -68,7 +68,8 @@ export const transposeMusicXML = (
     targetClef?: string, 
     targetStaff: string = '1',
     sourceTranspose: string = 'P1',
-    targetPartName?: string
+    targetPartName?: string,
+    additionalSemitones: number = 0
 ): string => {
     // Calculate relative interval
     let interval = 'P1';
@@ -77,6 +78,16 @@ export const transposeMusicXML = (
     } else {
         // Just normalize existing if P1?
         interval = normalizeInterval('P1');
+    }
+
+    if (additionalSemitones !== 0) {
+        try {
+            const extra = Interval.fromSemitones(additionalSemitones);
+            const sum = Interval.add(interval, extra);
+            if (sum) interval = sum;
+        } catch (e) {
+            console.warn("Error adding semitone shift", e);
+        }
     }
 
     const parser = new DOMParser();

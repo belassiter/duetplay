@@ -1,3 +1,17 @@
+# 2026-02-01 12:10
+- Logic & UI Feature: Advanced Transposition Controls:
+  - **Feature**: Added Octave Shift and Global Key Transposition.
+    - **Octave Control**: Added per-part Octave Shift controls (Up/Down Arrows, +/- 5 Octaves).
+    - **Global Key**: Added a global transposition slider (-12 to +12 semitones).
+  - **Logic Updates**:
+    - **xmlTranspose.ts**: Updated `transposeMusicXML` to accept an `additionalSemitones` argument.
+    - **Calculation**: Used `tonal`'s `Interval.add` to combine relative instrument transposition with user-defined semitone shifts.
+    - **App.tsx pipeline**: Updated `renderScore` to sum `instrumentShift + octaveShift + globalShift` before calling transposition utility.
+  - **Testing**:
+    - Added `src/utils/transposeLogic.test.ts` to verify integration of Tonal logic and XML transposition with extra steps.
+    - Verified that instrument logic + octave logic combine correctly (+Octave + Bb Trumpet = +14 semitone shift effective?).
+      - *Correction*: Bb Trumpet is written M2 higher than sounding. If I take Concert C, and want it for Bb Trumpet, I transpose +M2. If I add +1 Octave (+12), I get +M9. The logic handles this composition.
+
 # 2026-02-01 11:00
 - Mobile UX & Modal Refinements:
     - **Zoom Controls**:

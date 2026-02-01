@@ -7,9 +7,9 @@ Here's a rough order to do development
 - [X] Display instrument name
 - [X] Song selection modal - simple
 - [X] Consider original transposition in mxl file
-- [ ] Zoom buttons
-- [ ] Transpose song
-- [ ] Adjust part's octave
+- [X] Zoom buttons
+- [X] Transpose song
+- [X] Adjust part's octave
 - [ ] Instrument selection, show min/max range (notation?)
 - [ ] Source mxl files
 - [ ] Deploy to prod

@@ -19,6 +19,10 @@ function App() {
   const [instrument1, setInstrument1] = useState<string>('none');
   const [instrument2, setInstrument2] = useState<string>('none');
   const [originalInstruments, setOriginalInstruments] = useState<{ part1: string, part2: string }>({ part1: 'none', part2: 'none' });
+  const [part1Octave, setPart1Octave] = useState<number>(0);
+  const [part2Octave, setPart2Octave] = useState<number>(0);
+  const [globalTranspose, setGlobalTranspose] = useState<number>(0);
+  
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
@@ -107,45 +111,49 @@ function App() {
             
             if (scoreFile && zipContent.files[scoreFile]) {
                 const xmlText = await zipContent.files[scoreFile].async('string');
+                let processedXML = xmlText;
                 
-                // Get Instrument Defs
+                // Get Inst 1
                 const inst1 = instruments.find(i => i.value === instrument1);
                 const orig1 = instruments.find(i => i.value === originalInstruments.part1);
                 
-                let processedXML = xmlText;
-                
-                if (inst1 && inst1.value !== 'none' && inst1.value !== originalInstruments.part1) {
-                    // Apply transposition to Part 1 / Staff 1
-                    // We need relative transposition: from Original -> Target.
-                    // If no original is known (or none), we assume C (Piano/Flute/Violin etc) or simply use target transpose logic if original was untransposed.
-                    
-                    // Actually, existing logic likely assumes source is C.
-                    // If source is Trumpet (Bb), transpose is -2.
-                    // If target is Alto Sax (Eb), transpose is +9 from C (Wait, Alto is Eb, sounds M6 lower, so -9).
-                    
-                    // Let's pass the raw steps difference to a modified transpose function or handle it here?
-                    // Currently transposeMusicXML takes 'interval' string which Tonal parses.
-                    
-                    // We need to calculate the interval from Source to Target.
-                    // Since specific interval math is complex with strings like "-M2", "-P5", 
-                    // we might need a better way if we want full relative support.
-                    
-                    // HOWEVER, if 'originalInstruments.part1' is 'none' (default), we treat source as Concert C.
-                    // If 'originalInstruments.part1' is 'bb_trumpet', we treat source as Bb.
-                    
-                    // Let's defer strict interval math and just pass both to transposeMusicXML if we update it?
-                    // OR: update transposeMusicXML to accept sourceTranspose and targetTranspose.
-                    
-                    processedXML = transposeMusicXML(processedXML, inst1.transpose, inst1.clef, '1', orig1?.transpose || 'P1', inst1.name);
+                const hasShift1 = part1Octave !== 0 || globalTranspose !== 0;
+
+                if (inst1 && (inst1.value !== 'none' || hasShift1)) {
+                    const p1TotalShift = (part1Octave * 12) + globalTranspose;
+                    const targetClef = inst1.value === 'none' ? undefined : inst1.clef;
+
+                    processedXML = transposeMusicXML(
+                        processedXML, 
+                        inst1.transpose, 
+                        targetClef, 
+                        '1', 
+                        orig1?.transpose || 'P1', 
+                        inst1.value === 'none' ? undefined : inst1.name,
+                        p1TotalShift
+                    );
                 }
                 
                 // Get Inst 2
                 const inst2 = instruments.find(i => i.value === instrument2);
                 const orig2 = instruments.find(i => i.value === originalInstruments.part2);
+                
+                const hasShift2 = part2Octave !== 0 || globalTranspose !== 0;
 
-                if (inst2 && inst2.value !== 'none' && inst2.value !== originalInstruments.part2) {
+                if (inst2 && (inst2.value !== 'none' || hasShift2 || (inst2.value !== originalInstruments.part2 && inst2.value !== 'none'))) {
+                     const p2TotalShift = (part2Octave * 12) + globalTranspose;
+                     const targetClef = inst2.value === 'none' ? undefined : inst2.clef;
+
                      // Apply to Part 2 / Staff 2
-                     processedXML = transposeMusicXML(processedXML, inst2.transpose, inst2.clef, '2', orig2?.transpose || 'P1', inst2.name);
+                     processedXML = transposeMusicXML(
+                        processedXML, 
+                        inst2.transpose, 
+                        targetClef, 
+                        '2', 
+                        orig2?.transpose || 'P1', 
+                        inst2.value === 'none' ? undefined : inst2.name,
+                        p2TotalShift
+                    );
                 }
                 
                 // Set options BEFORE loading data to ensure layout is calculated correctly during load/render
@@ -173,7 +181,7 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape]);
+  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape, part1Octave, part2Octave, globalTranspose]);
 
 
   const loadScore = useCallback(async (filename: string) => {
@@ -328,6 +336,12 @@ function App() {
         onInstrument1Change={setInstrument1}
         onInstrument2Change={setInstrument2}
         isMobile={isMobile}
+        part1Octave={part1Octave}
+        onPart1OctaveChange={setPart1Octave}
+        part2Octave={part2Octave}
+        onPart2OctaveChange={setPart2Octave}
+        globalTranspose={globalTranspose}
+        onGlobalTransposeChange={setGlobalTranspose}
       />
       
       <SongSelectorPanel 
