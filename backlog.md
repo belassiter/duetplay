@@ -11,20 +11,20 @@ Here's a rough order to do development
 - [X] Transpose song
 - [X] Adjust part's octave
 - [X] Instrument selection, show min/max range (notation?)
+- [X] Mobile-vertical layout
+- [X] Mobile horizontal layout
 - [ ] Handle mid-song key changes (known bug, e.g. I Get Around)
 - [ ] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
 - [ ] Deploy to prod
-- [ ] Custom instrument
-- [X] Mobile-vertical layout
-- [X] Mobile horizontal layout
-- [ ] Tablet layout
-- [ ] Import user's mxl file
-- [ ] Half page turns
-- [ ] Larger ensemble size
 - [ ] Only display one part (play on two separate devices)
+- [ ] Custom instrument
+- [ ] Larger ensemble size
+- [ ] Import user's mxl file
+- [ ] Tablet layout
+- [ ] Half page turns
 - [ ] Range handling and suggestions
 - [ ] Playback (duets for one person)
 - [ ] 
-- [ ] 
+- [ ] Add to EsQ website/library
 - [ ] 
 - [ ] 

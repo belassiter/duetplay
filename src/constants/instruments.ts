@@ -35,6 +35,8 @@ export const instruments: Instrument[] = [
     { name: 'C Trumpet', label: 'C Trumpet', value: 'c_trumpet', transpose: 'P1', clef: 'treble' },
     { name: 'Bb Trumpet', label: 'Bb Trumpet (sounds -M2, treble clef)', value: 'bb_trumpet', transpose: 'M2', clef: 'treble', aliases: ['Trumpet'] },
     { name: 'Horn in F', label: 'Horn in F (sounds -P5, treble clef)', value: 'horn_f', transpose: 'P5', clef: 'treble' },
+    { name: 'Euphonium', label: 'Euphonium (bass clef)', value: 'euphonium', transpose: 'P1', clef: 'bass', aliases: ['Baritone BC', 'Baritone Bass Clef'] },
+    { name: 'Baritone', label: 'Baritone (sounds -M9, treble clef)', value: 'baritone', transpose: 'M9', clef: 'treble', aliases: ['Baritone', 'Baritone TC'] },
     { name: 'Trombone', label: 'Trombone', value: 'trombone', transpose: 'P1', clef: 'bass' },
     { name: 'Bass Trombone', label: 'Bass Trombone', value: 'bass_trombone', transpose: 'P1', clef: 'bass' },
     { name: 'Tuba', label: 'Tuba', value: 'tuba', transpose: 'P1', clef: 'bass' },
@@ -44,5 +46,7 @@ export const instruments: Instrument[] = [
     { name: 'Contrabass', label: 'Contrabass (sounds -8va, bass clef)', value: 'contrabass', transpose: 'P8', clef: 'bass' },
     { name: 'Vibraphone', label: 'Vibraphone', value: 'vibraphone', transpose: 'P1', clef: 'treble' },
     { name: 'Marimba', label: 'Marimba', value: 'marimba', transpose: 'P1', clef: 'treble' },
-    { name: 'Glockenspiel', label: 'Glockenspiel (sounds +15ma, treble clef)', value: 'glockenspiel', transpose: '-15ma', clef: 'treble' }
+    { name: 'Glockenspiel', label: 'Glockenspiel (sounds +15ma, treble clef)', value: 'glockenspiel', transpose: '-15ma', clef: 'treble' },
+    { name: 'Guitar', label: 'Guitar (sounds -8va, treble clef)', value: 'guitar', transpose: 'P8', clef: 'treble' },
+    { name: 'Tenor Clef', label: 'Tenor Clef', value: 'tenor_clef', transpose: 'P1', clef: 'tenor' }
 ];
