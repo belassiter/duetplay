@@ -11,8 +11,8 @@ export interface Instrument {
 
 export const instruments: Instrument[] = [
     { name: 'None', label: 'None', value: 'none', transpose: 'P1', clef: 'treble' },
-    { name: 'Piano (Right Hand)', label: 'Piano (Right Hand)', value: 'piano_rh', transpose: 'P1', clef: 'treble' },
-    { name: 'Piano (Left Hand)', label: 'Piano (Left Hand)', value: 'piano_lh', transpose: 'P1', clef: 'bass' },
+    { name: 'Piano RH', label: 'Piano RH', value: 'piano_rh', transpose: 'P1', clef: 'treble' },
+    { name: 'Piano LH', label: 'Piano LH', value: 'piano_lh', transpose: 'P1', clef: 'bass' },
     { name: 'Piccolo', label: 'Piccolo (sounds +8va, treble clef)', value: 'piccolo', transpose: '-8va', clef: 'treble' },
     { name: 'Flute', label: 'Flute', value: 'flute', transpose: 'P1', clef: 'treble' },
     { name: 'Alto Flute', label: 'Alto Flute (sounds -P4, treble clef)', value: 'alto_flute', transpose: 'P4', clef: 'treble' },

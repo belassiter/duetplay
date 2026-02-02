@@ -7,6 +7,20 @@ import userEvent from '@testing-library/user-event';
 // Mock the hook
 vi.mock('../hooks/useVerovio');
 
+// Mock Data
+vi.mock('../data/songs.json', () => ({
+    default: [
+        {
+            id: 'test_song',
+            filename: 'test.mxl',
+            title: 'Test Song',
+            instruments: ['Flute', 'Violin'], // Distinct defaults
+            style: 'Test',
+            difficulty: 'Easy'
+        }
+    ]
+}));
+
 // Mock JSZip
 vi.mock('jszip', () => {
     return {
@@ -64,8 +78,11 @@ describe('App Transpose', () => {
         await user.click(selectButton);
 
         // 2. Select Instrument
-        const triggers = screen.getAllByText('None');
-        const part1Trigger = triggers[0];
+        // Default in mock is "Flute" for Part 1.
+        // We look for the display text which might be in the selector.
+        // The InstrumentSelector component shows just the name.
+        const triggers = screen.getAllByText('Flute');
+        const part1Trigger = triggers[0]; 
         await user.click(part1Trigger);
 
         // 3. Search for "Trumpet"

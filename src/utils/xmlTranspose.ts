@@ -2,7 +2,8 @@ import { Note, Key, Interval } from 'tonal';
 
 const normalizeInterval = (interval: string): string => {
     // Handle user-friendly interval notation (e.g., "8va", "M6+8va")
-    if (interval === 'P1') return 'P1';
+    // Tonal may return 1P for unison
+    if (interval === 'P1' || interval === '1P') return 'P1';
 
     let base = interval;
     let direction = 1;
@@ -207,44 +208,50 @@ export const transposeMusicXML = (
         }
     }
 
+    // 4. Optimization: If Interval is P1 and no extra semitones, skip Notes and Key Modifictions
+    // This preserves original XML structures (like explicit <transpose> tags) which might be critical for display.
+    // Tonal.js might return '1P' or 'P1' for perfect unison.
+    const isIdentityTransposition = (interval === 'P1' || interval === '1P') && additionalSemitones === 0;
+
     // Attribute: <attributes><key><fifths>...</fifths></key></attributes>
     // Note: <note><pitch><step>C</step><alter>1</alter><octave>4</octave></pitch></note>
 
     // 1. Transpose Key Signatures
     // MusicXML uses "fifths" (number of sharps/flats). -1 = 1 flat (F), 1 = 1 sharp (G).
-    // Source Key Tracking
+
     const keys = Array.from(part.getElementsByTagName('key'));
-    
-    let sourceKeyRoot = 'C'; // Default
-    
-    // Find the Source Key for this specific staff
+
+    // Determine Initial Target Key Root (for Note Accidental Context)
+    // We default to the first key found, or C if none.
+    // As we iterate measures properly, we should update this, but having a default prevents crashes.
+    let sourceKeyRoot = 'C';
     let sourceKeyNode = keys.find(k => k.getAttribute('number') === internalTargetStaff);
-    // Fallback: Global key (no number)
     if (!sourceKeyNode) sourceKeyNode = keys.find(k => !k.hasAttribute('number'));
-    // Fallback: Any key (simplistic)
     if (!sourceKeyNode && keys.length > 0) sourceKeyNode = keys[0];
 
     if (sourceKeyNode) {
         const fifths = parseInt(sourceKeyNode.getElementsByTagName('fifths')[0]?.textContent || '0');
         sourceKeyRoot = Note.transposeFifths('C', fifths);
     }
-    
-    // Calculate new Key Root
     const targetKeyRoot = Note.transpose(sourceKeyRoot, interval);
     
-    // Update Keys
-    // We must handle splitting global key into <key number="1"> and <key number="2">
-    // if the part has 2 staves.
+    // Instead of calculating one target key for the whole piece,
+    // we must iterate through EACH key change and transpose it individually relative to itself.
+    // keys array contains all key signatures for the part.
+    
+    if (!isIdentityTransposition) {
     keys.forEach(key => {
         // Validation: Check if this key belongs to our target staff
         const keyNumber = key.getAttribute('number');
+
 
         // Logic A: Key is explicitly for OTHER staff -> Skip
         if (keyNumber && keyNumber !== internalTargetStaff) return;
         
         // Logic B: Key is Global (no number).
-        // If we are targeting Staff 2, and key is global -> We must Split it?
-        if (!keyNumber) {
+        // If we are targeting Staff 2, and key is global -> We must Split it
+        // ONLY if the part actually has multiple staves. If it's a single staff part, global key applies to it.
+        if (!keyNumber && partHasMultipleStaves) {
             // It's global. We need to split it so we can modify ONE copy.
             const otherStaff = internalTargetStaff === '1' ? '2' : '1';
             
@@ -259,15 +266,36 @@ export const transposeMusicXML = (
         }
         
         // Now update the Key (it matches internalTargetStaff)
-        if (key.getAttribute('number') === internalTargetStaff) { 
-             const newFifths = Key.majorKey(targetKeyRoot).alteration;
+        if (key.getAttribute('number') === internalTargetStaff || (!key.hasAttribute('number') && internalTargetStaff === '1')) { 
+             // 1. Get CURRENT fifths
+             const currentFifthsStr = key.getElementsByTagName('fifths')[0]?.textContent || '0';
+             const currentFifths = parseInt(currentFifthsStr);
+             
+             // 2. Determine CURRENT Root (e.g. 1 sharp -> G)
+             const currentRoot = Note.transposeFifths('C', currentFifths);
+             
+             // 3. Transpose Root by Interval (e.g. G + M2 -> A)
+             const targetRoot = Note.transpose(currentRoot, interval);
+             
+             // 4. Get NEW Fifths from New Root (e.g. A -> 3 sharps)
+             let newFifths = Key.majorKey(targetRoot).alteration;
+             
+             // Enharmonic simplification for extreme keys
+             // e.g. -8 (Fb Major) -> +4 (E Major)
+             // e.g. +8 (G# Major) -> -4 (Ab Major)
+             if (newFifths < -6) {
+                 newFifths += 12;
+             } else if (newFifths > 6) {
+                 newFifths -= 12;
+             }
+
              const fifthsEl = key.getElementsByTagName('fifths')[0];
              if (fifthsEl) fifthsEl.textContent = newFifths.toString();
         }
         
         // Inject <transpose> element to Attributes
         const attributes = key.parentElement;
-        if (attributes && key.getAttribute('number') === internalTargetStaff) {
+        if (attributes && (key.getAttribute('number') === internalTargetStaff || (!key.hasAttribute('number') && internalTargetStaff === '1'))) {
              // Check if <transpose> exists
              let transposeEl = attributes.getElementsByTagName('transpose')[0];
              if (!transposeEl) {
@@ -290,21 +318,32 @@ export const transposeMusicXML = (
              const diaStep = (intervalNum - 1) * (isDescending ? -1 : 1);
              
              // Invert for <transpose> tag (Written -> Sounding)
+             // If we transpose UP (e.g. for Trumpet), the sounding pitch is DOWN.
              const xmlChrom = -1 * (semitones || 0);
              const xmlDia = -1 * diaStep;
 
-             const diatonicEl = doc.createElement('diatonic');
-             diatonicEl.textContent = xmlDia.toString();
+             // Create elements
              const chromaticEl = doc.createElement('chromatic');
              chromaticEl.textContent = xmlChrom.toString();
              
+             const diatonicEl = doc.createElement('diatonic');
+             diatonicEl.textContent = xmlDia.toString();
+
              transposeEl.appendChild(diatonicEl);
              transposeEl.appendChild(chromaticEl);
+
+             // Octave Change?
+             // Add logic if needed
         }
-        
-        // --- 1b. Update Clef if Requested ---
-        if (targetClef) {
-             const attributes = key.parentElement;
+    });
+    }
+
+    // --- 1b. Update Clef if Requested ---
+    if (targetClef) {
+         // Because we might have skipped the Key Loop, we iterate Attributes for Clefs
+         const attributesList = Array.from(part.getElementsByTagName('attributes'));
+         attributesList.forEach(attributes => {
+             // const attributes = key.parentElement; // OLD Logic relied on Key.
              if (attributes) {
                  const clefs = Array.from(attributes.getElementsByTagName('clef'));
                  let clefEl = clefs.find(c => c.getAttribute('number') === internalTargetStaff);
@@ -340,8 +379,8 @@ export const transposeMusicXML = (
                  clefEl.appendChild(signEl);
                  clefEl.appendChild(lineEl);
              }
-        }
-    });
+        }); // End Attributes Loop
+    } // End Clef Update
 
     // 2. Transpose Notes (Iterate by Measure to track accidentals)
     const measures = Array.from(part.getElementsByTagName('measure'));
@@ -360,6 +399,7 @@ export const transposeMusicXML = (
             return 0;
     };
 
+    if (!isIdentityTransposition) {
     measures.forEach(measure => {
         const measureState = new Map<string, number>(); // Key: "${step}${octave}", Value: alter (int)
 
@@ -476,6 +516,7 @@ export const transposeMusicXML = (
             }
         });
     });
+    }
 
     return new XMLSerializer().serializeToString(doc);
 };

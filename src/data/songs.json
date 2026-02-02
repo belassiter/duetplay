@@ -6,8 +6,8 @@
     "composer": "J.S. Bach",
     "arranger": "",
     "instruments": [
-      "Piano (right hand)",
-      "Piano (left hand)"
+      "Piano RH",
+      "Piano LH"
     ],
     "difficulty": "Medium-Hard",
     "style": "Classical"
@@ -50,5 +50,44 @@
     ],
     "difficulty": "Medium",
     "style": "Pop"
+  },
+  {
+    "id": "joyous_duet_no2_hazlerig",
+    "filename": "joyous_duet_no2_hazlerig.mxl",
+    "title": "Joyous Duet No. 2",
+    "composer": "Sylvia E. Hazlerig",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trombone"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
+    "id": "six_duos_no1_Ernst_Paudert",
+    "filename": "six_duos_no1_Ernst_Paudert.mxl",
+    "title": "Six Duets, No. 1: Allegro moderato",
+    "composer": "Ernst Paudert",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
+    "id": "trumpet_canon_fugue_rondeau",
+    "filename": "trumpet_canon_fugue_rondeau.mxl",
+    "title": "Trumpet Canon & Fugue No.1155",
+    "composer": "Michel Rondeau",
+    "arranger": "",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2"
+    ],
+    "difficulty": "",
+    "style": ""
   }
 ]

@@ -8,12 +8,15 @@ import SidePanel from './components/SidePanel';
 import SongSelectorPanel from './components/SongSelectorPanel';
 import { instruments } from './constants/instruments';
 import type { Song } from './types/song';
+import songsData from './data/songs.json';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
   const [svg, setSvg] = useState<string>('');
+  const [processedXml, setProcessedXml] = useState<string>('');
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('');
+  const [scoreVersion, setScoreVersion] = useState<number>(0);
   
   // Instrument State
   const [instrument1, setInstrument1] = useState<string>('none');
@@ -156,11 +159,14 @@ function App() {
                     );
                 }
                 
+                setProcessedXml(processedXML);
+
                 // Set options BEFORE loading data to ensure layout is calculated correctly during load/render
                 verovioToolkit.setOptions({
                     scale: scale,
                     adjustPageHeight: true,
                     pageWidth: Math.floor((safeWidth * 100) / scale),
+                    pageHeight: 60000,
                     transpose: ''
                 });
 
@@ -183,34 +189,69 @@ function App() {
       }
   }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape, part1Octave, part2Octave, globalTranspose]);
 
+  const mapInstrumentNameToValue = useCallback((name: string): string => {
+      if (!name) return 'none';
+      const cleanName = name.trim().toLowerCase();
+      const inst = instruments.find(i => 
+          i.name.toLowerCase() === cleanName || 
+          i.value.toLowerCase() === cleanName || 
+          (i.aliases && i.aliases.some(a => a.toLowerCase() === cleanName)) ||
+          i.label.toLowerCase().includes(cleanName)
+      );
+      return inst ? inst.value : 'none';
+  }, []);
 
   const loadScore = useCallback(async (filename: string) => {
         setStatus('Loading score...');
+        // Clear current data to prevent rendering old score with new settings
+        fileDataRef.current = null; 
         try {
             const response = await fetch(`/${filename}`); // Public folder access
             if (!response.ok) throw new Error(`Fetch error: ${response.statusText}`);
             const data = await response.arrayBuffer();
             fileDataRef.current = data;
-            renderScore();
+            setScoreVersion(v => v + 1);
         } catch (e) {
             console.error(e);
             setStatus('Error loading file');
             setIsRendering(false);
         }
-  }, [renderScore]);
+  }, []);
+
+  const hasInitialLoad = useRef(false);
 
   // Initial Load
   useEffect(() => {
+    if (hasInitialLoad.current) return;
+
     if (!loading && verovioToolkit && !fileDataRef.current) {
-        loadScore('bach_invention_11.mxl');
-    } else if (!loading && verovioToolkit && fileDataRef.current) {
+        hasInitialLoad.current = true;
+        // Set default instruments for the starting song
+        const songs = songsData as Song[];
+        const defaultSong = songs.find(s => s.id === 'bach_invention_11') || songs[0];
+        if (defaultSong) {
+             const p1Val = defaultSong.instruments[0] ? mapInstrumentNameToValue(defaultSong.instruments[0]) : 'none';
+             const p2Val = defaultSong.instruments[1] ? mapInstrumentNameToValue(defaultSong.instruments[1]) : 'none';
+             
+             // Batch updates
+             setInstrument1(p1Val);
+             setInstrument2(p2Val);
+             setOriginalInstruments({ part1: p1Val, part2: p2Val });
+             loadScore(defaultSong.filename);
+        }
+    }
+  }, [loading, verovioToolkit, loadScore, mapInstrumentNameToValue]);
+
+  // Re-render when data/params change
+  useEffect(() => {
+    if (!loading && verovioToolkit && fileDataRef.current) {
         // Debounce re-render slightly for UX
         const timeoutId = setTimeout(() => {
             renderScore();
         }, 100);
         return () => clearTimeout(timeoutId);
     }
-  }, [loading, verovioToolkit, renderScore, loadScore]);
+  }, [loading, verovioToolkit, renderScore, scoreVersion]); // Removed fileDataRef.current check from deps as it's a ref
 
   // Handle Keyboard Scrolling
   useEffect(() => {
@@ -236,18 +277,6 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const mapInstrumentNameToValue = useCallback((name: string): string => {
-      if (!name) return 'none';
-      const cleanName = name.trim().toLowerCase();
-      const inst = instruments.find(i => 
-          i.name.toLowerCase() === cleanName || 
-          i.value.toLowerCase() === cleanName || 
-          (i.aliases && i.aliases.some(a => a.toLowerCase() === cleanName)) ||
-          i.label.toLowerCase().includes(cleanName)
-      );
-      return inst ? inst.value : 'none';
   }, []);
 
   const handleSongSelect = (song: Song) => {
@@ -342,6 +371,7 @@ function App() {
         onPart2OctaveChange={setPart2Octave}
         globalTranspose={globalTranspose}
         onGlobalTransposeChange={setGlobalTranspose}
+        xmlString={processedXml}
       />
       
       <SongSelectorPanel 

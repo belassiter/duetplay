@@ -10,12 +10,13 @@ Here's a rough order to do development
 - [X] Zoom buttons
 - [X] Transpose song
 - [X] Adjust part's octave
-- [ ] Instrument selection, show min/max range (notation?)
-- [ ] Source mxl files
+- [X] Instrument selection, show min/max range (notation?)
+- [ ] Handle mid-song key changes (known bug, e.g. I Get Around)
+- [ ] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
 - [ ] Deploy to prod
 - [ ] Custom instrument
-- [ ] Mobile-vertical layout
-- [ ] Mobile horizontal layout
+- [X] Mobile-vertical layout
+- [X] Mobile horizontal layout
 - [ ] Tablet layout
 - [ ] Import user's mxl file
 - [ ] Half page turns

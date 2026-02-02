@@ -2,6 +2,7 @@ import React from 'react';
 import { X, ArrowUp, ArrowDown } from 'lucide-react';
 import InstrumentSelector from './InstrumentSelector';
 import { instruments } from '../constants/instruments';
+import RangePreview from './RangePreview';
 
 interface SidePanelProps {
     isOpen: boolean;
@@ -20,6 +21,9 @@ interface SidePanelProps {
     onPart2OctaveChange: (val: number) => void;
     globalTranspose: number;
     onGlobalTransposeChange: (val: number) => void;
+    
+    // Range Preview
+    xmlString: string;
 }
 
 const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: number) => void }) => (
@@ -59,9 +63,15 @@ const SidePanel: React.FC<SidePanelProps> = ({
     part2Octave,
     onPart2OctaveChange,
     globalTranspose,
-    onGlobalTransposeChange
+    onGlobalTransposeChange,
+    xmlString
 }) => {
     const [activeSelector, setActiveSelector] = React.useState<'none' | 'part1' | 'part2'>('none');
+
+    const getClef = (instVal: string) => {
+        const inst = instruments.find(i => i.value === instVal);
+        return inst ? inst.clef : 'treble';
+    };
 
     // Close selectors when panel closes
     React.useEffect(() => {
@@ -116,6 +126,15 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     />
                     
                     <OctaveControl value={part1Octave} onChange={onPart1OctaveChange} />
+                    
+                    {isOpen && (
+                        <RangePreview 
+                            label="Part 1" 
+                            xmlString={xmlString} 
+                            staffId="1" 
+                            clef={getClef(instrument1)} 
+                        />
+                    )}
 
                     <InstrumentSelector 
                         label={getLabel('part2')}
@@ -127,6 +146,15 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
                     <OctaveControl value={part2Octave} onChange={onPart2OctaveChange} />
                     
+                    {isOpen && (
+                        <RangePreview 
+                            label="Part 2" 
+                            xmlString={xmlString} 
+                            staffId="2" 
+                            clef={getClef(instrument2)} 
+                        />
+                    )}
+
                     <hr className="my-6 border-gray-200" />
                     
                     <div className="mb-4">
