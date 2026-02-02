@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
-import { Loader2, Music, RotateCcw } from 'lucide-react';
-import { transposeMusicXML } from './utils/xmlTranspose';
+import { Loader2, Music, RotateCcw, Eye } from 'lucide-react';
+import { transposeMusicXML, isolatePart } from './utils/xmlTranspose';
 import JSZip from 'jszip';
 import './App.css'
 import SidePanel from './components/SidePanel';
@@ -17,6 +17,7 @@ function App() {
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('');
   const [scoreVersion, setScoreVersion] = useState<number>(0);
+  const [viewMode, setViewMode] = useState<'score' | 'part1' | 'part2'>('score');
   
   // Instrument State
   const [instrument1, setInstrument1] = useState<string>('none');
@@ -159,6 +160,13 @@ function App() {
                     );
                 }
                 
+                // --- View Mode Filtering ---
+                if (viewMode === 'part1') {
+                    processedXML = isolatePart(processedXML, 0);
+                } else if (viewMode === 'part2') {
+                    processedXML = isolatePart(processedXML, 1);
+                }
+                
                 setProcessedXml(processedXML);
 
                 // Set options BEFORE loading data to ensure layout is calculated correctly during load/render
@@ -187,11 +195,12 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape, part1Octave, part2Octave, globalTranspose]);
+  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape, part1Octave, part2Octave, globalTranspose, viewMode]);
 
   const mapInstrumentNameToValue = useCallback((name: string): string => {
       if (!name) return 'none';
-      const cleanName = name.trim().toLowerCase();
+      // Normalize: remove trailing numbers (e.g. "Trumpet 1" -> "Trumpet") and whitespace
+      const cleanName = name.replace(/\s*\d+$/, '').trim().toLowerCase();
       const inst = instruments.find(i => 
           i.name.toLowerCase() === cleanName || 
           i.value.toLowerCase() === cleanName || 
@@ -337,6 +346,17 @@ function App() {
                 <span className="text-xs text-gray-700 w-8 text-right font-variant-numeric tabular-nums">{zoomLevel}%</span>
             </div>
             
+            <button 
+                onClick={() => setViewMode(prev => prev === 'score' ? 'part1' : (prev === 'part1' ? 'part2' : 'score'))}
+                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap min-w-[90px] justify-center"
+                title="Toggle View: Score / Part 1 / Part 2"
+            >
+                <Eye size={18} />
+                <span className="inline">
+                    {viewMode === 'score' ? 'Score' : (viewMode === 'part1' ? 'Part 1' : 'Part 2')}
+                </span>
+            </button>
+
             <button 
                 onClick={() => setIsSongPanelOpen(true)}
                 className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap"

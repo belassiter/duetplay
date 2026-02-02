@@ -63,6 +63,133 @@ const getRelativeInterval = (targetTrans: string, sourceTrans: string): string =
    return Interval.distance(noteSource, noteTarget);
 }
 
+// Helper: Explode Grand Staff (1 Part, 2 Staves) into 2 Parts (1 Staff each)
+// This standardizes the XML structure so that "Piano RH" and "Piano LH" are treated as distinct parts P1 and P2.
+const explodeGrandStaff = (doc: Document): void => {
+    const partElements = Array.from(doc.getElementsByTagName('part'));
+    const scoreParts = Array.from(doc.getElementsByTagName('score-part'));
+
+    // Check conditions: 1 Part, 1 Score Part, Multi-Staves
+    if (partElements.length !== 1 || scoreParts.length !== 1) return;
+
+    const originalPart = partElements[0];
+    const originalScorePart = scoreParts[0];
+
+    // Check Staves count
+    const stavesEl = originalPart.getElementsByTagName('staves')[0];
+    const stavesCount = stavesEl ? parseInt(stavesEl.textContent || '1') : 1;
+    
+    if (stavesCount <= 1) return;
+
+    // --- EXECUTE EXPLOSION ---
+    
+    // 1. Create New Part IDs
+    const idBase = originalPart.getAttribute('id') || 'P1';
+    const id1 = `${idBase}-Staff1`;
+    const id2 = `${idBase}-Staff2`;
+
+    // 2. Clone Score Parts (Metadata)
+    const scorePart1 = originalScorePart.cloneNode(true) as Element;
+    scorePart1.setAttribute('id', id1);
+    const name1 = scorePart1.getElementsByTagName('part-name')[0];
+    if (name1) name1.textContent = (name1.textContent || '') + ' (High)';
+
+    const scorePart2 = originalScorePart.cloneNode(true) as Element;
+    scorePart2.setAttribute('id', id2);
+    const name2 = scorePart2.getElementsByTagName('part-name')[0];
+    if (name2) name2.textContent = (name2.textContent || '') + ' (Low)';
+
+    // Update <part-list>
+    originalScorePart.parentElement?.insertBefore(scorePart1, originalScorePart);
+    originalScorePart.parentElement?.insertBefore(scorePart2, originalScorePart);
+    originalScorePart.remove(); // Remove original "Piano" definition
+
+    // 3. Create New Parts (Content)
+    // We clone the original part twice, then filter down to the specific staff for each.
+    
+    // --- Helper to Filter a Part to a Single Staff ---
+    const filterToStaff = (part: Element, targetStaff: number) => {
+        // Set staves to 1
+        const sEl = part.getElementsByTagName('staves')[0];
+        if (sEl) sEl.textContent = '1';
+
+        const measures = Array.from(part.getElementsByTagName('measure'));
+        measures.forEach(measure => {
+             // Remove explicitly other-staff notes
+             const notes = Array.from(measure.getElementsByTagName('note'));
+             notes.forEach(note => {
+                 const staff = note.getElementsByTagName('staff')[0];
+                 const staffNum = staff ? parseInt(staff.textContent || '1') : 1;
+                 
+                 // If default (no staff tag), assume it belongs to Staff 1
+                 // So if we want Staff 2, we remove notes without tag (assuming they are Staff 1)
+                 // NOTE: This is heuristic.
+                 const effectiveStaff = staff ? staffNum : 1;
+
+                 if (effectiveStaff !== targetStaff) {
+                     note.remove();
+                 } else {
+                     // Normalize staff tag to 1
+                     if (staff) staff.textContent = '1';
+                 }
+             });
+
+             // Attributes / Clefs
+             const attributes = Array.from(measure.getElementsByTagName('attributes'));
+             attributes.forEach(attr => {
+                 const clefs = Array.from(attr.getElementsByTagName('clef'));
+                 
+                 // Remove clefs not for this staff
+                 clefs.forEach(clef => {
+                     const num = clef.getAttribute('number');
+                     const numInt = num ? parseInt(num) : 1;
+                     if (numInt !== targetStaff) {
+                         clef.remove();
+                     } else {
+                         clef.setAttribute('number', '1');
+                     }
+                 });
+                 // If no clef left, maybe we should've kept one? 
+                 // Usually attributes has multiple children.
+             });
+             
+             // Remove Backups/Forwards (Linearize)
+             Array.from(measure.getElementsByTagName('backup')).forEach(el => el.remove());
+             Array.from(measure.getElementsByTagName('forward')).forEach(el => el.remove());
+             
+             // Remove Directions (Dynamics etc) not for this staff
+              const directions = Array.from(measure.getElementsByTagName('direction'));
+              directions.forEach(dir => {
+                    const staff = dir.getElementsByTagName('staff')[0];
+                    if (staff) {
+                         if (parseInt(staff.textContent || '1') !== targetStaff) {
+                             dir.remove();
+                         } else {
+                             staff.textContent = '1';
+                         }
+                    } else {
+                        // If no staff, it's ambiguous. Keep it usually? 
+                        // Or assume Staff 1. 
+                        // For now, keep.
+                    }
+              });
+        });
+    };
+
+    const part1 = originalPart.cloneNode(true) as Element;
+    part1.setAttribute('id', id1);
+    filterToStaff(part1, 1);
+
+    const part2 = originalPart.cloneNode(true) as Element;
+    part2.setAttribute('id', id2);
+    filterToStaff(part2, 2);
+
+    // Inject New Parts
+    originalPart.parentElement?.insertBefore(part1, originalPart);
+    originalPart.parentElement?.insertBefore(part2, originalPart);
+    originalPart.remove();
+};
+
 export const transposeMusicXML = (
     xmlString: string, 
     targetTranspose: string, 
@@ -72,12 +199,11 @@ export const transposeMusicXML = (
     targetPartName?: string,
     additionalSemitones: number = 0
 ): string => {
-    // Calculate relative interval
+    // ... Interval Logic ...
     let interval = 'P1';
     if (targetTranspose !== sourceTranspose) {
         interval = getRelativeInterval(targetTranspose, sourceTranspose);
     } else {
-        // Just normalize existing if P1?
         interval = normalizeInterval('P1');
     }
 
@@ -93,6 +219,11 @@ export const transposeMusicXML = (
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "application/xml");
+    
+    // --- STEP 0: NORMALIZE GRAND STAFF ---
+    // If we detect a Grand Staff (Single Part, Multi Staves), we explode it into 2 separate parts.
+    // This allows them to be targeted and labeled individually.
+    explodeGrandStaff(doc);
 
     // DETERMINE TARGET PART vs STAFF
     const partElements = Array.from(doc.getElementsByTagName('part')); 
@@ -101,15 +232,13 @@ export const transposeMusicXML = (
     let internalTargetStaff = '1';
 
     if (partElements.length >= 2) {
-        // Multi-Part Score (e.g. Duet with P1, P2)
+        // Multi-Part Score (Standard or Exploded Grand Staff)
         // targetStaff refers to the Part Index in the UI (1, 2)
         const partIndex = parseInt(targetStaff) - 1;
         if (partIndex >= 0 && partIndex < partElements.length) {
             targetPart = partElements[partIndex];
         }
-        // In a multi-part scenario, each part typically has 1 staff.
-        // So we target staff 1 of that specific part.
-        internalTargetStaff = '1'; 
+        internalTargetStaff = '1';
     } else if (partElements.length === 1) {
         // Single Part Score (e.g. Piano)
         // targetStaff refers to Staff Number within that part (1=RH, 2=LH)
@@ -519,4 +648,160 @@ export const transposeMusicXML = (
     }
 
     return new XMLSerializer().serializeToString(doc);
+};
+
+export const isolatePart = (xmlString: string, partIndexToKeep: number): string => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlString, "application/xml");
+    
+    // Find all parts
+    const partElements = Array.from(doc.getElementsByTagName('part'));
+    const scoreParts = Array.from(doc.getElementsByTagName('score-part'));
+
+    // --- GRAND STAFF LOGIC (Single Part with 2 Staves) ---
+    // If there is only 1 part, but it has multiple staves, we treat partIndexToKeep as Staff Index (0=Staff 1, 1=Staff 2)
+    if (partElements.length === 1 && scoreParts.length === 1) {
+         const part = partElements[0];
+         // Check if grand staff
+         const stavesEl = part.getElementsByTagName('staves')[0];
+         const stavesCount = stavesEl ? parseInt(stavesEl.textContent || '1') : 1;
+
+         if (stavesCount > 1) {
+             // We need to isolate a STAFF within the part
+             // partIndexToKeep: 0 -> Keep Staff 1. 1 -> Keep Staff 2.
+             const staffToKeep = partIndexToKeep + 1;
+             
+             if (staffToKeep > stavesCount || staffToKeep < 1) return xmlString;
+             
+             // 1. Update <staves> to 1
+             stavesEl.textContent = '1';
+             
+             // 2. Remove Notes not on this staff
+             // Also need to handle <backup> and <forward> because removing one staff's notes from a polyphonic measure messes up timing.
+             // BUT, Grand Staff usually separates staves via <backup>.
+             // Typical: [Staff 1 Notes] <backup> [Staff 2 Notes].
+             
+             const measures = Array.from(part.getElementsByTagName('measure'));
+             
+             measures.forEach(measure => {
+                  // Strategy: 
+                  // If keeping Staff 1: Remove <backup>, <forward>, and any note with staff=2.
+                  // If keeping Staff 2: This is harder. We need to remove Staff 1 notes, AND remove the <backup> that rewinds for Staff 2.
+                  // Basically:
+                  // Staff 1 Notes -> Remove
+                  // <backup> -> Remove
+                  // Staff 2 Notes -> Keep (and set staff=1)
+                  
+                  // Helper: identify elements by expected staff context
+                  // MusicXML is sequential. "Voice" tracks cursor.
+                  // This is complex to do perfectly without a full parser.
+                  
+                  // AGGRESSIVE APPROACH:
+                  // Just remove explicitly tagged elements.
+                  
+                  const notes = Array.from(measure.getElementsByTagName('note'));
+                  notes.forEach(note => {
+                      const staff = note.getElementsByTagName('staff')[0];
+                      if (staff) {
+                          const staffNum = parseInt(staff.textContent || '1');
+                          if (staffNum !== staffToKeep) {
+                              note.remove();
+                          } else {
+                              // Relocate to Staff 1
+                              staff.textContent = '1';
+                          }
+                      } else {
+                          // No staff tag usually implies Staff 1. Use caution.
+                          if (staffToKeep !== 1) {
+                               // If we want Staff 2, and this note has no staff tag (defaults to 1), remove it.
+                               note.remove();
+                          }
+                      }
+                  });
+                  
+                  // Remove Clefs for other staves
+                  const attributes = measure.getElementsByTagName('attributes');
+                  Array.from(attributes).forEach(attr => {
+                      const clefs = Array.from(attr.getElementsByTagName('clef'));
+                      clefs.forEach(clef => {
+                          const num = clef.getAttribute('number');
+                          if (num && parseInt(num) !== staffToKeep) {
+                              clef.remove();
+                          } else if (num) {
+                              // Renumber to 1
+                              clef.setAttribute('number', '1');
+                          }
+                      });
+                  });
+                  
+                  // Direction / Dynamics?
+                  // Often have <staff> tag too. 
+                  const directions = Array.from(measure.getElementsByTagName('direction'));
+                  directions.forEach(dir => {
+                        const staff = dir.getElementsByTagName('staff')[0];
+                        if (staff) {
+                             if (parseInt(staff.textContent || '1') !== staffToKeep) {
+                                 dir.remove();
+                             } else {
+                                 staff.textContent = '1';
+                             }
+                        }
+                  });
+                  
+                  
+                  // CRITICAL: TIMING FIX
+                  // If we simply remove notes, we might break the timeline if the removed notes were the "primary" timeline 
+                  // and the kept notes were on a "backup" timeline.
+                  
+                  // If Keeping Staff 1:
+                  // We remove Staff 2. Staff 2 was likely after a <backup>. 
+                  // So we should remove the <backup> too.
+                  
+                  // If Keeping Staff 2:
+                  // We remove Staff 1. Staff 1 was likely FIRST.
+                  // If we remove Staff 1, we must ALSO remove the <backup> that followed it (which was meant to rewind).
+                  // Because now Staff 2 IS the first thing.
+                  
+                  // Conclusion: In a standard Grand Staff, simply removing ALL <backup> and <forward> tags 
+                  // usually linearizes the remaining staff correctly, assuming each staff sums to the full measure duration.
+                  
+                  const backups = Array.from(measure.getElementsByTagName('backup'));
+                  backups.forEach(el => el.remove());
+                  
+                  const forwards = Array.from(measure.getElementsByTagName('forward'));
+                  forwards.forEach(el => el.remove());
+             });
+             
+             const serializer = new XMLSerializer();
+             return serializer.serializeToString(doc);
+         }
+    }
+
+    // --- STANDARD MULTI-PART LOGIC ---
+    if (partIndexToKeep < 0 || partIndexToKeep >= partElements.length) return xmlString;
+
+    const keptPartId = partElements[partIndexToKeep].getAttribute('id');
+    
+    // Remove unwanted <part> elements from the DOM
+    partElements.forEach((el, index) => {
+        if (index !== partIndexToKeep) {
+            el.remove();
+        }
+    });
+
+    // Remove unwanted <score-part> definitions
+    // Note: score-part ID might not match part ID exactly (usually P1 matches P1, but good to be safe)
+    // Actually, in MusicXML, <part id="P1"> refers to <score-part id="P1">. They MUST match.
+    scoreParts.forEach(el => {
+        if (el.getAttribute('id') !== keptPartId) {
+            el.remove();
+        }
+    });
+    
+    // Also remove part-groups which might reference removed parts
+    const partGroups = Array.from(doc.getElementsByTagName('part-group'));
+    partGroups.forEach(el => el.remove());
+    
+    const serializer = new XMLSerializer();
+    return serializer.serializeToString(doc);
 };

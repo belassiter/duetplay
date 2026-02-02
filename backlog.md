@@ -16,7 +16,7 @@ Here's a rough order to do development
 - [ ] Handle mid-song key changes (known bug, e.g. I Get Around)
 - [ ] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
 - [ ] Deploy to prod
-- [ ] Only display one part (play on two separate devices)
+- [X] Only display one part (play on two separate devices)
 - [ ] Custom instrument
 - [ ] Larger ensemble size
 - [ ] Import user's mxl file

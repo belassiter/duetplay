@@ -1,3 +1,37 @@
+# 2026-02-02 12:30
+- Feature: Grand Staff Explosion.
+    - Problem: Users reported that Grand Staff scores (like Piano scores) were displaying combined instrument names ("Piano RH / Piano LH") incorrectly in the center, and single-part filtering was showing both names.
+    - Solution: Implemented `explodeGrandStaff` in `src/utils/xmlTranspose.ts`. This utility runs at the beginning of the transposition pipeline.
+    - Logic:
+        - Detects if the XML has 1 Part with >1 Staves.
+        - If so, it actively re-writes the DOM to split that single part into 2 separate Parts (P1-Staff1 and P1-Staff2).
+        - It clones the original part, filters the content (removing notes/clefs/attributes not relevant to the specific staff), and linearizes the measures (removing backups).
+        - It updates the `<part-list>` to define two distinct parts, appending "(High)" and "(Low)" to their default names (though these are overwritten by the App's instrument selection properly).
+    - Result: The application now treats a Piano score exactly like a Duet score (two distinct parts), allowing independent labeling, transposition, and visualization.
+
+# 2026-02-02 11:30
+- Improvement: Enhanced Part Selection for Grand Staff Scores (e.g., Piano).
+    - Problem: Users reported that selecting "Part 1" or "Part 2" for single-instrument scores (like Invention #11, which is one Piano part with two staves) did not work/split the staves.
+    - Solution: Updated `isolatePart` in `xmlTranspose.ts` to detect "Grand Staff" scenarios (Single Part with `<staves>2`).
+    - Logic:
+        - If the score has only 1 part but 2 Staves:
+            - "Part 1" mode isolates Staff 1 (Right Hand).
+            - "Part 2" mode isolates Staff 2 (Left Hand).
+        - The filter logic actively removes notes from the unwanted staff, neutralizes `<backup>`/`<forward>` tags to linearize the timeline, and updates the `<staves>` attribute to 1 to produce a clean single-staff presentation.
+    - Result: This allows "Piano" scores to be split into separate "RH" and "LH" views using the same UI logic as multi-instrument scores.
+
+# 2026-02-02 10:00
+- Feature: Added Part Selection Mode ("Score" / "Part 1" / "Part 2").
+    - Added `viewMode` state to `App.tsx` and a toggle button in the header.
+    - Added `isolatePart` utility to `src/utils/xmlTranspose.ts` which removes unwanted parts/score-parts from the XML DOM before rendering.
+    - Updated `App.useEffect` to apply isolation filter when a specific part is selected.
+- Feature: More robust Instrument Matching.
+    - Updated `mapInstrumentNameToValue` in `App.tsx` to ignore trailing numbers (e.g. "Trumpet 1" -> matches "Trumpet").
+- Fix: Addressed Reported TS Errors (checked and verified).
+    - `SidePanel` prop `xmlString` is correctly passed.
+    - `processedXml` usage is valid.
+    - `RangePreview` logic is sound, likely false positive on `containerRef` usage. 
+
 # 2026-02-01 16:15
 - Revert: Reverted "Mid-Song Key Change" fixes at user request.
 - Context: The user requested to revert the recent changes to `src/utils/xmlTranspose.ts` regarding Key Change handling, Identity Optimization, and Metadata Stripping.
