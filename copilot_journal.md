@@ -1,3 +1,10 @@
+# 2026-02-03 10:58
+
+## Deployment Hotfix
+
+- Updated ite.config.ts with ase: '/duetplay/' to fix 404 errors on subdirectory deployment.
+- This ensures assets are loaded from /duetplay/assets/ instead of root /assets/.
+
 # 2026-02-03 10:52
 
 ## Deployment Fixes
@@ -655,6 +662,7 @@ Example:
 - Improving the UX of the song selection modal. Added sort and filter, and updated styling
 - Made updates to `songlist.ts` and created `helper.tsx`
 - During verification, fixed 2 linting problems and 1 test regression
+
 
 
 
