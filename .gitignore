@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 public/temp/*
+!public/temp/*.html
+!public/temp/*.js
+!public/temp/*.css
 
 # Editor directories and files
 .vscode/*

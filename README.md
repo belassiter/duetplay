@@ -1,23 +1,44 @@
-# React + TypeScript + Vite
+# DuetPlay
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DuetPlay is a web-based tool for transposing and visualizing MusicXML scores, specifically designed for adapting piano scores (Grand Staff) into separate parts or duets.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **MusicXML Rendering**: Uses [Verovio](https://www.verovio.org/) to render scores directly in the browser.
+-   **Intelligent Transposition**: Supports global key changes and individual instrument octave shifts.
+-   **Grand Staff Explosion**: Automatically splits complex piano systems (2 staves) into two distinct parts (Right Hand / Left Hand) for easier assignment in a duet setting.
+-   **Part Isolation**: View full score or isolate individual parts.
+-   **Responsive Design**: Works on Desktop and Mobile (Portrait/Landscape).
 
-## React Compiler
+## Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-## Expanding the ESLint configuration
+2.  **Run locally**:
+    ```bash
+    npm run dev
+    ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3.  **Build**:
+    ```bash
+    npm run build
+    ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
+## Project Structure
+
+-   `src/`: React source code.
+-   `public/`: Static assets (MusicXML files).
+-   `public/temp/`: Local tools (Search UI) - *Not deployed*.
+
+## CSV Search Tool (Local Only)
+
+This project includes a local-only tool for searching the header metadata of large PDMX datasets.
+To use it locally:
+1.  Place `PDMX.csv` in `public/temp/`.
+2.  Navigate to `http://localhost:5173/temp/search.html`.
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

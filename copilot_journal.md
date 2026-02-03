@@ -1,3 +1,24 @@
+# 2026-02-03 14:00
+
+## Deployment Preparation
+
+- Removed "Explore Full Library" link from `SongSelectorPanel.tsx` for production.
+- Updated `.gitignore` to whitelist `search.html` and `search.js` while ignoring headers/CSV in `public/temp`.
+- Configured `.github/workflows/deploy.yml`:
+    - Added Node.js setup, dependency installation, and build steps.
+    - Added step to remove `dist/temp` before upload to properly exclude the search tool from production.
+    - Set `local-dir` to `./dist/` to upload the build artifacts instead of source code.
+- Created standard `README.md` documentation.
+
+# 2026-02-02 13:25
+
+## Feature: Added Large CSV Search UI
+
+- Created `public/temp/search.html` and `public/temp/search.js` to handle large `PDMX.csv` (225MB) searching via client-side streaming.
+- Used PapaParse with web workers and chunking to prevent UI freezing ensuring memory efficiency.
+- Added "Explore Full Library" link to `SongSelectorPanel.tsx` to expose the new tool.
+- Validated with Lint, Test, and Build.
+
 # 2026-02-02 12:30
 - Feature: Grand Staff Explosion.
     - Problem: Users reported that Grand Staff scores (like Piano scores) were displaying combined instrument names ("Piano RH / Piano LH") incorrectly in the center, and single-part filtering was showing both names.
