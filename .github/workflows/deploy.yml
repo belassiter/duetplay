@@ -1,6 +1,6 @@
 # This is a basic workflow to deploy your project to an FTP server.
 
-name: 🚀 Deploy website on push
+name:  Deploy website on push
 
 # Controls when the action will run.
 # This example runs on pushes to the "main" branch.
@@ -17,38 +17,30 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - name: 🚚 Get latest code
+    # Checks-out your repository under , so your job can access it
+    - name:  Get latest code
       uses: actions/checkout@v4
 
-    - name: � Setup Node.js
+    - name:  Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 20
         cache: 'npm'
 
-    - name: 📦 Install dependencies
+    - name:  Install dependencies
       run: npm ci
 
-    - name: 🔨 Build Project
+    - name:  Build Project
       run: npm run build
 
-    - name: 🧹 Cleanup (Remove temp/search)
+    - name:  Cleanup (Remove temp/search)
       run: rm -rf dist/temp
 
-    - name: 📂 Sync files to FTP server
+    - name:  Sync files to FTP server
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/ 
-        server-dir: public_html/duetplay/ 
-        # 👇 This section prevents deletions and excludes specific files.
-        # - '**' prevents any files from being deleted on the server.
-        # - 'README.md' and 'LICENSE' will not be uploaded.
-        exclude: |
-          **
-          README.md
-          LICENSE
-
+        server-dir: public_html/duetplay/

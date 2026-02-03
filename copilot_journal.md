@@ -1,3 +1,21 @@
+# 2026-02-03 10:52
+
+## Deployment Fixes
+
+- Reverted deploy.yml to build on server (cleaner workflow).
+- Updated ite.config.ts to organize build assets into ssets/ subfolder.
+- Added dist and 
+pm-debug.log back to .gitignore.
+- Removed dist from git tracking.
+
+# 2026-02-03 10:43
+
+## Deployment Adjustment
+
+- Modified .gitignore to allow committing dist/.
+- Updated .github/workflows/deploy.yml to remove build steps (Node/Install/Build) and sync the pre-built dist/ folder directly.
+- Added FTP exclusion 	emp/** to prevent the local search tool from reaching production.
+
 # 2026-02-03 14:00
 
 ## Deployment Preparation
@@ -637,6 +655,8 @@ Example:
 - Improving the UX of the song selection modal. Added sort and filter, and updated styling
 - Made updates to `songlist.ts` and created `helper.tsx`
 - During verification, fixed 2 linting problems and 1 test regression
+
+
 
 
 

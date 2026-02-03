@@ -13,6 +13,19 @@
     "style": "Classical"
   },
   {
+    "id": "barcarolle_tchaikovsyk",
+    "filename": "barcarolle_tchaikovsyk.mxl",
+    "title": "Barcarolle",
+    "composer": "Tchaikovsky",
+    "arranger": "paganic",
+    "instruments": [
+      "Clarinet",
+      "Clarinet"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
     "id": "happy_birthday_dennis",
     "filename": "happy_birthday_dennis.mxl",
     "title": "Happy Birthday, Dennis",
@@ -65,6 +78,32 @@
     "style": ""
   },
   {
+    "id": "leichte_sonatine_beethoven",
+    "filename": "leichte_sonatine_beethoven.mxl",
+    "title": "Leichte Sonatine",
+    "composer": "Ludwig van Beethoven",
+    "arranger": "Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
+    "id": "minuett_in_g_BWV_116_mozart",
+    "filename": "minuett_in_g_BWV_116_mozart.mxl",
+    "title": "Minuett in G, BWV 116",
+    "composer": "J. S. Bach",
+    "arranger": "Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
     "id": "six_duos_no1_Ernst_Paudert",
     "filename": "six_duos_no1_Ernst_Paudert.mxl",
     "title": "Six Duets, No. 1: Allegro moderato",
@@ -73,6 +112,32 @@
     "instruments": [
       "Trumpet",
       "Trumpet"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
+    "id": "small_duet_opus_38_mazas",
+    "filename": "small_duet_opus_38_mazas.mxl",
+    "title": "Small Duet from Op. 38",
+    "composer": "J. Mazas",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "",
+    "style": ""
+  },
+  {
+    "id": "studio_ghibli_medley",
+    "filename": "studio_ghibli_medley.mxl",
+    "title": "Studio Ghibli Duet",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Oboe",
+      "Flute"
     ],
     "difficulty": "",
     "style": ""
