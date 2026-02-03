@@ -1,3 +1,10 @@
+# 2026-02-03 11:01
+
+## Bug Fix: Base Path Fetching
+
+- Modified src/App.tsx to use import.meta.env.BASE_URL when fetching scores.
+- This fixes 404 errors when the app is deployed to a subdirectory (like /duetplay/) by preventing fetching from the domain root.
+
 # 2026-02-03 10:58
 
 ## Deployment Hotfix
@@ -662,6 +669,7 @@ Example:
 - Improving the UX of the song selection modal. Added sort and filter, and updated styling
 - Made updates to `songlist.ts` and created `helper.tsx`
 - During verification, fixed 2 linting problems and 1 test regression
+
 
 
 

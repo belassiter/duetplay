@@ -215,7 +215,8 @@ function App() {
         // Clear current data to prevent rendering old score with new settings
         fileDataRef.current = null; 
         try {
-            const response = await fetch(`/${filename}`); // Public folder access
+            // Use BASE_URL to handle subdirectory deployment correctly
+            const response = await fetch(`${import.meta.env.BASE_URL}${filename}`);
             if (!response.ok) throw new Error(`Fetch error: ${response.statusText}`);
             const data = await response.arrayBuffer();
             fileDataRef.current = data;
