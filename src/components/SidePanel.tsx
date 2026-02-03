@@ -106,10 +106,10 @@ const SidePanel: React.FC<SidePanelProps> = ({
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-[60%]' : 'w-[40%]'} bg-white shadow-xl transform transition-transform duration-300 z-50 ${
+            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-[60%]' : 'w-[40%]'} bg-[#f5faff] shadow-xl transform transition-transform duration-300 z-50 ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
-                <div className="flex justify-between items-center p-4 border-b">
+                <div className="flex justify-between items-center p-4 border-b bg-blue-100">
                     <h2 className="text-lg font-bold text-gray-800">Select Instruments</h2>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
                         <X size={24} />

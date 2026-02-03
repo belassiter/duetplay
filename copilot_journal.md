@@ -1,3 +1,24 @@
+# 2026-02-03 11:19
+
+## UI Refinement
+
+- Changed modal backgrounds in SongSelectorPanel.tsx and SidePanel.tsx to g-[#f5faff] (simulated blue-25) for a lighter appearance.
+- Reduced width of notation preview in RangePreview.tsx to 40% (80px) to make it more compact.
+
+# 2026-02-03 11:16
+
+## UI Styling
+
+- Updated SongSelectorPanel.tsx and SidePanel.tsx to use g-blue-50 (light blue) instead of white, distinguishing modals from the main content.
+- Updated panel headers to g-blue-100 for better contrast within the darker modal theme.
+
+# 2026-02-03 14:45
+
+## Bug Fix: Instrument Matching Logic
+
+- Refactored `mapInstrumentNameToValue` in `src/App.tsx` to prioritize exact matches (Value > Name > Alias) over fuzzy label matching.
+- This fixes the issue where "Trumpet" was matching "C Trumpet" (first in list) instead of "Bb Trumpet" (explicit alias), ensuring correct default instrument assignment.
+
 # 2026-02-03 11:01
 
 ## Bug Fix: Base Path Fetching
@@ -669,6 +690,8 @@ Example:
 - Improving the UX of the song selection modal. Added sort and filter, and updated styling
 - Made updates to `songlist.ts` and created `helper.tsx`
 - During verification, fixed 2 linting problems and 1 test regression
+
+
 
 
 

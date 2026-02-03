@@ -30,14 +30,14 @@ const RangePreview: React.FC<RangePreviewProps> = ({ xmlString, staffId, clef = 
         const VF = VexFlow;
         const renderer = new VF.Renderer(containerRef.current, VF.Renderer.Backends.SVG);
         
-        // Size
+        // Size (Reduced width to 40% of original 200)
         renderer.resize(200, 160);
         const context = renderer.getContext();
         context.scale(0.8, 0.8);
 
         // Stave
-        // x=0, y=30, width=250 (Scaled space)
-        const stave = new VF.Stave(0, 30, 250);
+        // x=0, y=30, width=100 (Reduced to 40% of original 250)
+        const stave = new VF.Stave(0, 30, 200);
         stave.addClef(clef);
         stave.setContext(context).draw();
 
@@ -110,6 +110,7 @@ const RangePreview: React.FC<RangePreviewProps> = ({ xmlString, staffId, clef = 
                         background: 'white',
                         textAlign: 'left',
                         height: '140px',
+                        width: '180px',
                         overflow: 'hidden',
                         display: 'block'
                     }} 

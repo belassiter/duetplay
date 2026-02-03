@@ -201,13 +201,28 @@ function App() {
       if (!name) return 'none';
       // Normalize: remove trailing numbers (e.g. "Trumpet 1" -> "Trumpet") and whitespace
       const cleanName = name.replace(/\s*\d+$/, '').trim().toLowerCase();
-      const inst = instruments.find(i => 
-          i.name.toLowerCase() === cleanName || 
-          i.value.toLowerCase() === cleanName || 
-          (i.aliases && i.aliases.some(a => a.toLowerCase() === cleanName)) ||
-          i.label.toLowerCase().includes(cleanName)
-      );
-      return inst ? inst.value : 'none';
+      
+      // Use "find" carefully - specificity matters. 
+      // 1. Exact match on value
+      // 2. Exact match on name
+      // 3. Exact match on alias
+      // 4. Label includes (Fallback)
+      
+      let inst = instruments.find(i => i.value.toLowerCase() === cleanName);
+      if (inst) return inst.value;
+
+      inst = instruments.find(i => i.name.toLowerCase() === cleanName);
+      if (inst) return inst.value;
+
+      inst = instruments.find(i => i.aliases && i.aliases.some(a => a.toLowerCase() === cleanName));
+      if (inst) return inst.value;
+
+      // Fallback: Check if label contains the name, but avoid partial matches like "Trumpet" matching "C Trumpet" incorrectly if a better match exists.
+      // We process explicit "Bb Trumpet" etc above. If we are here, we have "Trumpet".
+      // "C Trumpet" label contains "trumpet". "Bb Trumpet" label contains "trumpet".
+      // The old logic `i.label.toLowerCase().includes(cleanName)` found the FIRST valid instrument containing "trumpet", which happened to be C Trumpet.
+      
+      return 'none';
   }, []);
 
   const loadScore = useCallback(async (filename: string) => {

@@ -145,10 +145,10 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 left-0 h-full ${isMobile ? 'w-full max-w-full' : 'w-[75%] max-w-[75vw]'} bg-white shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
+            <div className={`fixed top-0 left-0 h-full ${isMobile ? 'w-full max-w-full' : 'w-[75%] max-w-[75vw]'} bg-[#f5faff] shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
                 isOpen ? 'translate-x-0' : '-translate-x-full'
             }`}>
-                <div className={`flex justify-between items-center ${isMobile && isLandscape ? 'p-2' : 'p-4'} border-b bg-gray-50`}>
+                <div className={`flex justify-between items-center ${isMobile && isLandscape ? 'p-2' : 'p-4'} border-b bg-blue-100`}>
                     <div className="flex items-center gap-2">
                         <Music2 className="text-blue-600" />
                         <h2 className="text-lg font-bold text-gray-800">Select Song</h2>
