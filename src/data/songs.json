@@ -1,5 +1,18 @@
 [
   {
+    "id": "air_a_deux_claviers_handel",
+    "filename": "air_a_deux_claviers_handel.mxl",
+    "title": "Air à deux Claviers HWV 470 Transkription für Flöte (Tenorflöte) und Altquerflöte in G",
+    "composer": "G.F. Händel (1685-1759)",
+    "arranger": "Felix Scharpf",
+    "instruments": [
+      "Flute",
+      "Flute"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
     "id": "bach_invention_11",
     "filename": "bach_invention_11.mxl",
     "title": "Invention #11",
@@ -23,7 +36,72 @@
       "Clarinet"
     ],
     "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "bouree_sonata_in_F_handel",
+    "filename": "bouree_sonata_in_F_handel.mxl",
+    "title": "Bourree",
+    "composer": "G.F. Handel",
+    "arranger": "cplager",
+    "instruments": [
+      "Violin",
+      "Cello"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "concerto_in_d_minor_vivace_bach",
+    "filename": "concerto_in_d_minor_vivace_bach.mxl",
+    "title": "Concerto for 2 violins and strings in D minor",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "dance_of_the_sugar_plum_fairy",
+    "filename": "dance_of_the_sugar_plum_fairy.mxl",
+    "title": "Dance of the Sugar Plum Fairy",
+    "composer": "Peter Ilyich Tchaikovsky",
+    "arranger": "",
+    "instruments": [
+      "Alto Saxophone",
+      "Violoncello"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "dog_wrestler_waltz",
+    "filename": "dog_wrestler_waltz.mxl",
+    "title": "The Dog Wrestler Waltz",
+    "composer": "Exurb1a",
+    "arranger": "FerretFire",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "",
     "style": ""
+  },
+  {
+    "id": "duetto_iii_bach",
+    "filename": "duetto_iii_bach.mxl",
+    "title": "DUETTO III, BWV 804",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "",
+    "instruments": [
+      "Piano RH",
+      "Piano LH"
+    ],
+    "difficulty": "",
+    "style": "Classical"
   },
   {
     "id": "happy_birthday_dennis",
@@ -75,7 +153,20 @@
       "Trombone"
     ],
     "difficulty": "",
-    "style": ""
+    "style": "Classical"
+  },
+  {
+    "id": "kakariko_village",
+    "filename": "kakariko_village.mxl",
+    "title": "Kakariko Village Trombone Duet",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Trombone",
+      "Trombone"
+    ],
+    "difficulty": "",
+    "style": "Video Game"
   },
   {
     "id": "leichte_sonatine_beethoven",
@@ -88,7 +179,20 @@
       "Violin"
     ],
     "difficulty": "",
-    "style": ""
+    "style": "Classical"
+  },
+  {
+    "id": "little_duet_bizet",
+    "filename": "little_duet_bizet.mxl",
+    "title": "Little Duet",
+    "composer": "Georges Bizet",
+    "arranger": "Arturo RamQui",
+    "instruments": [
+      "Bassoon",
+      "Cello"
+    ],
+    "difficulty": "",
+    "style": "Classical"
   },
   {
     "id": "minuett_in_g_BWV_116_mozart",
@@ -99,6 +203,45 @@
     "instruments": [
       "Violin",
       "Viola"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "new_world_symphony_first_mvt",
+    "filename": "new_world_symphony_first_mvt.mxl",
+    "title": "New World Symphony",
+    "composer": "Dvořák arr. AM",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "nocturne_op9_no2_chopin",
+    "filename": "nocturne_op9_no2_chopin.mxl",
+    "title": "Nocturne",
+    "composer": "Composer: Fréderic Chopin",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "B♭ Clarinet"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "que_sera_sera",
+    "filename": "que_sera_sera.mxl",
+    "title": "Que Sera Sera",
+    "composer": "Jay Livington",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "B♭ Clarinet"
     ],
     "difficulty": "",
     "style": ""
@@ -114,7 +257,7 @@
       "Trumpet"
     ],
     "difficulty": "",
-    "style": ""
+    "style": "Classical"
   },
   {
     "id": "small_duet_opus_38_mazas",
@@ -125,6 +268,19 @@
     "instruments": [
       "Violin",
       "Violin"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "star_spangled_banner",
+    "filename": "star_spangled_banner.mxl",
+    "title": "Star Spangled Banner for Violin and Viola",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Viola"
     ],
     "difficulty": "",
     "style": ""
@@ -140,6 +296,45 @@
       "Flute"
     ],
     "difficulty": "",
+    "style": "Pop"
+  },
+  {
+    "id": "telemann_TWV_40",
+    "filename": "telemann_TWV_40.mxl",
+    "title": "telemann_TWV_40",
+    "composer": "G. Ph. Telemann",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "Flute"
+    ],
+    "difficulty": "",
+    "style": "Classical"
+  },
+  {
+    "id": "test_drive_how_to_train_your_dragon",
+    "filename": "test_drive_how_to_train_your_dragon.mxl",
+    "title": "Test Drive (How to Train Your Dragon)",
+    "composer": "John Powell",
+    "arranger": "Arr. Sebastian Wolf",
+    "instruments": [
+      "Trombone",
+      "Euphonium"
+    ],
+    "difficulty": "",
+    "style": "Film"
+  },
+  {
+    "id": "the_thunderer_sousa",
+    "filename": "the_thunderer_sousa.mxl",
+    "title": "The Thunderer",
+    "composer": "John Phillip Sousa",
+    "arranger": "Benned Hedegaard",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "",
     "style": ""
   },
   {
@@ -149,10 +344,36 @@
     "composer": "Michel Rondeau",
     "arranger": "",
     "instruments": [
-      "Trumpet 1",
-      "Trumpet 2"
+      "Trumpet",
+      "Trumpet"
     ],
     "difficulty": "",
-    "style": ""
+    "style": "Classical"
+  },
+  {
+    "id": "up_a_lazy_river",
+    "filename": "up_a_lazy_river.mxl",
+    "title": "Up a Lazy River",
+    "composer": "Hoagy Carmichael",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Clarinet"
+    ],
+    "difficulty": "",
+    "style": "Jazz"
+  },
+  {
+    "id": "walking_in_the_air",
+    "filename": "walking_in_the_air.mxl",
+    "title": "Walking in the Air",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "B♭ Clarinet",
+      "Tenor Trombone"
+    ],
+    "difficulty": "",
+    "style": "Pop"
   }
 ]

@@ -144,6 +144,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                             xmlString={xmlString} 
                             staffId="1" 
                             clef={getClef(instrument1)} 
+                            instrumentValue={instrument1}
                         />
                     )}
 
@@ -163,6 +164,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                             xmlString={xmlString} 
                             staffId="2" 
                             clef={getClef(instrument2)} 
+                            instrumentValue={instrument2}
                         />
                     )}
 

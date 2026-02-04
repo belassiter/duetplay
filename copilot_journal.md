@@ -1,3 +1,31 @@
+# 2026-02-03 17:15
+
+## Accessibility & Data Updates
+
+- **Range Colors**: Switched range preview colors to a High Contrast / Color Blind Safe palette (Paul Tol's qualitative scheme variant):
+    - Easy: **Blue** (`#0077BB`)
+    - Hard: **Orange** (`#EE7733`)
+    - Out: **Red/Vermilion** (`#CC7331` -> Adjusted to `#CC3311`)
+- **Instrument Data**: Added range definitions (`easyLow`, `easyHigh`, etc.) for all remaining instruments in `instruments.ts`, including Piano, Flute family, Clarinet family, Double Reeds, Percussion, and Guitar.
+
+# 2026-02-03 17:12
+
+## UI Features: Help Menu & Range Color Coding
+
+- **Help Panel**:
+    - Changed Help Panel background to "Blue 25" (`#f5faff`) for consistency.
+    - Updated item #4 "Display Score or Parts" icon to `Eye`.
+    - Inverted "Help (?)" button colors in header to Blue background/White text.
+- **Instrument Range Logic**:
+    - Added experimental `instrumentRange` data to `instruments.ts` (with a first pass for Flute, Clarinet, Saxophone, Trumpet, Violin, Cello etc.).
+    - Implemented range analysis in `RangePreview.tsx`:
+        - Calculates notes as MIDI numbers.
+        - Compares score range vs instrument capabilities.
+        - **Green**: Easy Range.
+        - **Dark Yellow/Orange**: Extended/Hard Range.
+        - **Red**: Outside Range.
+    - Updated `SidePanel.tsx` to pass `instrumentValue` to `RangePreview`.
+
 # 2026-02-03 16:25
 
 ## UI Adjustments

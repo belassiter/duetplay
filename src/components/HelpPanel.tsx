@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Search, FileMusic, HelpCircle, AlertCircle, Volume2, Info, Mail, Heart, Github, Bot } from 'lucide-react';
+import { X, Search, FileMusic, HelpCircle, AlertCircle, Volume2, Info, Mail, Heart, Github, Eye, Bot } from 'lucide-react';
 
 interface HelpPanelProps {
     isOpen: boolean;
@@ -29,10 +29,10 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-full max-w-full' : 'w-[500px] max-w-[80vw]'} bg-white shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
+            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-full max-w-full' : 'w-[500px] max-w-[80vw]'} bg-[#f5faff] shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
-                <div className="flex justify-between items-center p-4 border-b bg-gray-50">
+                <div className="flex justify-between items-center p-4 border-b bg-blue-100">
                     <div className="flex items-center gap-2">
                         <HelpCircle className="text-blue-600" />
                         <h2 className="text-lg font-bold text-gray-800">Help & FAQ</h2>
@@ -54,7 +54,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                         <h3 className="text-lg font-bold border-b pb-2 mb-4">How to Use</h3>
                         
                         <div className="flex gap-3 mb-4">
-                            <div className="bg-gray-100 p-2 rounded h-fit shrink-0"><Search size={20} /></div>
+                            <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><Search size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">1. Select a Song</strong>
                                 <p className="text-sm text-gray-600">Browse the library by title, composer, or difficulty.</p>
@@ -62,7 +62,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                         </div>
 
                         <div className="flex gap-3 mb-4">
-                            <div className="bg-gray-100 p-2 rounded h-fit shrink-0"><FileMusic size={20} /></div>
+                            <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><FileMusic size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">2. Configure Instruments</strong>
                                 <p className="text-sm text-gray-600">Open <strong>Select Instruments</strong> to choose your instrument for Part 1 and Part 2. The score will automatically transpose!</p>
@@ -70,7 +70,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                         </div>
 
                         <div className="flex gap-3 mb-6">
-                            <div className="bg-gray-100 p-2 rounded h-fit shrink-0"><AlertCircle size={20} /></div>
+                            <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><AlertCircle size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">3. Adjust Range</strong>
                                 <p className="text-sm text-gray-600">Use the octave and key adjustment controls if the notes are too high or low for your instrument. The range for each instrument is shown below.</p>
@@ -78,7 +78,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                         </div>
 
                         <div className="flex gap-3 mb-6">
-                            <div className="bg-gray-100 p-2 rounded h-fit shrink-0"><AlertCircle size={20} /></div>
+                            <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><Eye size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">4. Display Score or Parts</strong>
                                 <p className="text-sm text-gray-600">Click on the <strong>Score</strong> button to toggle between displaying the score or invidiual parts. This is useful if you're playing on two separate devices.</p>

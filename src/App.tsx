@@ -403,7 +403,7 @@ function App() {
 
             <button 
                 onClick={() => setIsHelpPanelOpen(true)}
-                className="p-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50 transition-colors shadow-sm hidden md:flex"
+                className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hidden md:flex"
                 title="Help & FAQ"
             >
                 <HelpCircle size={20} />
