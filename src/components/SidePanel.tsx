@@ -24,6 +24,9 @@ interface SidePanelProps {
     
     // Range Preview
     xmlString: string;
+    
+    // Reset
+    onReset?: () => void;
 }
 
 const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: number) => void }) => (
@@ -64,7 +67,8 @@ const SidePanel: React.FC<SidePanelProps> = ({
     onPart2OctaveChange,
     globalTranspose,
     onGlobalTransposeChange,
-    xmlString
+    xmlString,
+    onReset
 }) => {
     const [activeSelector, setActiveSelector] = React.useState<'none' | 'part1' | 'part2'>('none');
 
@@ -110,7 +114,14 @@ const SidePanel: React.FC<SidePanelProps> = ({
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
                 <div className="flex justify-between items-center p-4 border-b bg-blue-100">
-                    <h2 className="text-lg font-bold text-gray-800">Select Instruments</h2>
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-bold text-gray-800">Select Instruments</h2>
+                        {onReset && (
+                             <button onClick={onReset} className="text-xs text-blue-600 hover:text-blue-800 underline ml-2" title="Reset all instrument settings to default">
+                                Reset
+                             </button>
+                        )}
+                    </div>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
                         <X size={24} />
                     </button>

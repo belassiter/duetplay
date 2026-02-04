@@ -1,3 +1,26 @@
+# 2026-02-03 16:25
+
+## UI Adjustments
+
+- **Header Layout**: Moved the Help (?) button to the far right of the header bar in `App.tsx`.
+- **Bug Fix**: Removed a duplicated/invalid FAQ item in `HelpPanel.tsx` that referenced a missing `Robot` icon, fixing a build error.
+
+# 2026-02-03 16:14
+
+## QA & Reliability
+
+- **Fixed Component Error**: Resolved `ReferenceError: onReset is not defined` in SidePanel.tsx (found via tests).
+- **Fixed Build Error**: Removed duplicate imports in App.tsx that were preventing the build.
+- **Verified**: Passed full QA suite (`lint`, `test`, `build`) successfully.
+
+# 2026-02-03 16:09
+
+## UI Features: Reset & Help
+
+- Added **Reset Button** to SidePanel.tsx that restores default instruments, octaves, and keys.
+- Created HelpPanel.tsx with onboarding instructions and FAQ.
+- Added **Help Button** (?) to the main App.tsx header to trigger the Help modal.
+
 # 2026-02-03 11:19
 
 ## UI Refinement
@@ -690,6 +713,7 @@ Example:
 - Improving the UX of the song selection modal. Added sort and filter, and updated styling
 - Made updates to `songlist.ts` and created `helper.tsx`
 - During verification, fixed 2 linting problems and 1 test regression
+
 
 
 

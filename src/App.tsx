@@ -1,14 +1,15 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
-import { Loader2, Music, RotateCcw, Eye } from 'lucide-react';
 import { transposeMusicXML, isolatePart } from './utils/xmlTranspose';
 import JSZip from 'jszip';
 import './App.css'
 import SidePanel from './components/SidePanel';
 import SongSelectorPanel from './components/SongSelectorPanel';
+import HelpPanel from './components/HelpPanel';
 import { instruments } from './constants/instruments';
 import type { Song } from './types/song';
 import songsData from './data/songs.json';
+import { Loader2, Music, RotateCcw, Eye, HelpCircle } from 'lucide-react';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
@@ -29,6 +30,7 @@ function App() {
   
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
+  const [isHelpPanelOpen, setIsHelpPanelOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -225,6 +227,15 @@ function App() {
       return 'none';
   }, []);
 
+
+  const resetSettings = useCallback(() => {
+    setInstrument1(originalInstruments.part1);
+    setInstrument2(originalInstruments.part2);
+    setPart1Octave(0);
+    setPart2Octave(0);
+    setGlobalTranspose(0);
+  }, [originalInstruments]);
+
   const loadScore = useCallback(async (filename: string) => {
         setStatus('Loading score...');
         // Clear current data to prevent rendering old score with new settings
@@ -389,6 +400,14 @@ function App() {
                 <span className="text-lg leading-none">🎷</span>
                 <span className="hidden md:inline">Select Instruments</span>
             </button>
+
+            <button 
+                onClick={() => setIsHelpPanelOpen(true)}
+                className="p-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50 transition-colors shadow-sm hidden md:flex"
+                title="Help & FAQ"
+            >
+                <HelpCircle size={20} />
+            </button>
           </div>
       </div>
       
@@ -408,16 +427,23 @@ function App() {
         globalTranspose={globalTranspose}
         onGlobalTransposeChange={setGlobalTranspose}
         xmlString={processedXml}
+        onReset={resetSettings}
       />
-      
-      <SongSelectorPanel 
-        isOpen={isSongPanelOpen} 
+
+      <SongSelectorPanel
+        isOpen={isSongPanelOpen}
         onClose={() => setIsSongPanelOpen(false)}
         onSelectSong={handleSongSelect}
         isMobile={isMobile}
         isLandscape={isLandscape}
       />
-      
+
+      <HelpPanel
+        isOpen={isHelpPanelOpen}
+        onClose={() => setIsHelpPanelOpen(false)}
+        isMobile={isMobile} 
+      />
+
       {status && <div className="text-sm text-gray-500 mb-2 px-2">{status}</div>}
 
       {(loading || isRendering) && (

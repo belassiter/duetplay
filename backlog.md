@@ -15,8 +15,10 @@ Here's a rough order to do development
 - [X] Mobile horizontal layout
 - [ ] Handle mid-song key changes (known bug, e.g. I Get Around)
 - [ ] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
-- [ ] Deploy to prod
+- [X] Deploy to prod
 - [X] Only display one part (play on two separate devices)
+- [X] Help menu
+- [ ] Hamburger menu for mobile-vertical
 - [ ] Custom instrument
 - [ ] Larger ensemble size
 - [ ] Import user's mxl file
@@ -26,5 +28,5 @@ Here's a rough order to do development
 - [ ] Playback (duets for one person)
 - [ ] 
 - [ ] Add to EsQ website/library
-- [ ] 
+- [ ] Offer to vgmusic website
 - [ ] 
