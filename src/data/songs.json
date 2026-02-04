@@ -9,8 +9,21 @@
       "Flute",
       "Flute"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
+  },
+  {
+    "id": "alright_ok",
+    "filename": "alright_ok.mxl",
+    "title": "Alright, OK, You Win",
+    "composer": "Mayme Watts & Sid Wyche",
+    "arranger": "Arr. Lee Evans Adapted by Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Jazz"
   },
   {
     "id": "bach_invention_11",
@@ -35,7 +48,7 @@
       "Clarinet",
       "Clarinet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -48,7 +61,7 @@
       "Violin",
       "Cello"
     ],
-    "difficulty": "",
+    "difficulty": "Easy",
     "style": "Classical"
   },
   {
@@ -61,7 +74,7 @@
       "Violin",
       "Violin"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -74,7 +87,7 @@
       "Alto Saxophone",
       "Violoncello"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": "Classical"
   },
   {
@@ -87,7 +100,7 @@
       "Violin",
       "Viola"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": ""
   },
   {
@@ -100,8 +113,21 @@
       "Piano RH",
       "Piano LH"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Hard",
     "style": "Classical"
+  },
+  {
+    "id": "final_fantasy_vii_main_theme",
+    "filename": "final_fantasy_vii_main_theme.mxl",
+    "title": "Final Fantasy VII -- Main Theme",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
   },
   {
     "id": "happy_birthday_dennis",
@@ -152,7 +178,7 @@
       "Trumpet",
       "Trombone"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -165,7 +191,7 @@
       "Trombone",
       "Trombone"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Video Game"
   },
   {
@@ -178,7 +204,7 @@
       "Violin",
       "Violin"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": "Classical"
   },
   {
@@ -191,7 +217,7 @@
       "Bassoon",
       "Cello"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -204,7 +230,7 @@
       "Violin",
       "Viola"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -217,7 +243,7 @@
       "Violin",
       "Viola"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -230,7 +256,7 @@
       "Flute",
       "B♭ Clarinet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": "Classical"
   },
   {
@@ -243,7 +269,7 @@
       "Flute",
       "B♭ Clarinet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": ""
   },
   {
@@ -256,7 +282,7 @@
       "Trumpet",
       "Trumpet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Hard",
     "style": "Classical"
   },
   {
@@ -269,7 +295,7 @@
       "Violin",
       "Violin"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": "Classical"
   },
   {
@@ -282,7 +308,7 @@
       "Violin",
       "Viola"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": ""
   },
   {
@@ -295,7 +321,7 @@
       "Oboe",
       "Flute"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Hard",
     "style": "Pop"
   },
   {
@@ -308,7 +334,7 @@
       "Flute",
       "Flute"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {
@@ -321,7 +347,7 @@
       "Trombone",
       "Euphonium"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Film"
   },
   {
@@ -334,7 +360,7 @@
       "Trumpet",
       "Trumpet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": ""
   },
   {
@@ -347,7 +373,7 @@
       "Trumpet",
       "Trumpet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Hard",
     "style": "Classical"
   },
   {
@@ -360,7 +386,7 @@
       "Trumpet",
       "Clarinet"
     ],
-    "difficulty": "",
+    "difficulty": "Medium",
     "style": "Jazz"
   },
   {
@@ -373,7 +399,20 @@
       "B♭ Clarinet",
       "Tenor Trombone"
     ],
-    "difficulty": "",
+    "difficulty": "Medium-Easy",
     "style": "Pop"
+  },
+  {
+    "id": "welcome_to_our_town",
+    "filename": "welcome_to_our_town.mxl",
+    "title": "Welcome to Our Town!",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   }
 ]
