@@ -46,7 +46,7 @@ export const instruments: Instrument[] = [
         value: 'bb_clarinet', 
         transpose: 'M2', 
         clef: 'treble', 
-        aliases: ['Clarinet','B♭ Clarinet'],
+        aliases: ['Clarinet', 'B♭ Clarinet'],
         instrumentRange: { easyLow: 'E3', easyHigh: 'C6', hardLow: 'E3', hardHigh: 'G6' }
     },
     { name: 'A Clarinet', label: 'A Clarinet (sounds -m3, treble clef)', value: 'a_clarinet', transpose: 'm3', clef: 'treble', instrumentRange: { easyLow: 'E3', easyHigh: 'C6', hardLow: 'E3', hardHigh: 'G6' } },

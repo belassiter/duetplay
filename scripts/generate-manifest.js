@@ -113,17 +113,21 @@ async function generateManifest() {
         
         const id = existing.id || file.replace(/\.(mxl|xml|musicxml)$/, '');
         
-        // Respect existing manual edits for instruments
+        // Respect existing manual edits. If the field exists in json, use it. Only fallback to meta if missing.
         const mergedInstruments = (existing.instruments && existing.instruments.length > 0) 
             ? existing.instruments 
             : (meta.instruments || []);
 
+        const title = existing.title || (meta.title && meta.title !== 'Untitled' ? meta.title : id);
+        const composer = existing.composer || (meta.composer && meta.composer !== 'Unknown' ? meta.composer : '');
+        const arranger = existing.arranger || (meta.arranger || '');
+
         songs.push({
             id: id,
             filename: file,
-            title: meta.title && meta.title !== 'Untitled' ? meta.title : id, // Fallback to ID if title missing/untitled
-            composer: meta.composer && meta.composer !== 'Unknown' ? meta.composer : '', // Blank default
-            arranger: meta.arranger || '',
+            title: title, 
+            composer: composer,
+            arranger: arranger,
             instruments: mergedInstruments,
             difficulty: existing.difficulty || '', // Blank default
             style: existing.style || '', // Blank default

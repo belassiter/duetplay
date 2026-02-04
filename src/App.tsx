@@ -9,7 +9,7 @@ import HelpPanel from './components/HelpPanel';
 import { instruments } from './constants/instruments';
 import type { Song } from './types/song';
 import songsData from './data/songs.json';
-import { Loader2, Music, RotateCcw, Eye, HelpCircle } from 'lucide-react';
+import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu } from 'lucide-react';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
@@ -31,6 +31,7 @@ function App() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
   const [isHelpPanelOpen, setIsHelpPanelOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -326,6 +327,11 @@ function App() {
       setOriginalInstruments({ part1: p1Val, part2: p2Val });
       
       loadScore(song.filename);
+
+      // Scroll to top
+      if (containerRef.current) {
+        containerRef.current.scrollTo({ top: 0, behavior: 'instant' });
+      }
   };
 
   return (
@@ -338,6 +344,18 @@ function App() {
           </div>
           
           <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+            
+            {/* Mobile Menu Button */}
+            {isMobile && !isLandscape && (
+                <button
+                    onClick={() => setIsMenuOpen(true)}
+                    className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm h-[38px] w-[38px]"
+                    title="Menu"
+                >
+                    <Menu size={20} />
+                </button>
+            )}
+
             {/* Zoom Control */}
             <div className="flex items-center gap-2 bg-white border border-gray-300 px-2 py-1.5 rounded shadow-sm h-[38px] relative flex-1 md:flex-none max-w-[240px] md:max-w-none">
                 
@@ -386,7 +404,7 @@ function App() {
 
             <button 
                 onClick={() => setIsSongPanelOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap"
+                className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap ${isMobile && !isLandscape ? 'hidden' : 'flex'}`}
                 title="Select Song"
             >
                 <Music size={18} />
@@ -394,7 +412,7 @@ function App() {
             </button>
             <button 
                 onClick={() => setIsSidePanelOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap"
+                className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap ${isMobile && !isLandscape ? 'hidden' : 'flex'}`}
                 title="Select Instruments"
             >
                 <span className="text-lg leading-none">🎷</span>
@@ -403,7 +421,7 @@ function App() {
 
             <button 
                 onClick={() => setIsHelpPanelOpen(true)}
-                className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hidden md:flex"
+                className={`flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hidden md:flex ${isMobile && !isLandscape ? 'hidden' : ''}`}
                 title="Help & FAQ"
             >
                 <HelpCircle size={20} />
@@ -411,6 +429,45 @@ function App() {
           </div>
       </div>
       
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[60] flex" onClick={() => setIsMenuOpen(false)}>
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/50" />
+            
+            {/* Drawer */}
+            <div className="relative w-[50%] bg-white h-full shadow-xl flex flex-col p-4 gap-4" onClick={e => e.stopPropagation()}>
+                 <div className="flex justify-between items-center border-b pb-2 mb-2">
+                     <h2 className="text-xl font-bold text-gray-800">Menu</h2>
+                 </div>
+                 
+                 <button 
+                    onClick={() => { setIsMenuOpen(false); setIsSongPanelOpen(true); }}
+                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
+                >
+                    <Music size={18} />
+                    <span>Select Song</span>
+                </button>
+
+                <button 
+                    onClick={() => { setIsMenuOpen(false); setIsSidePanelOpen(true); }}
+                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
+                >
+                    <span className="text-lg leading-none">🎷</span>
+                    <span>Select Instruments</span>
+                </button>
+
+                <button 
+                    onClick={() => { setIsMenuOpen(false); setIsHelpPanelOpen(true); }}
+                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
+                >
+                    <HelpCircle size={18} />
+                    <span>Help</span>
+                </button>
+            </div>
+        </div>
+      )}
+
       <SidePanel 
         isOpen={isSidePanelOpen} 
         onClose={() => setIsSidePanelOpen(false)}

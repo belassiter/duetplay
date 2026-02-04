@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown } from 'lucide-react';
+import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, Filter, Check } from 'lucide-react';
 import type { Song } from '../types/song';
 import songsData from '../data/songs.json';
 
@@ -84,10 +84,36 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
     const [styleFilters, setStyleFilters] = useState<string[]>([]);
     const [difficultyFilters, setDifficultyFilters] = useState<string[]>([]);
     const [sortConfig, setSortConfig] = useState<{ key: keyof Song | null, direction: 'asc' | 'desc' }>({ key: 'title', direction: 'asc' });
+    
+    // Filter Menu State (Desktop)
+    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+    const filterMenuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (filterMenuRef.current && !filterMenuRef.current.contains(event.target as Node)) {
+                setIsFilterMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Unique options for filters
-    const styles = useMemo(() => Array.from(new Set(songs.map(s => s.style).filter(Boolean))), []);
-    const difficulties = useMemo(() => Array.from(new Set(songs.map(s => s.difficulty).filter(Boolean))), []);
+    const styles = useMemo(() => Array.from(new Set(songs.map(s => s.style).filter(Boolean))).sort(), []);
+    const difficulties = useMemo(() => {
+        const unique = Array.from(new Set(songs.map(s => s.difficulty).filter(Boolean)));
+        const order = ['None', 'Easy', 'Medium-Easy', 'Medium', 'Medium-Hard', 'Hard'];
+        return unique.sort((a, b) => {
+            const idxA = order.indexOf(a as string);
+            const idxB = order.indexOf(b as string);
+            // Put items not in list at end
+            if (idxA === -1 && idxB === -1) return (a as string).localeCompare(b as string);
+            if (idxA === -1) return 1;
+            if (idxB === -1) return -1;
+            return idxA - idxB;
+        });
+    }, []);
 
     const handleSort = (key: keyof Song) => {
         let direction: 'asc' | 'desc' = 'asc';
@@ -159,8 +185,8 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                 </div>
                 
                 {/* Search & Filter Bar */}
-                <div className={`${isMobile && isLandscape ? 'p-2 gap-2 flex-row items-center' : 'p-4 flex-col gap-4'} border-b flex`}>
-                    <div className={`relative ${isMobile && isLandscape ? 'flex-1' : 'w-full'}`}>
+                <div className={`${isMobile && !isLandscape ? 'p-4 flex-col gap-4' : (isMobile ? 'p-2 gap-2 flex-row items-center' : 'p-4 gap-4 flex-row items-center')} border-b flex`}>
+                    <div className={`relative ${isMobile && !isLandscape ? 'w-full' : 'flex-1'}`}>
                         <Search className="absolute left-3 top-3 text-gray-400" size={18} />
                         <input
                             type="text"
@@ -170,20 +196,93 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />
                     </div>
-                    <div className={`flex gap-4 ${isMobile && isLandscape ? 'items-center' : 'justify-end'}`}>
-                        <MultiSelectDropdown 
-                            label="Styles"
-                            options={styles as string[]}
-                            selectedValues={styleFilters}
-                            onChange={setStyleFilters}
-                        />
+                    <div className={`flex gap-4 items-center ${isMobile && !isLandscape ? 'justify-between' : ''}`}>
+                        {/* Mobile: Keep Dropdowns */}
+                        {(isMobile || (isMobile && isLandscape)) && (
+                            <>
+                                <MultiSelectDropdown 
+                                    label="Styles"
+                                    options={styles as string[]}
+                                    selectedValues={styleFilters}
+                                    onChange={setStyleFilters}
+                                />
+                                
+                                <MultiSelectDropdown 
+                                    label="Difficulty"
+                                    options={difficulties as string[]}
+                                    selectedValues={difficultyFilters}
+                                    onChange={setDifficultyFilters}
+                                />
+                            </>
+                        )}
                         
-                        <MultiSelectDropdown 
-                            label="Difficulty"
-                            options={difficulties as string[]}
-                            selectedValues={difficultyFilters}
-                            onChange={setDifficultyFilters}
-                        />
+                        {/* Desktop: Filter Icon Button */}
+                        {!isMobile && (
+                            <div className="relative" ref={filterMenuRef}>
+                                <button
+                                    onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                                    className={`p-2 rounded border flex items-center gap-2 transition-colors ${
+                                        (styleFilters.length > 0 || difficultyFilters.length > 0 || isFilterMenuOpen) 
+                                        ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                                        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+                                    }`}
+                                    title="Filter Options"
+                                >
+                                    <Filter size={20} />
+                                    {(styleFilters.length + difficultyFilters.length) > 0 && (
+                                         <span className="bg-blue-600 text-white text-xs px-1.5 rounded-full min-w-[1.2em] text-center font-bold">
+                                            {styleFilters.length + difficultyFilters.length}
+                                        </span>
+                                    )}
+                                </button>
+                                
+                                {isFilterMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl z-50 p-4 max-h-[80vh] overflow-y-auto">
+                                        <div className="mb-4">
+                                            <h4 className="font-bold text-gray-800 mb-2 border-b pb-1 text-sm">Styles</h4>
+                                            <div className="space-y-1">
+                                                {styles.map((style: unknown) => (
+                                                    <div 
+                                                        key={style as string}
+                                                        className="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer text-sm"
+                                                        onClick={() => {
+                                                            const s = style as string;
+                                                            setStyleFilters(prev => prev.includes(s) ? prev.filter(item => item !== s) : [...prev, s]);
+                                                        }}
+                                                    >
+                                                        <div className={`w-4 h-4 border rounded flex items-center justify-center shrink-0 ${styleFilters.includes(style as string) ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}`}>
+                                                            {styleFilters.includes(style as string) && <Check size={12} className="text-white" />}
+                                                        </div>
+                                                        <span className="text-gray-700">{style as string}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <h4 className="font-bold text-gray-800 mb-2 border-b pb-1 text-sm">Difficulty</h4>
+                                             <div className="space-y-1">
+                                                {difficulties.map((diff: unknown) => (
+                                                    <div 
+                                                        key={diff as string}
+                                                        className="flex items-center gap-2 p-1.5 hover:bg-gray-50 rounded cursor-pointer text-sm"
+                                                        onClick={() => {
+                                                            const d = diff as string;
+                                                            setDifficultyFilters(prev => prev.includes(d) ? prev.filter(item => item !== d) : [...prev, d]);
+                                                        }}
+                                                    >
+                                                        <div className={`w-4 h-4 border rounded flex items-center justify-center shrink-0 ${difficultyFilters.includes(diff as string) ? 'bg-blue-600 border-blue-600' : 'border-gray-300'}`}>
+                                                            {difficultyFilters.includes(diff as string) && <Check size={12} className="text-white" />}
+                                                        </div>
+                                                        <span className="text-gray-700">{diff as string}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                         
                         {(searchTerm || styleFilters.length > 0 || difficultyFilters.length > 0) && (
                             <button 

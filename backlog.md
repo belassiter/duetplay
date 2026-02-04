@@ -14,11 +14,11 @@ Here's a rough order to do development
 - [X] Mobile-vertical layout
 - [X] Mobile horizontal layout
 - [ ] Handle mid-song key changes (known bug, e.g. I Get Around)
-- [ ] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
+- [X] Source mxl files ( google search site:imslp.org "For 2 players" "MusicXML" -beatty )
 - [X] Deploy to prod
 - [X] Only display one part (play on two separate devices)
 - [X] Help menu
-- [ ] Hamburger menu for mobile-vertical
+- [X] Hamburger menu for mobile-vertical
 - [ ] Custom instrument
 - [ ] Larger ensemble size
 - [ ] Import user's mxl file

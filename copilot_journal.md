@@ -1,3 +1,34 @@
+# 2026-02-04 06:00
+
+## UI Refinements & Build Logic
+
+- **User request**: 
+1) For desktop select song modal, put the filter button in-line with the search bar, to save space.
+2) For the style filter, the options should be in alphabetic order
+3) When importing mxl metadata during build, never overwrite data that has been changed. I'm doing some amount of manual edits and I don't want them overwritten.
+4) For mobile-vertical, let's make a hamburger menu. Add the Song Select, Instrument Select, and Help buttons as rows, using the same text that's used in desktop view. Keep Zoom and Part toggle on the main screen. The menu should take up 50% of the width. The hamburger button should be styled like the other buttons (blue with white text). When exiting out of the song, instrument, or help modals, it should return to the main screen (not the hamburger menu)
+- **Song Selector (Desktop)**: Updated the layout to position the Filter button inline with the Search bar for better space utilization.
+- **Sorting**: The "Style" filter dropdown options are now sorted alphabetically.
+- **Build Script**: Modified `scripts/generate-manifest.js` to prioritize existing data in `songs.json` (title, composer, arranger) over MXL metadata during re-builds. This prevents overwriting manual edits.
+- **Mobile Menu**:
+    - Implemented a "Hamburger Menu" for the mobile portrait view.
+    - Moved "Select Song", "Select Instruments", and "Help" buttons into this menu (blue buttons, white text).
+    - Kept "Zoom" and "View Mode" on the main toolbar.
+    - The menu opens a 50% width drawer on the left.
+    - Exiting any modal (Song/Inst/Help) returns to the main screen, as requested.
+
+# 2026-02-04 05:43
+
+## UI Improvements & Data Updates
+
+- **Scroll Behavior**: Implemented logic in `App.tsx` (`handleSongSelect`) to scroll the music view to the top whenever a new song is loaded.
+- **Song Selection UI (Desktop)**:
+    - Replaced the individual "Styles" and "Difficulty" dropdowns with a single **filter icon button** to save horizontal space.
+    - This opens a popover menu (custom implementation) containing the checkbox options for filters.
+    - Mobile layout preserves the original standalone dropdowns.
+- **Difficulty Sorting**: Updated the options to sort logically: `None` -> `Easy` -> `Medium-Easy` -> `Medium` -> `Medium-Hard` -> `Hard`.
+- **Instrument Ranges**: Added `instrumentRange` data for all remaining instruments (Tenor Clef, etc.) in `instruments.ts` to support the colored range preview.
+
 # 2026-02-03 17:15
 
 ## Accessibility & Data Updates

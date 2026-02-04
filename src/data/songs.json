@@ -1,8 +1,21 @@
 [
   {
+    "id": "accumula_town_pokemon_bw",
+    "filename": "accumula_town_pokemon_bw.mxl",
+    "title": "Accumula Town from Pokemon B/W",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trombone"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
     "id": "air_a_deux_claviers_handel",
     "filename": "air_a_deux_claviers_handel.mxl",
-    "title": "Air à deux Claviers HWV 470 Transkription für Flöte (Tenorflöte) und Altquerflöte in G",
+    "title": "Air à deux Claviers HWV 470",
     "composer": "G.F. Händel (1685-1759)",
     "arranger": "Felix Scharpf",
     "instruments": [
@@ -65,6 +78,19 @@
     "style": "Classical"
   },
   {
+    "id": "bourree_BWV_996_bach",
+    "filename": "bourree_BWV_996_bach.mxl",
+    "title": "Bourrée BWV 996",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "Arr. Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Easy",
+    "style": "Classical"
+  },
+  {
     "id": "concerto_in_d_minor_vivace_bach",
     "filename": "concerto_in_d_minor_vivace_bach.mxl",
     "title": "Concerto for 2 violins and strings in D minor",
@@ -73,6 +99,19 @@
     "instruments": [
       "Violin",
       "Violin"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "courante_lully",
+    "filename": "courante_lully.mxl",
+    "title": "Keyboard Pieces No. 2 - Courante",
+    "composer": "Jean-Baptiste Lully",
+    "arranger": "Arr. Mike Magatagan",
+    "instruments": [
+      "Violin",
+      "Cello"
     ],
     "difficulty": "Medium",
     "style": "Classical"
@@ -117,6 +156,19 @@
     "style": "Classical"
   },
   {
+    "id": "fantasia_no_2_telemann",
+    "filename": "fantasia_no_2_telemann.mxl",
+    "title": "Fanstasia No. 2",
+    "composer": "Georg Philipp Telemann",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "final_fantasy_vii_main_theme",
     "filename": "final_fantasy_vii_main_theme.mxl",
     "title": "Final Fantasy VII -- Main Theme",
@@ -154,6 +206,19 @@
     ],
     "difficulty": "Medium-Hard",
     "style": "Classical"
+  },
+  {
+    "id": "hit_that_jive_jack",
+    "filename": "hit_that_jive_jack.mxl",
+    "title": "Hit That Jive, Jack",
+    "composer": "Johnny Alston-Campbell Tolbert",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Alto Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Jazz"
   },
   {
     "id": "i_get_around",
@@ -258,6 +323,19 @@
     ],
     "difficulty": "Medium-Easy",
     "style": "Classical"
+  },
+  {
+    "id": "pinky_and_the_brain",
+    "filename": "pinky_and_the_brain.mxl",
+    "title": "Pinky and the Brain Theme",
+    "composer": "Richard Stone/Tom Ruegger",
+    "arranger": "Arr. Brian Einstein Lassiter",
+    "instruments": [
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "TV"
   },
   {
     "id": "que_sera_sera",
