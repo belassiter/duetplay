@@ -4,7 +4,7 @@
     "filename": "25_or_6_to_4_sax_quartet_AATB.mxl",
     "title": "25 or 6 to 4",
     "composer": "Robert Lamm",
-    "arranger": "",
+    "arranger": "Brian Einstein Lassiter",
     "instruments": [
       "Alto Sax 1",
       "Alto Sax 2",
@@ -66,6 +66,9 @@
     "composer": "Ari Pulkkinen (2009)",
     "arranger": "Arr. Brian Einstein Lassiter",
     "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
       "Bass Clarinet 4"
     ],
     "difficulty": "Medium",
@@ -78,7 +81,10 @@
     "composer": "Ari Pulkkinen (2009)",
     "arranger": "Arr. Brian Einstein Lassiter",
     "instruments": [
-      "Soprano Sax"
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
     ],
     "difficulty": "Medium",
     "style": "Video Game"
@@ -87,8 +93,8 @@
     "id": "a_foggy_day_sax_quartet_aatb",
     "filename": "a_foggy_day_sax_quartet_AATB.mxl",
     "title": "A Foggy Day",
-    "composer": "Gershwin, Arr. Lee Evans",
-    "arranger": "",
+    "composer": "George Gershwin",
+    "arranger": "Lee Evans (adapted by Brian Einstein Lassiter)",
     "instruments": [
       "Alto Sax 1",
       "Alto Sax 2",
@@ -103,7 +109,7 @@
     "filename": "beethovens_5th_a_la_chopin_SATB.mxl",
     "title": "Beethoven's 5th Symphony",
     "composer": "Ludwig van Beethoven (1770-1827)",
-    "arranger": "Arr. Syd R Duke\r\nAdapted by Brian Einstein Lassiter",
+    "arranger": "Arr. Syd R Duke, Adapted by Brian Einstein Lassiter",
     "instruments": [
       "Soprano Sax",
       "Alto Sax",
@@ -132,8 +138,8 @@
     "id": "bernies_tune_4bari",
     "filename": "bernies_tune_4bari.mxl",
     "title": "Bernie's Tune",
-    "composer": "Bernie Miller\r\nArr. Lee Evans",
-    "arranger": "",
+    "composer": "Bernie Miller",
+    "arranger": "Arr. Lee Evans",
     "instruments": [
       "Bari Sax 1",
       "Bari Sax 2",
@@ -147,8 +153,8 @@
     "id": "bernies_tune_bass_clarinet_quartet",
     "filename": "bernies_tune_bass_clarinet_quartet.mxl",
     "title": "Bernie's Tune",
-    "composer": "Bernie Miller\r\nArr. Lee Evans",
-    "arranger": "",
+    "composer": "Bernie Miller",
+    "arranger": "Arr. Lee Evans",
     "instruments": [
       "Bass Clarinet 1",
       "Bass Clarinet 2",
@@ -162,8 +168,8 @@
     "id": "bernies_tune_sax_quartet_aatb",
     "filename": "bernies_tune_sax_quartet_AATB.mxl",
     "title": "Bernie's Tune",
-    "composer": "Bernie Miller\r\nArr. Lee Evans",
-    "arranger": "",
+    "composer": "Bernie Miller",
+    "arranger": "Arr. Lee Evans",
     "instruments": [
       "Alto 1",
       "Alto 2",
@@ -177,10 +183,13 @@
     "id": "blue_charlie_brown_4bari",
     "filename": "blue_charlie_brown_4bari.mxl",
     "title": "Blue Charlie Brown",
-    "composer": "Vince Guaraldi (1969?)",
-    "arranger": "Arr. Albert Einstein Lassiter (06/29/1996)\r\nAdapted from Lee Evans",
+    "composer": "Vince Guaraldi",
+    "arranger": "Arr. Albert Einstein Lassiter, Adapted from Lee Evans",
     "instruments": [
-      "Bari Sax 1"
+      "Bari Sax 1",
+      "Bari Sax 2",
+      "Bari Sax 3",
+      "Bari Sax 4"
     ],
     "difficulty": "Medium",
     "style": "TV"
@@ -189,8 +198,8 @@
     "id": "blue_charlie_brown_bass_clarinets",
     "filename": "blue_charlie_brown_bass_clarinets.mxl",
     "title": "Blue Charlie Brown",
-    "composer": "Vince Guaraldi (1969?)",
-    "arranger": "Arr. Albert Einstein Lassiter (06/29/1996)\r\nAdapted from Lee Evans",
+    "composer": "Vince Guaraldi",
+    "arranger": "Arr. Albert Einstein Lassiter, Adapted from Lee Evans",
     "instruments": [
       "Bass Clarinet 1",
       "Bass Clarinet 2",
@@ -237,6 +246,8 @@
     "composer": "Traditional",
     "arranger": "Arr. Albert Einstein Lassiter",
     "instruments": [
+      "Bari Sax 1",
+      "Bari Sax 2",
       "Bari Sax 3"
     ],
     "difficulty": "Medium",
@@ -338,7 +349,10 @@
     "composer": "Mercer/Arlen",
     "arranger": "Adapted from Lee Evans\r\nArr. Albert Einstein Lassiter\r\n9/17/1998",
     "instruments": [
-      "Bass Clarinet 1"
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
     ],
     "difficulty": "Medium",
     "style": "Jazz"
@@ -840,7 +854,10 @@
     "composer": "Erroll Garner (1954)",
     "arranger": "Arr. Albert Einstein Lassiter\r\nAdapted from Lee Evans",
     "instruments": [
-      "Soprano Sax"
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
     ],
     "difficulty": "Medium",
     "style": "Jazz"
@@ -927,6 +944,9 @@
     "composer": "Mykola Lysenko/Oleksandr Konysky (1885)",
     "arranger": "Arr. Brian Einstein Lassiter",
     "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
       "Bass Clarinet 4"
     ],
     "difficulty": "Easy",
@@ -1117,10 +1137,10 @@
     "composer": "Arr. AEL",
     "arranger": "",
     "instruments": [
-      "Soprano",
-      "Alto",
-      "Tenor",
-      "Bari"
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
     ],
     "difficulty": "Easy",
     "style": "Holiday"
@@ -1251,6 +1271,9 @@
     "composer": "Koji Kondo (1990)",
     "arranger": "Arr. Brian Einstein Lassiter",
     "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
       "Bari Sax"
     ],
     "difficulty": "Medium-Hard",

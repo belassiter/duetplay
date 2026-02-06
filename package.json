@@ -7,7 +7,7 @@
     "dev": "node scripts/generate-manifest.js --input public_duet --output public_duet/songs.json && node scripts/copy-assets.cjs public_duet/songs.json public/songs.json && vite",
     "dev:quartet": "node scripts/generate-manifest.js --input ../esquartet/sheetmusic --output public/quartet-songs.json --optional && vite --mode quartet",
     "build": "node scripts/generate-manifest.js --input public_duet --output public_duet/songs.json && tsc -b && vite build && node scripts/copy-assets.cjs public_duet dist",
-    "build:quartet": "node scripts/generate-manifest.js --input ../esquartet/sheetmusic --output public/quartet-songs.json --optional && tsc -b && vite build --mode quartet && node scripts/copy-assets.cjs ../esquartet/sheetmusic dist-quartet --optional",
+    "build:quartet": "tsc -b && vite build --mode quartet",
     "gen-manifest": "node scripts/generate-manifest.js",
     "lint": "eslint .",
     "test": "vitest run",

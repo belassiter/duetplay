@@ -1,3 +1,18 @@
+# 2026-02-06 13:30:00 - Separate Deployment Workflow for QuartetPlay
+
+> "Select Instrument modal still has the download buttons... Remove them... QuartetPlay did not [deploy correctly]... I expect it to be at public_html/esquartet/quartetplay"
+
+**Summary of Changes:**
+1.  **Cleanup SidePanel**: Removed the vestigial download buttons (PDF/MusicXML) from `SidePanel.tsx` as requested, confirming they are now only available in the main UI (header/menu).
+2.  **Fix Quartet Build**:
+    *   Simplified the `build:quartet` script in `package.json`. It previously tried to run `generate-manifest.js` and `copy-assets.cjs` on the `../esquartet` folder, which **does not exist** in the GitHub Actions environment.
+    *   Since `public/quartet-songs.json` is tracked in git (and generated locally by you), we don't need to regenerate it in CI. The build script now simply runs `tsc` and `vite build --mode quartet`.
+3.  **New Deployment Workflow**:
+    *   Created `.github/workflows/deploy-quartet.yml`.
+    *   This workflow runs parallel to the standard deploy but triggers specifically for QuartetPlay.
+    *   It executes the simplified `npm run build:quartet`.
+    *   It deploys the output (`dist-quartet/`) to the specific FTP path requested: `public_html/esquartet/quartetplay/`.
+
 # 2026-02-06 13:20:00 - UI Refinements for Downloads and Song Selection
 
 > "Ok, let's make these changes to the download buttons... Remove the MusicXML button... Make the PDF Download button have the download icon... Move the PDF button to the header and mobile menu... Add "MXL" column... Only load song if cell clicked... filtering changes."
