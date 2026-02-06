@@ -1,3 +1,26 @@
+# 2026-02-05 17:16
+User: "restore Range Preview to look like it did before (notes on staff + text)"
+Summary:
+1.  **Restored VexFlow Implementation**: Reverted `RangePreview.tsx` to use VexFlow for rendering notes on a staff, as requested.
+2.  **Upgraded for VexFlow 5**: Adapted the previous VexFlow 4.x code to use VexFlow 5.0 named imports (`Renderer`, `Stave`, etc.) and camelCase options (`numBeats`) to ensure it actually works and builds.
+3.  **Fixed Props**: Maintained the updated Prop interface to ensure compatibility with `SidePanel.tsx`.
+4.  **Fixed Color Logic**: Restored the color-coding logic using `instrumentRange` from `constants/instruments.ts`.
+5.  **Verified**: `npm run build` passed.
+
+# 2026-02-05 17:08
+User: "Select a song list is empty... Revert range preview... Update search.html... Add logo..."
+Summary:
+1.  **Fixed Empty Song List**: Discovered `useMemo` in `SongSelectorPanel.tsx` had missing dependency `[songs]`, preventing the list from updating after fetch. Fixed dependency array and added "No songs loaded" empty state message.
+2.  **Fixed Range Preview**: Reverted broken VexFlow implementation to a robust Text + Visual Bar CSS implementation.
+3.  **UI Enhancements**:
+    *   Moved `duetplay_logo.png` to `public/` and added it to `App.tsx` header.
+    *   Styled "Reset Instrument" button in `SidePanel` to match "Zoom Reset" button (Icon-only style).
+4.  **Search Tool Update**:
+    *   Updated `public/temp/search.js` to support Pagination (50 items/page).
+    *   Updated filtering logic to support specific track counts (1, 2, 3, 4, 5+).
+    *   Updated `public/temp/search.html` dropdown options.
+5.  **Verified**: Ran `lint`, `test`, and `build`. All passed.
+
 # 2026-02-04 06:00
 
 ## UI Refinements & Build Logic

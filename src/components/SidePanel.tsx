@@ -1,24 +1,17 @@
 import React from 'react';
-import { X, ArrowUp, ArrowDown } from 'lucide-react';
+import { X, ArrowUp, ArrowDown, RotateCcw } from 'lucide-react';
 import InstrumentSelector from './InstrumentSelector';
 import { instruments } from '../constants/instruments';
 import RangePreview from './RangePreview';
+import type { PartState } from '../types/song';
 
 interface SidePanelProps {
     isOpen: boolean;
     onClose: () => void;
-    instrument1: string;
-    instrument2: string;
-    originalInstruments?: { part1: string, part2: string };
-    onInstrument1Change: (val: string) => void;
-    onInstrument2Change: (val: string) => void;
-    isMobile?: boolean;
     
-    // New Props
-    part1Octave: number;
-    onPart1OctaveChange: (val: number) => void;
-    part2Octave: number;
-    onPart2OctaveChange: (val: number) => void;
+    parts: PartState[];
+    onPartChange: (partId: number, field: keyof PartState, value: string | number) => void;
+
     globalTranspose: number;
     onGlobalTransposeChange: (val: number) => void;
     
@@ -27,6 +20,7 @@ interface SidePanelProps {
     
     // Reset
     onReset?: () => void;
+    isMobile?: boolean;
 }
 
 const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: number) => void }) => (
@@ -55,22 +49,15 @@ const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: num
 const SidePanel: React.FC<SidePanelProps> = ({ 
     isOpen, 
     onClose, 
-    instrument1, 
-    instrument2, 
-    originalInstruments,
-    onInstrument1Change, 
-    onInstrument2Change,
-    isMobile,
-    part1Octave,
-    onPart1OctaveChange,
-    part2Octave,
-    onPart2OctaveChange,
+    parts,
+    onPartChange,
     globalTranspose,
     onGlobalTransposeChange,
     xmlString,
-    onReset
+    onReset,
+    isMobile
 }) => {
-    const [activeSelector, setActiveSelector] = React.useState<'none' | 'part1' | 'part2'>('none');
+    const [activeSelectorId, setActiveSelectorId] = React.useState<number | null>(null);
 
     const getClef = (instVal: string) => {
         const inst = instruments.find(i => i.value === instVal);
@@ -79,19 +66,17 @@ const SidePanel: React.FC<SidePanelProps> = ({
 
     // Close selectors when panel closes
     React.useEffect(() => {
-        if (!isOpen) setActiveSelector('none');
+        if (!isOpen) setActiveSelectorId(null);
     }, [isOpen]);
 
-    const handleToggle = (selector: 'part1' | 'part2') => {
-        setActiveSelector(prev => prev === selector ? 'none' : selector);
+    const handleToggle = (id: number) => {
+        setActiveSelectorId(prev => prev === id ? null : id);
     };
 
-    const getLabel = (part: 'part1' | 'part2') => {
-        const base = part === 'part1' ? "Part 1 Instrument" : "Part 2 Instrument";
-        const origVal = originalInstruments ? originalInstruments[part] : 'none';
-        
-        if (origVal && origVal !== 'none') {
-            const inst = instruments.find(i => i.value === origVal);
+    const getLabel = (partId: number, originalInstrument: string) => {
+        const base = `Part ${partId} Instrument`;
+        if (originalInstrument && originalInstrument !== 'none') {
+            const inst = instruments.find(i => i.value === originalInstrument);
             if (inst) {
                  return `${base} (original is ${inst.name})`;
             }
@@ -117,8 +102,12 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     <div className="flex items-center gap-2">
                         <h2 className="text-lg font-bold text-gray-800">Select Instruments</h2>
                         {onReset && (
-                             <button onClick={onReset} className="text-xs text-blue-600 hover:text-blue-800 underline ml-2" title="Reset all instrument settings to default">
-                                Reset
+                             <button 
+                                onClick={onReset} 
+                                className="p-1.5 hover:bg-gray-100 rounded text-gray-500 hover:text-blue-600 transition-colors ml-2" 
+                                title="Reset all instrument settings to default"
+                             >
+                                <RotateCcw size={16} />
                              </button>
                         )}
                     </div>
@@ -127,52 +116,44 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     </button>
                 </div>
                 
-                <div className="p-4">
-                    <InstrumentSelector 
-                        label={getLabel('part1')}
-                        selectedValue={instrument1}
-                        onSelect={onInstrument1Change}
-                        isOpen={activeSelector === 'part1'}
-                        onToggle={() => handleToggle('part1')}
-                    />
-                    
-                    <OctaveControl value={part1Octave} onChange={onPart1OctaveChange} />
-                    
-                    {isOpen && (
-                        <RangePreview 
-                            label="Part 1" 
-                            xmlString={xmlString} 
-                            staffId="1" 
-                            clef={getClef(instrument1)} 
-                            instrumentValue={instrument1}
-                        />
-                    )}
+                <div className="p-4 h-[calc(100vh-60px)] overflow-y-auto pb-20">
+                    {parts.map((part) => (
+                        <div key={part.id} className="mb-6">
+                            <InstrumentSelector 
+                                label={getLabel(part.id, part.originalInstrument)}
+                                selectedValue={part.instrument}
+                                onSelect={(val) => onPartChange(part.id, 'instrument', val)}
+                                isOpen={activeSelectorId === part.id}
+                                onToggle={() => handleToggle(part.id)}
+                            />
+                            
+                            <OctaveControl 
+                                value={part.octave} 
+                                onChange={(val) => onPartChange(part.id, 'octave', val)} 
+                            />
+                            
+                            {isOpen && (
+                                <RangePreview 
+                                    label={`Part ${part.id}`} 
+                                    xmlString={xmlString} 
+                                    staffId={part.id.toString()}
+                                    clef={getClef(part.instrument)} 
+                                    instrumentValue={part.instrument}
+                                    partId={part.id.toString()}
+                                    octaveShift={part.octave}
+                                    transposeSemitones={globalTranspose}
+                                    isMobile={isMobile}
+                                />
+                            )}
+                            <hr className="my-4 border-gray-100" />
+                        </div>
+                    ))}
 
-                    <InstrumentSelector 
-                        label={getLabel('part2')}
-                        selectedValue={instrument2}
-                        onSelect={onInstrument2Change}
-                        isOpen={activeSelector === 'part2'}
-                        onToggle={() => handleToggle('part2')}
-                    />
-
-                    <OctaveControl value={part2Octave} onChange={onPart2OctaveChange} />
-                    
-                    {isOpen && (
-                        <RangePreview 
-                            label="Part 2" 
-                            xmlString={xmlString} 
-                            staffId="2" 
-                            clef={getClef(instrument2)} 
-                            instrumentValue={instrument2}
-                        />
-                    )}
-
-                    <hr className="my-6 border-gray-200" />
+                    <hr className="my-2 border-gray-200" />
                     
                     <div className="mb-4">
                         <div className="flex justify-between items-center mb-2">
-                             <label className="text-sm font-bold text-gray-800">Adjust key:</label>
+                             <label className="text-sm font-bold text-gray-800">Adjust key (Global):</label>
                              <span className="text-sm font-medium text-blue-600 w-12 text-right">
                                 {globalTranspose > 0 ? '+' : ''}{globalTranspose}
                              </span>

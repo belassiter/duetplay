@@ -42,9 +42,24 @@ describe('App', () => {
         });
         
         // Mock fetch
-        window.fetch = vi.fn().mockResolvedValue({
-            ok: true,
-            arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
+        window.fetch = vi.fn().mockImplementation((url) => {
+             if (typeof url === 'string' && url.endsWith('songs.json')) {
+                 return Promise.resolve({
+                     ok: true,
+                     json: () => Promise.resolve([
+                        { 
+                            id: 'bach_invention_11', 
+                            title: 'Invention 11', 
+                            filename: 'bach_invention_11.mxl',
+                            instruments: ['Piano', 'Piano'] 
+                        }
+                     ])
+                 });
+             }
+             return Promise.resolve({
+                ok: true,
+                arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
+             });
         });
     });
 

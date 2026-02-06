@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, Filter, Check } from 'lucide-react';
 import type { Song } from '../types/song';
-import songsData from '../data/songs.json';
 
 interface MultiSelectDropdownProps {
     label: string;
@@ -75,11 +74,10 @@ interface SongSelectorPanelProps {
     onSelectSong: (song: Song) => void;
     isMobile?: boolean;
     isLandscape?: boolean;
+    songs: Song[];
 }
 
-const songs = songsData as Song[];
-
-const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, onSelectSong, isMobile, isLandscape }) => {
+const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, onSelectSong, isMobile, isLandscape, songs }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [styleFilters, setStyleFilters] = useState<string[]>([]);
     const [difficultyFilters, setDifficultyFilters] = useState<string[]>([]);
@@ -100,20 +98,19 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
     }, []);
 
     // Unique options for filters
-    const styles = useMemo(() => Array.from(new Set(songs.map(s => s.style).filter(Boolean))).sort(), []);
+    const styles = useMemo(() => Array.from(new Set(songs.map(s => s.style).filter(Boolean))).sort(), [songs]);
     const difficulties = useMemo(() => {
         const unique = Array.from(new Set(songs.map(s => s.difficulty).filter(Boolean)));
         const order = ['None', 'Easy', 'Medium-Easy', 'Medium', 'Medium-Hard', 'Hard'];
         return unique.sort((a, b) => {
             const idxA = order.indexOf(a as string);
             const idxB = order.indexOf(b as string);
-            // Put items not in list at end
             if (idxA === -1 && idxB === -1) return (a as string).localeCompare(b as string);
             if (idxA === -1) return 1;
             if (idxB === -1) return -1;
             return idxA - idxB;
         });
-    }, []);
+    }, [songs]);
 
     const handleSort = (key: keyof Song) => {
         let direction: 'asc' | 'desc' = 'asc';
@@ -158,7 +155,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
             });
         }
         return result;
-    }, [searchTerm, styleFilters, difficultyFilters, sortConfig]);
+    }, [searchTerm, styleFilters, difficultyFilters, sortConfig, songs]);
 
     return (
         <>
@@ -328,7 +325,13 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                             </tr>
                         </thead>
                         <tbody className="text-sm text-gray-700">
-                            {filteredAndSortedSongs.length > 0 ? (
+                            {songs.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="p-8 text-center text-gray-500">
+                                        No songs loaded. Please checks logs or verify songs.json.
+                                    </td>
+                                </tr>
+                            ) : filteredAndSortedSongs.length > 0 ? (
                                 filteredAndSortedSongs.map((song) => (
                                     <tr 
                                         key={song.id} 

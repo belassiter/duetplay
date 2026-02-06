@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node scripts/generate-manifest.js && vite",
     "build": "node scripts/generate-manifest.js && tsc -b && vite build",
+    "build:quartet": "cross-env CONTENT_DIR=../skq/sheetmusic VITE_BASE_URL=/quartetplay/ npm run build",
     "gen-manifest": "node scripts/generate-manifest.js",
     "lint": "eslint .",
     "test": "vitest run",
@@ -34,6 +35,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
     "autoprefixer": "^10.4.24",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

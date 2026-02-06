@@ -390,6 +390,19 @@
     "style": ""
   },
   {
+    "id": "star_trek_tas",
+    "filename": "star_trek_tas.mxl",
+    "title": "Star Trek: The Animated Series",
+    "composer": "Ray Ellis (1973)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "TV"
+  },
+  {
     "id": "studio_ghibli_medley",
     "filename": "studio_ghibli_medley.mxl",
     "title": "Studio Ghibli Duet",

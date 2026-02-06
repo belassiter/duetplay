@@ -7,8 +7,7 @@ import SidePanel from './components/SidePanel';
 import SongSelectorPanel from './components/SongSelectorPanel';
 import HelpPanel from './components/HelpPanel';
 import { instruments } from './constants/instruments';
-import type { Song } from './types/song';
-import songsData from './data/songs.json';
+import type { Song, PartState } from './types/song';
 import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu } from 'lucide-react';
 
 function App() {
@@ -18,16 +17,38 @@ function App() {
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('');
   const [scoreVersion, setScoreVersion] = useState<number>(0);
-  const [viewMode, setViewMode] = useState<'score' | 'part1' | 'part2'>('score');
   
-  // Instrument State
-  const [instrument1, setInstrument1] = useState<string>('none');
-  const [instrument2, setInstrument2] = useState<string>('none');
-  const [originalInstruments, setOriginalInstruments] = useState<{ part1: string, part2: string }>({ part1: 'none', part2: 'none' });
-  const [part1Octave, setPart1Octave] = useState<number>(0);
-  const [part2Octave, setPart2Octave] = useState<number>(0);
+  // N-Part State
+  const [parts, setParts] = useState<PartState[]>([]);
   const [globalTranspose, setGlobalTranspose] = useState<number>(0);
+  const [viewMode, setViewMode] = useState<string>('score'); // 'score' | 'part-1' | 'part-2' etc.
   
+  // Songs Data
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [isLoadingSongs, setIsLoadingSongs] = useState(true);
+
+  // Fetch Songs on Boot
+  useEffect(() => {
+    const fetchSongs = async () => {
+        try {
+            // Use import.meta.env.BASE_URL to respect 'base' config in vite.config.ts
+            // But 'current' logic for public files is tricky if base is not root.
+            // Vite handles 'public' files at root.
+            // If base is '/duetplay/', then fetch('/duetplay/songs.json')
+            const response = await fetch(`${import.meta.env.BASE_URL}songs.json`);
+            if (!response.ok) throw new Error('Failed to load songs manifest');
+            const data = await response.json();
+            setSongs(data);
+        } catch (e) {
+            console.error(e);
+            setStatus('Error loading library');
+        } finally {
+            setIsLoadingSongs(false);
+        }
+    };
+    fetchSongs();
+  }, []);
+
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isSongPanelOpen, setIsSongPanelOpen] = useState(false);
   const [isHelpPanelOpen, setIsHelpPanelOpen] = useState(false);
@@ -120,54 +141,48 @@ function App() {
                 const xmlText = await zipContent.files[scoreFile].async('string');
                 let processedXML = xmlText;
                 
-                // Get Inst 1
-                const inst1 = instruments.find(i => i.value === instrument1);
-                const orig1 = instruments.find(i => i.value === originalInstruments.part1);
-                
-                const hasShift1 = part1Octave !== 0 || globalTranspose !== 0;
-
-                if (inst1 && (inst1.value !== 'none' || hasShift1)) {
-                    const p1TotalShift = (part1Octave * 12) + globalTranspose;
-                    const targetClef = inst1.value === 'none' ? undefined : inst1.clef;
-
-                    processedXML = transposeMusicXML(
-                        processedXML, 
-                        inst1.transpose, 
-                        targetClef, 
-                        '1', 
-                        orig1?.transpose || 'P1', 
-                        inst1.value === 'none' ? undefined : inst1.name,
-                        p1TotalShift
-                    );
-                }
-                
-                // Get Inst 2
-                const inst2 = instruments.find(i => i.value === instrument2);
-                const orig2 = instruments.find(i => i.value === originalInstruments.part2);
-                
-                const hasShift2 = part2Octave !== 0 || globalTranspose !== 0;
-
-                if (inst2 && (inst2.value !== 'none' || hasShift2 || (inst2.value !== originalInstruments.part2 && inst2.value !== 'none'))) {
-                     const p2TotalShift = (part2Octave * 12) + globalTranspose;
-                     const targetClef = inst2.value === 'none' ? undefined : inst2.clef;
-
-                     // Apply to Part 2 / Staff 2
-                     processedXML = transposeMusicXML(
-                        processedXML, 
-                        inst2.transpose, 
-                        targetClef, 
-                        '2', 
-                        orig2?.transpose || 'P1', 
-                        inst2.value === 'none' ? undefined : inst2.name,
-                        p2TotalShift
-                    );
+                // --- MULTI-PART TRANSPOSE LOOP ---
+                for (const part of parts) {
+                    const inst = instruments.find(i => i.value === part.instrument);
+                    const orig = instruments.find(i => i.value === part.originalInstrument);
+                    const hasShift = part.octave !== 0 || globalTranspose !== 0;
+                    
+                    // Optimization: Skip if "none" and no transpose
+                    // BUT: If user explicitly selected "none" (meaning Concert Pitch), we might still want Global Transpose applied.
+                    
+                    // Logic: If user specifically chose an instrument, apply its transposition.
+                    // If instrument is 'none', it implies no CHANGE to transposition (keep original), 
+                    // UNLESS Global Transpose is active.
+                    
+                    // Wait, if I select 'Alto Sax' (Eb) on a generic C part, I want it to read for Alto Sax.
+                    // If I select 'none', it stays as is. 
+                    
+                    // Construct Transpose Params
+                    if (inst && (part.instrument !== 'none' || hasShift)) {
+                        const totalShift = (part.octave * 12) + globalTranspose;
+                        const targetClef = part.instrument === 'none' ? undefined : inst.clef;
+                        
+                        // We target the part by Index (1-based ID).
+                        processedXML = transposeMusicXML(
+                            processedXML,
+                            inst.transpose,
+                            targetClef,
+                            part.id.toString(), // "1", "2", "3", "4"
+                            orig?.transpose || 'P1',
+                            part.instrument === 'none' ? undefined : inst.name,
+                            totalShift
+                        );
+                    }
                 }
                 
                 // --- View Mode Filtering ---
-                if (viewMode === 'part1') {
-                    processedXML = isolatePart(processedXML, 0);
-                } else if (viewMode === 'part2') {
-                    processedXML = isolatePart(processedXML, 1);
+                if (viewMode !== 'score') {
+                    // viewMode is like 'part-1'
+                    const partId = parseInt(viewMode.replace('part-', ''));
+                    // isolatePart expects 0-based index
+                    if (!isNaN(partId)) {
+                        processedXML = isolatePart(processedXML, partId - 1);
+                    }
                 }
                 
                 setProcessedXml(processedXML);
@@ -198,11 +213,11 @@ function App() {
       } finally {
           setIsRendering(false);
       }
-  }, [verovioToolkit, containerWidth, instrument1, instrument2, originalInstruments, zoomLevel, isMobile, isLandscape, part1Octave, part2Octave, globalTranspose, viewMode]);
+  }, [verovioToolkit, containerWidth, parts, zoomLevel, isMobile, isLandscape, globalTranspose, viewMode]);
 
   const mapInstrumentNameToValue = useCallback((name: string): string => {
       if (!name) return 'none';
-      // Normalize: remove trailing numbers (e.g. "Trumpet 1" -> "Trumpet") and whitespace
+      // Normalize: remove trailing nuparts, globalTranspose, viewMode, zoomLevel, isMobile, isLandscap
       const cleanName = name.replace(/\s*\d+$/, '').trim().toLowerCase();
       
       // Use "find" carefully - specificity matters. 
@@ -230,12 +245,14 @@ function App() {
 
 
   const resetSettings = useCallback(() => {
-    setInstrument1(originalInstruments.part1);
-    setInstrument2(originalInstruments.part2);
-    setPart1Octave(0);
-    setPart2Octave(0);
+    // Reset all parts to original
+    setParts(prev => prev.map(p => ({
+        ...p,
+        instrument: p.originalInstrument,
+        octave: 0
+    })));
     setGlobalTranspose(0);
-  }, [originalInstruments]);
+  }, []);
 
   const loadScore = useCallback(async (filename: string) => {
         setStatus('Loading score...');
@@ -255,29 +272,76 @@ function App() {
         }
   }, []);
 
+  const handleSongSelect = useCallback((song: Song) => {
+        // Initialize Parts Array
+        const newParts: PartState[] = [];
+        
+        // If song.instruments is missing or empty, assume 2 (default/legacy)
+        const instList = (song.instruments && song.instruments.length > 0) 
+            ? song.instruments 
+            : ['', '']; // Dummy empty strings to trigger 2 iterations
+
+        instList.forEach((instName, index) => {
+             const val = mapInstrumentNameToValue(instName);
+             newParts.push({
+                 id: index + 1,
+                 instrument: val,
+                 originalInstrument: val,
+                 octave: 0
+             });
+        });
+
+        // If for some reason we have a 1-part song that is Grand Staff (Piano), logic might be tricky.
+        // But for now we trust `instruments` array length.
+        
+        setParts(newParts);
+        setGlobalTranspose(0);
+        setViewMode('score');
+        
+        loadScore(song.filename);
+        setIsSongPanelOpen(false);
+  }, [mapInstrumentNameToValue, loadScore]);
+
   const hasInitialLoad = useRef(false);
 
   // Initial Load
   useEffect(() => {
-    if (hasInitialLoad.current) return;
+    if (hasInitialLoad.current || isLoadingSongs || songs.length === 0) return;
 
     if (!loading && verovioToolkit && !fileDataRef.current) {
         hasInitialLoad.current = true;
-        // Set default instruments for the starting song
-        const songs = songsData as Song[];
+        // Default song
         const defaultSong = songs.find(s => s.id === 'bach_invention_11') || songs[0];
-        if (defaultSong) {
-             const p1Val = defaultSong.instruments[0] ? mapInstrumentNameToValue(defaultSong.instruments[0]) : 'none';
-             const p2Val = defaultSong.instruments[1] ? mapInstrumentNameToValue(defaultSong.instruments[1]) : 'none';
-             
-             // Batch updates
-             setInstrument1(p1Val);
-             setInstrument2(p2Val);
-             setOriginalInstruments({ part1: p1Val, part2: p2Val });
-             loadScore(defaultSong.filename);
-        }
+        if (defaultSong) handleSongSelect(defaultSong);
     }
-  }, [loading, verovioToolkit, loadScore, mapInstrumentNameToValue]);
+  }, [loading, verovioToolkit, songs, isLoadingSongs, handleSongSelect]); // Removing deps that caused loops
+  
+  const handlePartChange = (id: number, field: keyof PartState, value: string | number) => {
+       setParts(prev => prev.map(p => {
+           if (p.id !== id) return p;
+           return { ...p, [field]: value };
+       }));
+  };
+  
+  const toggleViewMode = () => {
+      // Cycle: score -> part-1 -> part-2 -> ... -> part-N -> score
+      if (viewMode === 'score') {
+          setViewMode('part-1');
+      } else {
+          const currentId = parseInt(viewMode.replace('part-', ''));
+          if (currentId < parts.length) {
+              setViewMode(`part-${currentId + 1}`);
+          } else {
+              setViewMode('score');
+          }
+      }
+  };
+  
+  const getViewLabel = () => {
+      if (viewMode === 'score') return 'Score';
+      const id = viewMode.replace('part-', '');
+      return `Part ${id}`;
+  };
 
   // Re-render when data/params change
   useEffect(() => {
@@ -316,37 +380,29 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleSongSelect = (song: Song) => {
-      setIsSongPanelOpen(false);
-      
-      const p1Val = song.instruments[0] ? mapInstrumentNameToValue(song.instruments[0]) : 'none';
-      const p2Val = song.instruments[1] ? mapInstrumentNameToValue(song.instruments[1]) : 'none';
-
-      setInstrument1(p1Val);
-      setInstrument2(p2Val);
-      setOriginalInstruments({ part1: p1Val, part2: p2Val });
-      
-      loadScore(song.filename);
-
-      // Scroll to top
-      if (containerRef.current) {
-        containerRef.current.scrollTo({ top: 0, behavior: 'instant' });
-      }
-  };
-
   return (
     <div className="p-0 w-full mx-auto flex flex-col h-screen">
       <div className="flex justify-between items-center mb-1 md:mb-2 gap-1 md:gap-2 p-1 md:p-2 relative flex-wrap md:flex-nowrap bg-white shadow-sm z-30">
-          <div className="flex items-center gap-4 hidden md:flex">
+          <div className="flex items-center gap-3 hidden md:flex">
+               <img 
+                   src={`${import.meta.env.BASE_URL}duetplay_logo.png`} 
+                   alt="Logo" 
+                   className="h-8 w-auto rounded-sm" 
+                   onError={(e) => {
+                       // Fallback if base url is tricky
+                       (e.target as HTMLImageElement).src = 'duetplay_logo.png';
+                   }} 
+               />
                <h1 className="text-xl md:text-2xl font-bold truncate max-w-[200px] md:max-w-md" title="DuetPlay">
                    DuetPlay
                </h1>
           </div>
           
-          <div className="flex gap-2 items-center w-full md:w-auto justify-end">
+
+          <div className="flex items-center gap-2 flex-wrap md:flex-nowrap flex-1 justify-end">
             
-            {/* Mobile Menu Button */}
-            {isMobile && !isLandscape && (
+            {/* Menu Button (Mobile) */}
+            {isMobile && (
                 <button
                     onClick={() => setIsMenuOpen(true)}
                     className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm h-[38px] w-[38px]"
@@ -392,13 +448,13 @@ function App() {
             </div>
             
             <button 
-                onClick={() => setViewMode(prev => prev === 'score' ? 'part1' : (prev === 'part1' ? 'part2' : 'score'))}
+                onClick={toggleViewMode}
                 className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap min-w-[90px] justify-center"
-                title="Toggle View: Score / Part 1 / Part 2"
+                title="Toggle View"
             >
                 <Eye size={18} />
                 <span className="inline">
-                    {viewMode === 'score' ? 'Score' : (viewMode === 'part1' ? 'Part 1' : 'Part 2')}
+                    {getViewLabel()}
                 </span>
             </button>
 
@@ -422,26 +478,24 @@ function App() {
             <button 
                 onClick={() => setIsHelpPanelOpen(true)}
                 className={`flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hidden md:flex ${isMobile && !isLandscape ? 'hidden' : ''}`}
-                title="Help & FAQ"
+                title="Help"
             >
                 <HelpCircle size={20} />
             </button>
-          </div>
-      </div>
-      
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-[60] flex" onClick={() => setIsMenuOpen(false)}>
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/50" />
-            
-            {/* Drawer */}
-            <div className="relative w-[50%] bg-white h-full shadow-xl flex flex-col p-4 gap-4" onClick={e => e.stopPropagation()}>
-                 <div className="flex justify-between items-center border-b pb-2 mb-2">
-                     <h2 className="text-xl font-bold text-gray-800">Menu</h2>
-                 </div>
-                 
-                 <button 
+
+            {/* Mobile Menu Button */}
+            <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="md:hidden flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
+            >
+                <Menu size={20} />
+            </button>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+            <div className="absolute bottom-16 right-4 w-48 bg-white rounded-lg shadow-xl border border-gray-200 p-2 flex flex-col gap-2 md:hidden z-50">
+                <button 
                     onClick={() => { setIsMenuOpen(false); setIsSongPanelOpen(true); }}
                     className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
                 >
@@ -465,26 +519,19 @@ function App() {
                     <span>Help</span>
                 </button>
             </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <SidePanel 
         isOpen={isSidePanelOpen} 
         onClose={() => setIsSidePanelOpen(false)}
-        instrument1={instrument1}
-        instrument2={instrument2}
-        originalInstruments={originalInstruments}
-        onInstrument1Change={setInstrument1}
-        onInstrument2Change={setInstrument2}
-        isMobile={isMobile}
-        part1Octave={part1Octave}
-        onPart1OctaveChange={setPart1Octave}
-        part2Octave={part2Octave}
-        onPart2OctaveChange={setPart2Octave}
+        parts={parts}
+        onPartChange={handlePartChange}
         globalTranspose={globalTranspose}
         onGlobalTransposeChange={setGlobalTranspose}
         xmlString={processedXml}
         onReset={resetSettings}
+        isMobile={isMobile}
       />
 
       <SongSelectorPanel
@@ -493,6 +540,7 @@ function App() {
         onSelectSong={handleSongSelect}
         isMobile={isMobile}
         isLandscape={isLandscape}
+        songs={songs}
       />
 
       <HelpPanel

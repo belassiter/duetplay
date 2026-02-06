@@ -19,6 +19,7 @@ Here's a rough order to do development
 - [X] Only display one part (play on two separate devices)
 - [X] Help menu
 - [X] Hamburger menu for mobile-vertical
+- [ ] Mobile - show songs as cards
 - [ ] Custom instrument
 - [ ] Larger ensemble size
 - [ ] Import user's mxl file

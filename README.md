@@ -1,6 +1,11 @@
 # DuetPlay
 
-DuetPlay is a web-based tool for transposing and visualizing MusicXML scores, specifically designed for adapting piano scores (Grand Staff) into separate parts or duets.
+DuetPlay is a web-based tool adapting duets for any pairing of instruments. Choose a song from the online library, then choose your instruments. Adjust octaves and key to better fit your instruments. Then play a duet with your friend!
+
+## How to use
+1. Click `Select Song`, choose a song. Use search to narrow down the title, composer, and arranger. Use filtering to narrow down style and difficulty level.
+1. Click `Select Instruments`. Select your instruments from the list. The range of the song will be shown below, with blue=easy, orange=difficult, red=out of range. Use the octave adjustment to adjust the range for one instrument, or use the key slider to adjust for both instruments.
+1. Use the `zoom slider` to adjust the size of the sheet music.
 
 ## Features
 

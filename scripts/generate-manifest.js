@@ -7,16 +7,48 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PUBLIC_DIR = path.join(__dirname, '../public');
-const DATA_FILE = path.join(__dirname, '../src/data/songs.json');
+// Default Paths
+const DEFAULT_INPUT_DIR = path.join(__dirname, '../public');
+const DEFAULT_OUTPUT_FILE = path.join(__dirname, '../public/songs.json');
+
+// Parse Arguments
+const args = process.argv.slice(2);
+const help = args.includes('--help') || args.includes('-h');
+
+if (help) {
+    console.log(`
+Usage: node generate-manifest.js [options]
+
+Options:
+  --input, -i <dir>    Input directory containing .mxl files (default: public/)
+  --output, -o <file>  Output path for songs.json (default: public/songs.json)
+  --help, -h           Show this help message
+`);
+    process.exit(0);
+}
+
+const getArg = (flags) => {
+    for (const flag of flags) {
+        const index = args.indexOf(flag);
+        if (index !== -1 && index + 1 < args.length) {
+            return args[index + 1];
+        }
+    }
+    return null;
+};
+
+const inputDir = getArg(['--input', '-i']) || DEFAULT_INPUT_DIR;
+const outputFile = getArg(['--output', '-o']) || DEFAULT_OUTPUT_FILE;
+
+console.log(`Scanning directory: ${inputDir}`);
+console.log(`Output file: ${outputFile}`);
 
 async function parseMxl(filePath) {
     try {
         const content = await fs.readFile(filePath);
         const zip = await JSZip.loadAsync(content);
         
-        // Find the root .xml file (usually in META-INF/container.xml pointing to it, or just the first .xml)
-        // Simplification: Look for the first file ending in .xml or .musicxml that isn't container.xml
+        // Find the root .xml file
         const files = Object.keys(zip.files);
         const xmlFile = files.find(f => (f.endsWith('.xml') || f.endsWith('.musicxml')) && !f.includes('META-INF'));
         
@@ -30,113 +62,97 @@ async function parseMxl(filePath) {
     }
 }
 
-function parseXmlMetadata(xml) {
-    // Simple regex extraction
-    const extract = (pattern) => {
-        const match = xml.match(pattern);
-        return match && match[1] ? match[1].trim() : null;
+function parseXmlMetadata(xmlString) {
+    // Basic Regex parsing to avoid DOM dependency in Node environment
+    const getTag = (tag) => {
+        const regex = new RegExp(`<${tag}[^>]*>(.*?)<\/${tag}>`, 's');
+        const match = xmlString.match(regex);
+        return match ? match[1].trim() : '';
     };
 
-    // 1. Title
-    // Try <work-title>, then <movement-title>
-    const title = extract(/<work-title[^>]*>([\s\S]*?)<\/work-title>/) || 
-                  extract(/<movement-title[^>]*>([\s\S]*?)<\/movement-title>/) || 
-                  'Untitled';
-
-    // 2. Composer
-    const composer = extract(/<creator[^>]*type="composer"[^>]*>([\s\S]*?)<\/creator>/) || 
-                     extract(/<creator[^>]*>([\s\S]*?)<\/creator>/) || 
-                     'Unknown';
-
-    // 3. Arranger
-    const arranger = extract(/<creator[^>]*type="arranger"[^>]*>([\s\S]*?)<\/creator>/) || '';
-
-    // 4. Instruments
-    // <part-name>Trumpet</part-name>
-    const partNames = [];
-    const partNameRegex = /<part-name[^>]*>([\s\S]*?)<\/part-name>/g;
+    const title = getTag('work-title') || getTag('movement-title') || 'Untitled';
+    
+    // Instruments
+    const instruments = [];
+    const partNameRegex = /<part-name[^>]*>(.*?)<\/part-name>/g;
     let match;
-    while ((match = partNameRegex.exec(xml)) !== null) {
-        if (match[1]) partNames.push(match[1].trim());
+    while ((match = partNameRegex.exec(xmlString)) !== null) {
+        instruments.push(match[1]);
     }
 
-    // Cleanup HTML entities (basic)
-    const cleanup = (str) => str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ');
-
-    return { 
-        title: cleanup(title), 
-        composer: cleanup(composer),
-        arranger: cleanup(arranger),
-        instruments: partNames.map(cleanup)
+    return {
+        title,
+        composer: '', 
+        arranger: '',
+        instruments
     };
 }
 
-async function generateManifest() {
-    console.log('🎵 Generating Song Manifest...');
-    
-    // 1. Read existing data to preserve manual fields
-    let existingData = {};
+async function generate() {
     try {
-        const fileContent = await fs.readFile(DATA_FILE, 'utf-8');
-        const json = JSON.parse(fileContent);
-        // Index by filename for easy lookup
-        json.forEach(song => {
-            existingData[song.filename] = song;
-        });
-    } catch (e) {
-        // File doesn't exist or is empty, start fresh
-    }
-
-    // 2. Scan Public Directory
-    const files = await fs.readdir(PUBLIC_DIR);
-    const mxlFiles = files.filter(f => f.endsWith('.mxl') || f.endsWith('.musicxml'));
-    
-    const songs = [];
-
-    for (const file of mxlFiles) {
-        const filePath = path.join(PUBLIC_DIR, file);
-        
-        // Try to get metadata from XML
-        let meta = { title: null, composer: '', arranger: '', instruments: [] };
-        
-        if (file.endsWith('.mxl')) {
-            const extracted = await parseMxl(filePath);
-            if (extracted) meta = extracted;
-        } else {
-             // Plain XML support if needed
-             const content = await fs.readFile(filePath, 'utf-8');
-             meta = parseXmlMetadata(content);
+        // Ensure input dir exists
+        try {
+            await fs.access(inputDir);
+        } catch {
+            console.error(`Input directory does not exist: ${inputDir}`);
+            process.exit(1);
         }
 
-        // Merge with existing data
-        const existing = existingData[file] || {};
-        
-        const id = existing.id || file.replace(/\.(mxl|xml|musicxml)$/, '');
-        
-        // Respect existing manual edits. If the field exists in json, use it. Only fallback to meta if missing.
-        const mergedInstruments = (existing.instruments && existing.instruments.length > 0) 
-            ? existing.instruments 
-            : (meta.instruments || []);
+        // 1. Read Existing JSON (for preservation)
+        let existingSongs = [];
+        try {
+            const existingData = await fs.readFile(outputFile, 'utf-8');
+            existingSongs = JSON.parse(existingData);
+            console.log(`Loaded ${existingSongs.length} existing songs to preserve metadata.`);
+        } catch (e) {
+            console.log("No existing manifest found (" + outputFile + "), creating new one.");
+        }
 
-        const title = existing.title || (meta.title && meta.title !== 'Untitled' ? meta.title : id);
-        const composer = existing.composer || (meta.composer && meta.composer !== 'Unknown' ? meta.composer : '');
-        const arranger = existing.arranger || (meta.arranger || '');
+        // 2. Scan Files
+        const files = await fs.readdir(inputDir);
+        const mxlFiles = files.filter(f => f.endsWith('.mxl'));
+        
+        const songs = [];
 
-        songs.push({
-            id: id,
-            filename: file,
-            title: title, 
-            composer: composer,
-            arranger: arranger,
-            instruments: mergedInstruments,
-            difficulty: existing.difficulty || '', // Blank default
-            style: existing.style || '', // Blank default
-        });
+        for (const file of mxlFiles) {
+            // Check if we already have this file in our DB
+            // Preservation Strategy: Match by filename
+            const existingEntry = existingSongs.find(s => s.filename === file);
+
+            if (existingEntry) {
+                // KEEP EXISTING DATA EXACTLY AS IS
+                // This preserves manual edits to difficulty, style, AND instruments
+                songs.push(existingEntry);
+            } else {
+                // NEW FILE: Parse it
+                console.log(`New file detected, parsing: ${file}...`);
+                const meta = await parseMxl(path.join(inputDir, file));
+                
+                if (meta) {
+                    const id = file.replace('.mxl', '').replace(/\s+/g, '_').toLowerCase();
+                    
+                    songs.push({
+                        id: id,
+                        filename: file,
+                        title: meta.title || file.replace('.mxl', ''),
+                        composer: meta.composer,
+                        arranger: meta.arranger,
+                        instruments: meta.instruments,
+                        difficulty: "Medium", // Default
+                        style: "Classical"   // Default
+                    });
+                }
+            }
+        }
+
+        // Write Output
+        await fs.writeFile(outputFile, JSON.stringify(songs, null, 2));
+        console.log(`Successfully generated manifest with ${songs.length} songs at ${outputFile}`);
+
+    } catch (e) {
+        console.error('Fatal error:', e);
+        process.exit(1);
     }
-
-    // 3. Write Manifest
-    await fs.writeFile(DATA_FILE, JSON.stringify(songs, null, 2));
-    console.log(`✅ Manifest generated with ${songs.length} songs at src/data/songs.json`);
 }
 
-generateManifest();
+generate();

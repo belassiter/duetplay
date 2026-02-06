@@ -57,9 +57,26 @@ describe('App Transpose', () => {
         });
         
         // Mock fetch
-        window.fetch = vi.fn().mockResolvedValue({
-            ok: true,
-            arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
+        window.fetch = vi.fn().mockImplementation((url) => {
+             if (typeof url === 'string' && url.endsWith('songs.json')) {
+                 return Promise.resolve({
+                     ok: true,
+                     json: () => Promise.resolve([
+                        {
+                            id: 'test_song',
+                            filename: 'test.mxl',
+                            title: 'Test Song',
+                            instruments: ['Flute', 'Violin'], // Distinct defaults
+                            style: 'Test',
+                            difficulty: 'Easy'
+                        }
+                     ])
+                 });
+             }
+             return Promise.resolve({
+                ok: true,
+                arrayBuffer: () => Promise.resolve(new ArrayBuffer(10))
+             });
         });
     });
 
@@ -81,8 +98,8 @@ describe('App Transpose', () => {
         // Default in mock is "Flute" for Part 1.
         // We look for the display text which might be in the selector.
         // The InstrumentSelector component shows just the name.
-        const triggers = screen.getAllByText('Flute');
-        const part1Trigger = triggers[0]; 
+        const triggers = await screen.findAllByText('Flute');
+        const part1Trigger = triggers[0];
         await user.click(part1Trigger);
 
         // 3. Search for "Trumpet"

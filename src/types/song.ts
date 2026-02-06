@@ -8,3 +8,10 @@ export interface Song {
     difficulty: string;
     style: string;
 }
+
+export interface PartState {
+    id: number;
+    instrument: string;
+    originalInstrument: string;
+    octave: number;
+}
