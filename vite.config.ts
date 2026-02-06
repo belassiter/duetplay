@@ -102,6 +102,20 @@ export default defineConfig(({ mode }) => {
           html = html.replace(/href="\/duetplay_logo.png"/, `href="/${logo}"`);
           return html;
         }
+      },
+      {
+        name: 'exclude-temp-folder',
+        closeBundle: async () => {
+          const tempPath = path.resolve(outDir, 'temp');
+          if (fs.existsSync(tempPath)) {
+            try {
+              fs.rmSync(tempPath, { recursive: true, force: true });
+              console.log(`Removed ${tempPath} from build output`);
+            } catch (e) {
+              console.warn(`Failed to remove ${tempPath}:`, e);
+            }
+          }
+        }
       }
     ],
     build: {

@@ -1,3 +1,18 @@
+# 2026-02-06 14:38
+> I need to modify the vite.config.ts to exclude the `public/temp` folder from the build output. The `temp` folder is inside the `public` directory, and Vite automatically copies everything from `public` to the `dist` folder. I want to prevent `temp` from being copied. Search for how to exclude specific files or folders from the public directory in Vite. Provide me with the code change for vite.config.ts.
+
+- **Build Config**: Modified `vite.config.ts` to exclude `public/temp` from the final build output.
+    - Implemented a custom inline Vite plugin `exclude-temp-folder`.
+    - The plugin uses the `closeBundle` hook to delete the `temp` directory from the output folder (`dist` or `dist-quartet`) immediately after the build completes, effectively excluding it from the final artifact.
+
+# 2026-02-06 14:10
+> Make sure when QuartetPlay is deployed, it's not deploying the temp/ folder.
+
+- **Build Configuration**: Modified `vite.config.ts` to implement an automated cleanup step.
+    - Added a custom inline Vite plugin `exclude-temp-folder`.
+    - The plugin runs at `closeBundle`, detecting and deleting the `temp` directory from the output folder (`dist` or `dist-quartet`).
+    - Verified that `npm run build` removes `dist/temp` and `npm run build:quartet` removes `dist-quartet/temp`.
+
 # 2026-02-06 14:04
 > I want the License section of the help modal to be at the bottom, not in the middle of the FAQ. Also, please confirm that we've met all the conditions of GPLv3...
 
