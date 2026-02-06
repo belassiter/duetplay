@@ -28,9 +28,21 @@ DuetPlay is a web-based tool adapting duets for any pairing of instruments. Choo
     ```
 
 3.  **Build**:
-    ```bash
-    npm run build
-    ```
+    
+    *   **DuetPlay** (Default):
+        ```bash
+        npm run build
+        ```
+        This builds the standard app using songs in `public/` and deploys to `public_html/duetplay/`.
+
+    *   **QuartetPlay** (Variant):
+        ```bash
+        npm run build:quartet
+        ```
+        This builds the Quartet variant. 
+        **Prerequisite**: This command expects the `esquartet` repository to be cloned as a sibling directory (`../esquartet`) containing the sheet music in `sheetmusic/`.
+        It generates a fresh `songs.json` from that directory before building.
+
 
 ## Project Structure
 

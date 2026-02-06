@@ -1,9 +1,11 @@
 import React from 'react';
-import { X, ArrowUp, ArrowDown, RotateCcw } from 'lucide-react';
+import { X, ArrowUp, ArrowDown, RotateCcw, Download, FileText } from 'lucide-react';
 import InstrumentSelector from './InstrumentSelector';
 import { instruments } from '../constants/instruments';
 import RangePreview from './RangePreview';
 import type { PartState } from '../types/song';
+import { jsPDF } from "jspdf";
+import { svg2pdf } from "svg2pdf.js";
 
 interface SidePanelProps {
     isOpen: boolean;
@@ -18,6 +20,10 @@ interface SidePanelProps {
     // Range Preview
     xmlString: string;
     
+    // Download
+    currentDisplayedXml?: string;
+    currentRawSvg?: string;
+
     // Reset
     onReset?: () => void;
     isMobile?: boolean;
@@ -57,9 +63,73 @@ const SidePanel: React.FC<SidePanelProps> = ({
     xmlString,
     onReset,
     isMobile,
-    isLandscape
+    isLandscape,
+    currentDisplayedXml,
+    currentRawSvg
 }) => {
     const [activeSelectorId, setActiveSelectorId] = React.useState<number | null>(null);
+
+    const handleDownloadXml = () => {
+        if (!currentDisplayedXml) return;
+        const blob = new Blob([currentDisplayedXml], { type: 'application/vnd.recordare.musicxml+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'score.musicxml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    const handleDownloadPdf = async () => {
+        if (!currentRawSvg) return;
+        
+        try {
+            // Parse SVG string to Element
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(currentRawSvg, "image/svg+xml");
+            const svgElement = svgDoc.documentElement;
+
+            // Get dimensions from SVG (Verovio units are often in 10ths or similar, usually pt is safe bet if we match viewBox)
+            // Verovio default: 100px ~= 1 inch? No.
+            // Let's rely on viewBox if possible.
+            const viewBox = svgElement.getAttribute('viewBox');
+            let w = 595.28; // A4
+            let h = 841.89;
+            
+            if (viewBox) {
+                const [, , vbW, vbH] = viewBox.split(' ').map(parseFloat);
+                w = vbW;
+                h = vbH;
+            } else {
+                 const wAttr = svgElement.getAttribute('width');
+                 const hAttr = svgElement.getAttribute('height');
+                 if (wAttr) w = parseFloat(wAttr);
+                 if (hAttr) h = parseFloat(hAttr);
+            }
+
+            const orientation = w > h ? 'l' : 'p';
+            
+            const doc = new jsPDF({
+                orientation: orientation,
+                unit: 'pt',
+                format: [w, h]
+            });
+
+            await svg2pdf(svgElement, doc, {
+                x: 0,
+                y: 0,
+                width: w,
+                height: h
+            });
+
+            doc.save('score.pdf');
+        } catch (e) {
+            console.error("PDF Generation failed:", e);
+            alert("Failed to generate PDF. Please try printing the page instead.");
+        }
+    };
 
     const getClef = (instVal: string) => {
         const inst = instruments.find(i => i.value === instVal);
@@ -124,6 +194,28 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     </div>
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
                         <X size={24} />
+                    </button>
+                </div>
+                
+                {/* Download Actions */}
+                <div className="flex gap-2 p-3 bg-gray-50 border-b justify-center shrink-0">
+                    <button 
+                        onClick={handleDownloadPdf}
+                        disabled={!currentRawSvg}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-50 font-medium text-gray-700 disabled:opacity-50"
+                        title="Download as PDF"
+                    >
+                        <FileText size={16} />
+                        <span>PDF</span>
+                    </button>
+                    <button 
+                         onClick={handleDownloadXml}
+                         disabled={!currentDisplayedXml}
+                         className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-300 rounded text-sm hover:bg-gray-50 font-medium text-gray-700 disabled:opacity-50"
+                         title="Download as MusicXML"
+                    >
+                        <Download size={16} />
+                        <span>MusicXML</span>
                     </button>
                 </div>
                 

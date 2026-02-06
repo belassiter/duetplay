@@ -21,13 +21,12 @@ Here's a rough order to do development
 - [X] Hamburger menu for mobile-vertical
 - [ ] Mobile - show songs as cards
 - [ ] Custom instrument
-- [ ] Larger ensemble size
+- [X] Larger ensemble size
 - [ ] Import user's mxl file
 - [ ] Tablet layout
 - [ ] Half page turns
 - [ ] Range handling and suggestions
 - [ ] Playback (duets for one person)
 - [ ] 
-- [ ] Add to EsQ website/library
+- [X] Add to EsQ website/library
 - [ ] Offer to vgmusic website
-- [ ] 

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, Filter, Check } from 'lucide-react';
+import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, Filter, Check, Download } from 'lucide-react';
 import type { Song } from '../types/song';
 
 interface MultiSelectDropdownProps {
@@ -118,6 +118,36 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
             direction = 'desc';
         }
         setSortConfig({ key, direction });
+    };
+
+    const handleDownloadMxl = (e: React.MouseEvent, song: Song) => {
+        e.stopPropagation();
+        const baseUrl = import.meta.env.VITE_ASSETS_BASE_URL || import.meta.env.BASE_URL;
+        const url = `${baseUrl}${song.filename}`;
+        
+        // Create a direct link download
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank'; // Helpful for remote files
+        a.download = song.filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    const handleFilterClick = (e: React.MouseEvent, category: 'style' | 'difficulty', value: string) => {
+        e.stopPropagation();
+        if (!value) return;
+        
+        if (category === 'style') {
+            setStyleFilters([value]);
+        } else if (category === 'difficulty') {
+            setDifficultyFilters([value]);
+        }
+    };
+
+    const handleTitleClick = (song: Song) => {
+        onSelectSong(song);
     };
 
     const getSortIcon = (key: keyof Song) => {
@@ -322,6 +352,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                 <th className="p-3 w-[10%]">Style</th>
                                 <th className="p-3 w-[10%]">Difficulty</th>
                                 <th className="p-3 w-[20%]">Parts</th>
+                                <th className="p-3 w-[5%] text-center">MXL</th>
                             </tr>
                         </thead>
                         <tbody className="text-sm text-gray-700">
@@ -335,10 +366,14 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                 filteredAndSortedSongs.map((song) => (
                                     <tr 
                                         key={song.id} 
-                                        onClick={() => onSelectSong(song)}
                                         className="border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
                                     >
-                                        <td className="p-3 font-medium text-gray-900 align-top">{song.title}</td>
+                                        <td 
+                                            className="p-3 font-medium text-gray-900 align-top hover:text-blue-600 hover:underline"
+                                            onClick={() => handleTitleClick(song)}
+                                        >
+                                            {song.title}
+                                        </td>
 
                                         {(!isMobile || isLandscape) && (
                                         <td className="p-3 align-top max-w-[180px]">
@@ -359,16 +394,22 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                         </td>
                                         )}
 
-                                        <td className="p-3 align-top whitespace-nowrap">
+                                        <td 
+                                            className="p-3 align-top whitespace-nowrap"
+                                            onClick={(e) => handleFilterClick(e, 'style', song.style)}
+                                        >
                                             {song.style && (
-                                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs hover:bg-blue-200 transition-colors">
                                                     {song.style}
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="p-3 align-top whitespace-nowrap">
+                                        <td 
+                                            className="p-3 align-top whitespace-nowrap"
+                                            onClick={(e) => handleFilterClick(e, 'difficulty', song.difficulty)}
+                                        >
                                             {song.difficulty && (
-                                                <span className={`px-2 py-1 rounded-full text-xs ${
+                                                <span className={`px-2 py-1 rounded-full text-xs hover:opacity-80 transition-opacity ${
                                                     song.difficulty.toLowerCase().includes('easy') ? 'bg-green-100 text-green-800' :
                                                     song.difficulty.toLowerCase().includes('hard') ? 'bg-red-100 text-red-800' :
                                                     'bg-yellow-100 text-yellow-800'
@@ -381,6 +422,15 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                             {song.instruments.map((inst, i) => (
                                                 <div key={i} className="truncate" title={inst}>{inst}</div>
                                             ))}
+                                        </td>
+                                        <td className="p-3 align-top text-center">
+                                            <button 
+                                                onClick={(e) => handleDownloadMxl(e, song)}
+                                                className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                                                title={`Download ${song.filename}`}
+                                            >
+                                                <Download size={16} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))

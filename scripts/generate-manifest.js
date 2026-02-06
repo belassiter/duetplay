@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Default Paths
-const DEFAULT_INPUT_DIR = path.join(__dirname, '../public');
-const DEFAULT_OUTPUT_FILE = path.join(__dirname, '../public/songs.json');
+const DEFAULT_INPUT_DIR = path.join(__dirname, '../public_duet');
+const DEFAULT_OUTPUT_FILE = path.join(__dirname, '../public_duet/songs.json');
 
 // Parse Arguments
 const args = process.argv.slice(2);
@@ -39,6 +39,7 @@ const getArg = (flags) => {
 
 const inputDir = getArg(['--input', '-i']) || DEFAULT_INPUT_DIR;
 const outputFile = getArg(['--output', '-o']) || DEFAULT_OUTPUT_FILE;
+const isOptional = args.includes('--optional');
 
 console.log(`Scanning directory: ${inputDir}`);
 console.log(`Output file: ${outputFile}`);
@@ -70,7 +71,17 @@ function parseXmlMetadata(xmlString) {
         return match ? match[1].trim() : '';
     };
 
+    const getCreator = (type) => {
+        // Matches <creator type="composer">Name</creator> handling loose whitespace and quotes
+        // Using [\s\S]*? for content to handle potential newlines, though unlikely in creator names
+        const regex = new RegExp(`<creator[^>]*type=["']${type}["'][^>]*>([\\s\\S]*?)<\/creator>`, 'i');
+        const match = xmlString.match(regex);
+        return match ? match[1].trim() : '';
+    };
+
     const title = getTag('work-title') || getTag('movement-title') || 'Untitled';
+    const composer = getCreator('composer');
+    const arranger = getCreator('arranger');
     
     // Instruments
     const instruments = [];
@@ -82,8 +93,8 @@ function parseXmlMetadata(xmlString) {
 
     return {
         title,
-        composer: '', 
-        arranger: '',
+        composer: composer, 
+        arranger: arranger,
         instruments
     };
 }
@@ -94,6 +105,10 @@ async function generate() {
         try {
             await fs.access(inputDir);
         } catch {
+            if (isOptional) {
+                console.log(`Input directory ${inputDir} not found. Skipping generation (Optional mode).`);
+                process.exit(0);
+            }
             console.error(`Input directory does not exist: ${inputDir}`);
             process.exit(1);
         }

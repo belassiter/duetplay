@@ -8,12 +8,15 @@ import SongSelectorPanel from './components/SongSelectorPanel';
 import HelpPanel from './components/HelpPanel';
 import { instruments } from './constants/instruments';
 import type { Song, PartState } from './types/song';
-import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu, X } from 'lucide-react';
+import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu, X, Download } from 'lucide-react';
+import { jsPDF } from "jspdf";
+import { svg2pdf } from "svg2pdf.js";
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
   const [svg, setSvg] = useState<string>('');
   const [processedXml, setProcessedXml] = useState<string>('');
+  const [fullScoreXml, setFullScoreXml] = useState<string>('');
   const [isRendering, setIsRendering] = useState<boolean>(false);
   const [status, setStatus] = useState<string>('');
   const [scoreVersion, setScoreVersion] = useState<number>(0);
@@ -27,6 +30,21 @@ function App() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [isLoadingSongs, setIsLoadingSongs] = useState(true);
 
+  // Update Page Title and Favicon based on Config
+  useEffect(() => {
+      const title = import.meta.env.VITE_APP_TITLE;
+      if (title) document.title = title;
+
+      const logo = import.meta.env.VITE_APP_LOGO;
+      if (logo) {
+          const link = document.querySelector("link[rel*='icon']") as HTMLLinkElement || document.createElement('link');
+          link.type = 'image/png';
+          link.rel = 'icon';
+          link.href = `${import.meta.env.BASE_URL}${logo}`;
+          document.head.appendChild(link);
+      }
+  }, []);
+
   // Fetch Songs on Boot
   useEffect(() => {
     const fetchSongs = async () => {
@@ -35,7 +53,9 @@ function App() {
             // But 'current' logic for public files is tricky if base is not root.
             // Vite handles 'public' files at root.
             // If base is '/duetplay/', then fetch('/duetplay/songs.json')
-            const response = await fetch(`${import.meta.env.BASE_URL}songs.json`);
+            const manifestName = import.meta.env.VITE_SONGS_MANIFEST_URL || 'songs.json';
+            const manifestUrl = `${import.meta.env.BASE_URL}${manifestName}`;
+            const response = await fetch(manifestUrl);
             if (!response.ok) throw new Error('Failed to load songs manifest');
             const data = await response.json();
             setSongs(data);
@@ -174,6 +194,9 @@ function App() {
                         );
                     }
                 }
+
+                // Capture the full score (transposed) for range previews and full-score download triggers
+                setFullScoreXml(processedXML);
                 
                 // --- View Mode Filtering ---
                 if (viewMode !== 'score') {
@@ -243,6 +266,52 @@ function App() {
       return 'none';
   }, []);
 
+  const handleDownloadPdf = async () => {
+    if (!svg) return;
+    
+    try {
+        // Parse SVG string to Element
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svg, "image/svg+xml");
+        const svgElement = svgDoc.documentElement;
+
+        // Get dimensions from SVG
+        const viewBox = svgElement.getAttribute('viewBox');
+        let w = 595.28; // A4
+        let h = 841.89;
+        
+        if (viewBox) {
+            const [, , vbW, vbH] = viewBox.split(' ').map(parseFloat);
+            w = vbW;
+            h = vbH;
+        } else {
+             const wAttr = svgElement.getAttribute('width');
+             const hAttr = svgElement.getAttribute('height');
+             if (wAttr) w = parseFloat(wAttr);
+             if (hAttr) h = parseFloat(hAttr);
+        }
+
+        const orientation = w > h ? 'l' : 'p';
+        
+        const doc = new jsPDF({
+            orientation: orientation,
+            unit: 'pt',
+            format: [w, h]
+        });
+
+        await svg2pdf(svgElement, doc, {
+            x: 0,
+            y: 0,
+            width: w,
+            height: h
+        });
+
+        doc.save(`${songs.find(s => s.filename === (fileDataRef.current ? 'current' : ''))?.title || 'score'}.pdf`);
+    } catch (e) {
+        console.error("PDF Generation failed:", e);
+        alert("Failed to generate PDF. Please try printing the page instead.");
+    }
+  };
 
   const resetSettings = useCallback(() => {
     // Reset all parts to original
@@ -260,7 +329,8 @@ function App() {
         fileDataRef.current = null; 
         try {
             // Use BASE_URL to handle subdirectory deployment correctly
-            const response = await fetch(`${import.meta.env.BASE_URL}${filename}`);
+            const baseUrl = import.meta.env.VITE_ASSETS_BASE_URL || import.meta.env.BASE_URL;
+            const response = await fetch(`${baseUrl}${filename}`);
             if (!response.ok) throw new Error(`Fetch error: ${response.statusText}`);
             const data = await response.arrayBuffer();
             fileDataRef.current = data;
@@ -326,8 +396,17 @@ function App() {
 
     if (!loading && verovioToolkit && !fileDataRef.current) {
         hasInitialLoad.current = true;
-        // Default song
-        const defaultSong = songs.find(s => s.id === 'bach_invention_11') || songs[0];
+        
+        // Determine default song based on mode (inferred from title or existence)
+        const appTitle = import.meta.env.VITE_APP_TITLE || 'DuetPlay';
+        let defaultId = 'bach_invention_11'; // Default for DuetPlay
+
+        if (appTitle === 'QuartetPlay') {
+            defaultId = 'final_fantasy_vii_main_theme_sax_quartet_satb';
+        }
+
+        // Try to find the preferred default, otherwise fall back to first song
+        const defaultSong = songs.find(s => s.id === defaultId) || songs[0];
         if (defaultSong) handleSongSelect(defaultSong);
     }
   }, [loading, verovioToolkit, songs, isLoadingSongs, handleSongSelect]); // Removing deps that caused loops
@@ -408,16 +487,16 @@ function App() {
       <div className="flex justify-between items-center mb-1 md:mb-2 gap-1 md:gap-2 p-1 md:p-2 relative flex-wrap md:flex-nowrap bg-white shadow-sm z-30">
           <div className="flex items-center gap-3 hidden md:flex">
                <img 
-                   src={`${import.meta.env.BASE_URL}duetplay_logo.png`} 
+                   src={`${import.meta.env.BASE_URL}${import.meta.env.VITE_APP_LOGO || 'duetplay_logo.png'}`} 
                    alt="Logo" 
                    className="h-8 w-auto rounded-sm" 
                    onError={(e) => {
                        // Fallback if base url is tricky
-                       (e.target as HTMLImageElement).src = 'duetplay_logo.png';
+                       (e.target as HTMLImageElement).src = import.meta.env.VITE_APP_LOGO || 'duetplay_logo.png';
                    }} 
                />
-               <h1 className="text-xl md:text-2xl font-bold truncate max-w-[200px] md:max-w-md" title="DuetPlay">
-                   DuetPlay
+               <h1 className="text-xl md:text-2xl font-bold truncate max-w-[200px] md:max-w-md" title={import.meta.env.VITE_APP_TITLE || 'DuetPlay'}>
+                   {import.meta.env.VITE_APP_TITLE || 'DuetPlay'}
                </h1>
           </div>
           
@@ -484,6 +563,16 @@ function App() {
             </button>
 
             <button 
+                onClick={handleDownloadPdf}
+                disabled={!svg}
+                className="flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed hidden md:flex"
+                title="Download PDF"
+            >
+                <Download size={18} />
+                <span className="hidden lg:inline">PDF</span>
+            </button>
+
+            <button 
                 onClick={() => setIsSongPanelOpen(true)}
                 className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm whitespace-nowrap ${isMobile && !isLandscape ? 'hidden' : 'flex'}`}
                 title="Select Song"
@@ -530,6 +619,15 @@ function App() {
                     </div>
 
                     <button 
+                         onClick={handleDownloadPdf}
+                         disabled={!svg}
+                         className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shadow-sm w-full text-left disabled:opacity-50"
+                    >
+                        <Download size={18} className="shrink-0" />
+                        <span>Download PDF</span>
+                    </button>
+
+                    <button 
                         onClick={() => { setIsMenuOpen(false); setIsSongPanelOpen(true); }}
                         className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full text-left"
                     >
@@ -564,7 +662,9 @@ function App() {
         onPartChange={handlePartChange}
         globalTranspose={globalTranspose}
         onGlobalTransposeChange={setGlobalTranspose}
-        xmlString={processedXml}
+        xmlString={fullScoreXml}
+        currentDisplayedXml={processedXml}
+        currentRawSvg={svg}
         onReset={resetSettings}
         isMobile={isMobile}
       />

@@ -1,3 +1,188 @@
+# 2026-02-06 13:20:00 - UI Refinements for Downloads and Song Selection
+
+> "Ok, let's make these changes to the download buttons... Remove the MusicXML button... Make the PDF Download button have the download icon... Move the PDF button to the header and mobile menu... Add "MXL" column... Only load song if cell clicked... filtering changes."
+
+**Summary of Changes:**
+1.  **Refactored Download Logic**:
+    *   Moved `handleDownloadPdf` logic from `SidePanel` to `App.tsx` so it can be accessed from the main header and mobile menu.
+    *   Removed both PDF and MusicXML download buttons from `SidePanel`.
+    *   Added a PDF Download button (with icon) to the Desktop Header (between Part view and Song Select).
+    *   Added a PDF Download button to the Mobile Hamburger Menu.
+
+2.  **Enhanced Song Selector**:
+    *   **Selection Behavior**: Changed interaction so clicking a row no longer selects the song. Instead, the user must click the **Title** cell explicitly.
+    *   **Filtering**: Clicking cells in the **Style** or **Difficulty** columns now activates a filter for that specific value (instead of selecting the song).
+    *   **MXL Download**: Added a new "MXL" column with a download button that fetches and downloads the original, unmodified `.mxl` file directly from the source.
+    *   Updated the UI to show `cursor-pointer` and hover effects appropriate for these new distinct click targets.
+
+# 2026-02-06 13:05:00 - Fix Range Preview and Add Downloads
+
+> "When I've selected to view a single Part, the Select Instruments modal no longer shows ranges for all the parts... I'd like to add buttons to download the currently displayed sheet music. ... What about downloading a PDF?"
+
+**Summary of Changes:**
+1.  **Fix Range Preview Logic**:
+    *   The issue was that when viewing a single part (e.g., Part 2), the `processedXml` passed to `SidePanel` contained *only* that part, causing `RangePreview` for other parts to fail.
+    *   **Solution**: Updated `App.tsx` to maintain a separate `fullScoreXml` state which captures the transposed XML *before* the single-part filtering is applied. Passed this full score to `SidePanel` expressly for range calculation. Now, ranges for all parts are visible regardless of the current view mode.
+
+2.  **Add Download Capability**:
+    *   Installed `jspdf` and `svg2pdf.js` to enable PDF generation from the rendered SVG.
+    *   Updated `SidePanel.tsx` to include a new action bar with "PDF" and "MusicXML" download buttons.
+    *   **PDF Download**: Generates a PDF matching the dimensions of the rendered score (using `svg2pdf` to convert the vector graphics).
+    *   **MusicXML Download**: Creates a downloadable blob from the currently displayed XML string.
+
+# 2026-02-06 12:15:00 - Fix Quartet Metadata and Default Songs
+
+> "1) When a user first loads QuartetPlay, have it load final_fantasy_vii_main_theme_sax_quartet_SATB.mxl 2) In QuartetPlay, all the composer and arranger are empty... 3) When a user first loads DuetPlay, have it load Invention #11."
+
+**Summary of Changes:**
+1.  **Fixed Metadata Extraction**: Updated `scripts/generate-manifest.js` to correctly parse `composer` and `arranger` from XML tags (using `<creator>` type attributes) which were previously missing.
+2.  **Regenerated Quartet Manifest**: Deleted and regenerated `public/quartet-songs.json` using the improved script. Verified that "Nobuo Uematsu" and "Brian Einstein Lassiter" now appear for Final Fantasy VII.
+3.  **Updated Default Songs**:
+    *   **DuetPlay**: Reverted default to `bach_invention_11` as requested.
+    *   **QuartetPlay**: Fixed ID casing to `final_fantasy_vii_main_theme_sax_quartet_satb` (lowercase) to match the generated manifest ID, ensuring the song loads correctly on startup.
+
+# 2025-02-12 12:10:00 - Refine Quartet Metadata and Fix Local Dev
+
+> "Okay let's start over with quartet-songs.json... I want to take the "Genre" data and put it in the "Style" field... And for DuetPlay, make the default song 'accumula_town', and for QuartetPlay, make the default 'final_fantasy_vii_main_theme_sax_quartet_SATB.mxl'"
+
+**Summary of Changes:**
+1.  **Refined Quartet Metadata Script**: Modified `scripts/update-quartet-metadata.js` to *only* update fields requested by user (Style/Genre and Difficulty) from the HTML source, while strictly preserving Title/Composer/Arranger from the MXL files.
+2.  **Regenerated Metadata**: Fetched `repertoire.html` from `esquartet.com` and ran the script to populate the `quartet-songs.json` correctly.
+3.  **Fixed Local Dev Loading**: Created `.env.quartet.local` to override `VITE_ASSETS_BASE_URL` with an empty string during local development. This ensures file requests go to the local Vite server (which uses middleware to serve from `../esquartet`) instead of trying to fetch from the live website (which failed due to CORS or path issues).
+4.  **Set Default Songs in App**: Updated `App.tsx` initialization logic to check the app title (DuetPlay vs QuartetPlay) and select the appropriate default song as requested.
+
+# 2025-02-12 07:15:00 - Consolidate Songs.json and Fix Metadata
+
+> "We've got a problem where we have multiple songs.json files... the script that pulled data from repertoire.html did a poor job."
+
+**Summary of Changes:**
+1.  **Consolidated Source of Truth**:
+    *   Deleted `src/data/songs.json` (incorrect defaults).
+    *   Updated `package.json` to use `public_duet/songs.json` (correct metadata) as the single source, copying it to `public/` for dev.
+
+2.  **Enhanced Quartet Metadata**:
+    *   Updated `scripts/update-quartet-metadata.js` to infer filenames from PDF links when MXL links are missing.
+    *   Result: Metadata update coverage increased from 71 to 89 songs (fixing "25 or 6 to 4").
+
+# 2025-02-12 06:15 
+User: "Lets implement Option C. This implies I need separate dist folders per app version? I also need a duet-specific folder for source files to avoid unwanted mxl files in the quartet build."
+Summary:
+1.  **Restructured Assets**:
+    *   Created `public_duet/` directory.
+    *   Moved all DuetPlay-specific `.mxl` files and `_headers` from `public/` to `public_duet/`.
+    *   `public/` now only contains shared assets (e.g., logo, existing output JSONs).
+
+2.  **Manifest Generation Script (`scripts/generate-manifest.js`)**:
+    *   Updated `generate` function to accept an `--optional` flag.
+    *   If `--optional` is present and the input directory is missing, the script now logs a message and exits successfully (exit code 0) instead of failing. This supports the CI workflow where external assets are not present.
+
+3.  **Build Configuration (`vite.config.ts`)**:
+    *   Confirmed `outDir` logic supports `dist` (default) vs `dist-quartet` (quartet mode).
+    *   Removed unused `path` import.
+
+4.  **Package Scripts (`package.json`)**:
+    *   Updated `build` command:
+        *   Generates manifest from `public_duet`.
+        *   Copies `public_duet` content to `dist`.
+    *   Updated `build:quartet` command:
+        *   Generates manifest from `../esquartet/sheetmusic` (optional).
+        *   Copies `../esquartet/sheetmusic` content to `dist-quartet` (optional).
+    *   Created consistent build pipeline using `generate-manifest.js` (named args) and a new `copy-assets.cjs` script.
+
+5.  **New Utility Script (`scripts/copy-assets.cjs`)**:
+    *   Created a cross-platform Node.js script to recursively copy directories.
+    *   Supports `--optional` flag to skip execution if the source directory is missing.
+    *   Includes error handling for individual file permission issues (e.g. locked files).
+
+## 2025-02-12 06:30:00 - Add QuartetPlay Dev support and Update Metadata
+
+> "how do I run quartetplay locally? ... Create and run a script to take that data from the html file and update quart-songs.json based on that."
+
+**Summary of Changes:**
+1.  **Package Scripts (`package.json`):**
+    *   Added `dev:quartet` script: `"node scripts/generate-manifest.js ... && vite --mode quartet"`.
+    *   This allows running the QuartetPlay version locally in development mode.
+
+2.  **Environment Config (`.env.quartet`):**
+    *   Updated `VITE_SONGS_MANIFEST_URL=quartet-songs.json` to ensure the correct data file is loaded in quartet mode.
+    *   Created `.env` (default) with `VITE_SONGS_MANIFEST_URL=songs.json`.
+
+3.  **App Logic (`src/App.tsx`):**
+    *   Updated manifest loading logic to respect the `VITE_SONGS_MANIFEST_URL` environment variable if present.
+
+4.  **Metadata Update Script (`scripts/update-quartet-metadata.js`):**
+    *   Created a script to parse `repertoire.html` (from the external esquartet repo) and extract Genre (Style) and Difficulty metadata.
+    *   Mapped this metadata to the filenames in `public/quartet-songs.json`.
+    *   Ran the script (via temp copy of html file) to populate the metadata for ~70 songs.
+
+## 2025-02-12 06:45:00 - Fix Local Development Serving
+
+> "DuetPlay is giving 'Error loading library' (running on local dev). Same error on quartetplay. SyntaxError: Unexpected token '<'"
+
+**Summary of Changes:**
+1.  **Fix DuetPlay Dev Manifest**:
+    *   Updated `package.json` `dev` script to output `songs.json` to `public/songs.json` (served dir) instead of `src/data/songs.json` (source dir). This fixes the 404 error fetching the manifest.
+
+2.  **Serve Separate Content Directories**:
+    *   Updated `vite.config.ts` to include a custom middleware (`serve-content-dir`).
+    *   This middleware intercepts requests for `.mxl` files.
+    *   In DuetPlay mode, it serves them from `public_duet`.
+    *   In QuartetPlay mode, it serves them from `../esquartet/sheetmusic`.
+    *   Allowed filesystem access to parent directories (`server.fs.allow: ['..']`) to support the external quartet folder.
+
+**Reasoning:**
+Since we separated the source files into folders that are distinct from the `public` directory (to avoid polluting build outputs), Vite's dev server could no longer find the files at the root URL paths. The middleware bridges this gap during development without affecting the production build structure.
+
+## 2025-02-12 07:00:00 - Fix Metadata Generation and History
+
+> "There's problems. It looks like it created a new songs.json in the public folder. But it's missing all the composer/arranger data... And the script that pulled data from repertoire.html did a poor job."
+
+**Summary of Changes:**
+1.  **Corrected `dev` Script**:
+    *   Adjusted `package.json` `dev` command to: `generate ... --output src/data/songs.json && cp src/data/songs.json public/songs.json`.
+    *   This ensures the generator reads/analyzes the persistence file (`src/data/songs.json`) to keep existing metadata, rather than creating a blank slate in `public/` that ignores previous edits.
+
+2.  **Improved Metadata Script (`scripts/update-quartet-metadata.js`)**:
+    *   Rewrote the script to be more robust.
+    *   Parsing logic now extracts **Artist** (Arranger) and **Composer** columns in addition to Style and Difficulty.
+    *   Improved strict cell extraction to handle HTML tags within cells and decoding entities.
+    *   Ran the script successfully -> ~70 songs now have Populated Composer/Arranger/Style/Difficulty data in `public/quartet-songs.json`.
+
+# 2026-02-06 11:30
+User: "Can we do separate dist folders per app version? ... I'm concerned about deploy.yml ... Can't we just deploy everything from local a local dist folder, like we do for the duet version?"
+Summary:
+1.  **Separate Build Outputs**:
+    -   Updated `vite.config.ts` to use a dynamic `outDir`:
+        -   Default/DuetPlay: `dist/`
+        -   Quartet mode: `dist-quartet/`
+    -   This prevents the builds from overwriting each other, allowing you to keep both builds available locally.
+    -   Added `"preview:quartet"` script to `package.json` to preview the separated build.
+2.  **Simplified Workflow**:
+    -   Reverted `.github/workflows/deploy.yml` to its original, simpler state (only building/deploying DuetPlay).
+    -   This removes the complexity of managing GitHub Secrets/Personal Access Tokens for the external repo in CI.
+3.  **Local Manual Deployment**:
+    -   Since `npm run build:quartet` now outputs to a dedicated `dist-quartet/` folder locally, you can deploy this folder manually (using your preferred FTP tool or script) without needing GitHub Actions logic for it.
+
+# 2026-02-06 10:30
+User: "We need to build songs.json for quartet, just like we do for duet. Do we need to connect to the relevant repo?"
+Summary:
+1.  **Quartet Data Integration**:
+    -   Updated `.github/workflows/deploy.yml` to checkout the Quartet repository (`belassiter/skq`) into a subdirectory `external_assets`.
+    -   Configured the workflow to run `node scripts/generate-manifest.js` using the Quartet repo's sheet music folder (`external_assets/sheetmusic`) as input, overwriting `public/songs.json` before the build.
+    -   This ensures the `QuartetPlay` build bundles a `songs.json` generated from the *latest* remote assets, while still fetching the actual MXL files from the remote URL (`VITE_ASSETS_BASE_URL`).
+2.  **Config Refinement**: Updated `.env.quartet` to remove `VITE_SONGS_MANIFEST_URL`, allowing the app to fall back to the bundled (now correctly generated) local `songs.json`, simplifying the data flow.
+
+# 2026-02-06 10:00
+User: "Ok, let's start with being able to make a QuartetPlay build... 1) Create a separate songs.json... 2) Build has a different logo/title... 3) readme has instructions... 4) update deploy.yml... 5) Have it use the correct relative path for quartet mxl files..."
+Summary:
+1.  **Multi-App Configuration**: Updated `App.tsx` and `vite.config.ts` to support configurable App Title, Logo, and Data Source URLs via Environment Variables (`VITE_APP_TITLE`, `VITE_SONGS_MANIFEST_URL`, `VITE_ASSETS_BASE_URL`).
+2.  **Environment Setup**: Created `.env.quartet` to define the configuration for the QuartetPlay variant (Remote JSON/MXL sources, Custom Title/Logo).
+3.  **Build Infrastructure**: 
+    -   Updated `vite.config.ts` to inspect `process.env` and apply an HTML Transform Plugin to inject the correct `<title>` and `<link rel="icon">` at build time.
+    -   Updated `package.json` with a dedicated `"build:quartet"` script (`vite build --mode quartet`).
+4.  **Deployment**: Updated `.github/workflows/deploy.yml` to use a **Matrix Strategy**, running simultaneous builds for "DuetPlay" (standard) and "QuartetPlay" (custom config), deploying them to their respective folders (`public_html/duetplay/` and `public_html/esquartet/quartetplay/`).
+5.  **Documentation**: Updated `README.md` with instructions for building the Quartet variant.
+
 # 2026-02-05 20:15
 User: "1) Mobile vertical and mobile horizontal, I'm seeing 2 hamburger menus, and neither works 2) use duetplay_logo.png to generate favico..."
 Summary:

@@ -1,0 +1,522 @@
+[
+  {
+    "id": "accumula_town_pokemon_bw",
+    "filename": "accumula_town_pokemon_bw.mxl",
+    "title": "Accumula Town from Pokemon B/W",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trombone"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
+    "id": "air_a_deux_claviers_handel",
+    "filename": "air_a_deux_claviers_handel.mxl",
+    "title": "Air à deux Claviers HWV 470",
+    "composer": "G.F. Händel (1685-1759)",
+    "arranger": "Felix Scharpf",
+    "instruments": [
+      "Flute",
+      "Flute"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "alright_ok",
+    "filename": "alright_ok.mxl",
+    "title": "Alright, OK, You Win",
+    "composer": "Mayme Watts & Sid Wyche",
+    "arranger": "Arr. Lee Evans Adapted by Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Jazz"
+  },
+  {
+    "id": "bach_invention_11",
+    "filename": "bach_invention_11.mxl",
+    "title": "Invention #11",
+    "composer": "J.S. Bach",
+    "arranger": "",
+    "instruments": [
+      "Piano RH",
+      "Piano LH"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "barcarolle_tchaikovsyk",
+    "filename": "barcarolle_tchaikovsyk.mxl",
+    "title": "Barcarolle",
+    "composer": "Tchaikovsky",
+    "arranger": "paganic",
+    "instruments": [
+      "Clarinet",
+      "Clarinet"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "bouree_sonata_in_F_handel",
+    "filename": "bouree_sonata_in_F_handel.mxl",
+    "title": "Bourree",
+    "composer": "G.F. Handel",
+    "arranger": "cplager",
+    "instruments": [
+      "Violin",
+      "Cello"
+    ],
+    "difficulty": "Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "bourree_BWV_996_bach",
+    "filename": "bourree_BWV_996_bach.mxl",
+    "title": "Bourrée BWV 996",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "Arr. Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "concerto_in_d_minor_vivace_bach",
+    "filename": "concerto_in_d_minor_vivace_bach.mxl",
+    "title": "Concerto for 2 violins and strings in D minor",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "courante_lully",
+    "filename": "courante_lully.mxl",
+    "title": "Keyboard Pieces No. 2 - Courante",
+    "composer": "Jean-Baptiste Lully",
+    "arranger": "Arr. Mike Magatagan",
+    "instruments": [
+      "Violin",
+      "Cello"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "dance_of_the_sugar_plum_fairy",
+    "filename": "dance_of_the_sugar_plum_fairy.mxl",
+    "title": "Dance of the Sugar Plum Fairy",
+    "composer": "Peter Ilyich Tchaikovsky",
+    "arranger": "",
+    "instruments": [
+      "Alto Saxophone",
+      "Violoncello"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "dog_wrestler_waltz",
+    "filename": "dog_wrestler_waltz.mxl",
+    "title": "The Dog Wrestler Waltz",
+    "composer": "Exurb1a",
+    "arranger": "FerretFire",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Medium",
+    "style": ""
+  },
+  {
+    "id": "duetto_iii_bach",
+    "filename": "duetto_iii_bach.mxl",
+    "title": "DUETTO III, BWV 804",
+    "composer": "Johann Sebastian Bach",
+    "arranger": "",
+    "instruments": [
+      "Piano RH",
+      "Piano LH"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "fantasia_no_2_telemann",
+    "filename": "fantasia_no_2_telemann.mxl",
+    "title": "Fanstasia No. 2",
+    "composer": "Georg Philipp Telemann",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "final_fantasy_vii_main_theme",
+    "filename": "final_fantasy_vii_main_theme.mxl",
+    "title": "Final Fantasy VII -- Main Theme",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
+  },
+  {
+    "id": "happy_birthday_dennis",
+    "filename": "happy_birthday_dennis.mxl",
+    "title": "Happy Birthday, Dennis",
+    "composer": "Patty Hill & Mildred J. Hill (disputed)",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Bb Trumpet",
+      "Tenor Sax"
+    ],
+    "difficulty": "Easy",
+    "style": "Jazz"
+  },
+  {
+    "id": "hey_jude_hayden",
+    "filename": "hey_jude_hayden.mxl",
+    "title": "Hey, Jude",
+    "composer": "Lennon/McCartney",
+    "arranger": "Arr. Bruce Adolphe, adapted Brian Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet",
+      "Bass Clarinet"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "hit_that_jive_jack",
+    "filename": "hit_that_jive_jack.mxl",
+    "title": "Hit That Jive, Jack",
+    "composer": "Johnny Alston-Campbell Tolbert",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Alto Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Jazz"
+  },
+  {
+    "id": "i_get_around",
+    "filename": "i_get_around.mxl",
+    "title": "I Get Around",
+    "composer": "Brian Wilson & Mike Love",
+    "arranger": "",
+    "instruments": [
+      "Trombone",
+      "Bass Clarinet"
+    ],
+    "difficulty": "Medium",
+    "style": "Pop"
+  },
+  {
+    "id": "joyous_duet_no2_hazlerig",
+    "filename": "joyous_duet_no2_hazlerig.mxl",
+    "title": "Joyous Duet No. 2",
+    "composer": "Sylvia E. Hazlerig",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trombone"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "kakariko_village",
+    "filename": "kakariko_village.mxl",
+    "title": "Kakariko Village Trombone Duet",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Trombone",
+      "Trombone"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
+  },
+  {
+    "id": "leichte_sonatine_beethoven",
+    "filename": "leichte_sonatine_beethoven.mxl",
+    "title": "Leichte Sonatine",
+    "composer": "Ludwig van Beethoven",
+    "arranger": "Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "little_duet_bizet",
+    "filename": "little_duet_bizet.mxl",
+    "title": "Little Duet",
+    "composer": "Georges Bizet",
+    "arranger": "Arturo RamQui",
+    "instruments": [
+      "Bassoon",
+      "Cello"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "minuett_in_g_BWV_116_mozart",
+    "filename": "minuett_in_g_BWV_116_mozart.mxl",
+    "title": "Minuett in G, BWV 116",
+    "composer": "J. S. Bach",
+    "arranger": "Alexander Jewstügow",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "new_world_symphony_first_mvt",
+    "filename": "new_world_symphony_first_mvt.mxl",
+    "title": "New World Symphony",
+    "composer": "Dvořák arr. AM",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "nocturne_op9_no2_chopin",
+    "filename": "nocturne_op9_no2_chopin.mxl",
+    "title": "Nocturne",
+    "composer": "Composer: Fréderic Chopin",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "B♭ Clarinet"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "pinky_and_the_brain",
+    "filename": "pinky_and_the_brain.mxl",
+    "title": "Pinky and the Brain Theme",
+    "composer": "Richard Stone/Tom Ruegger",
+    "arranger": "Arr. Brian Einstein Lassiter",
+    "instruments": [
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "TV"
+  },
+  {
+    "id": "que_sera_sera",
+    "filename": "que_sera_sera.mxl",
+    "title": "Que Sera Sera",
+    "composer": "Jay Livington",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "B♭ Clarinet"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": ""
+  },
+  {
+    "id": "six_duos_no1_Ernst_Paudert",
+    "filename": "six_duos_no1_Ernst_Paudert.mxl",
+    "title": "Six Duets, No. 1: Allegro moderato",
+    "composer": "Ernst Paudert",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "small_duet_opus_38_mazas",
+    "filename": "small_duet_opus_38_mazas.mxl",
+    "title": "Small Duet from Op. 38",
+    "composer": "J. Mazas",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "sonata_for_two_violins_op3_no1_leclair",
+    "filename": "sonata_for_two_violins_op3_no1_Leclair.mxl",
+    "title": "Sonata for Two Violins in G Major",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "star_spangled_banner",
+    "filename": "star_spangled_banner.mxl",
+    "title": "Star Spangled Banner for Violin and Viola",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Viola"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": ""
+  },
+  {
+    "id": "star_trek_tas",
+    "filename": "star_trek_tas.mxl",
+    "title": "Star Trek: The Animated Series",
+    "composer": "Ray Ellis (1973)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "TV"
+  },
+  {
+    "id": "studio_ghibli_medley",
+    "filename": "studio_ghibli_medley.mxl",
+    "title": "Studio Ghibli Duet",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Oboe",
+      "Flute"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Pop"
+  },
+  {
+    "id": "telemann_TWV_40",
+    "filename": "telemann_TWV_40.mxl",
+    "title": "telemann_TWV_40",
+    "composer": "G. Ph. Telemann",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "Flute"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "test_drive_how_to_train_your_dragon",
+    "filename": "test_drive_how_to_train_your_dragon.mxl",
+    "title": "Test Drive (How to Train Your Dragon)",
+    "composer": "John Powell",
+    "arranger": "Arr. Sebastian Wolf",
+    "instruments": [
+      "Trombone",
+      "Euphonium"
+    ],
+    "difficulty": "Medium",
+    "style": "Film"
+  },
+  {
+    "id": "the_thunderer_sousa",
+    "filename": "the_thunderer_sousa.mxl",
+    "title": "The Thunderer",
+    "composer": "John Phillip Sousa",
+    "arranger": "Benned Hedegaard",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "Medium",
+    "style": ""
+  },
+  {
+    "id": "trumpet_canon_fugue_rondeau",
+    "filename": "trumpet_canon_fugue_rondeau.mxl",
+    "title": "Trumpet Canon & Fugue No.1155",
+    "composer": "Michel Rondeau",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Trumpet"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "up_a_lazy_river",
+    "filename": "up_a_lazy_river.mxl",
+    "title": "Up a Lazy River",
+    "composer": "Hoagy Carmichael",
+    "arranger": "",
+    "instruments": [
+      "Trumpet",
+      "Clarinet"
+    ],
+    "difficulty": "Medium",
+    "style": "Jazz"
+  },
+  {
+    "id": "walking_in_the_air",
+    "filename": "walking_in_the_air.mxl",
+    "title": "Walking in the Air",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "B♭ Clarinet",
+      "Tenor Trombone"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Pop"
+  },
+  {
+    "id": "welcome_to_our_town",
+    "filename": "welcome_to_our_town.mxl",
+    "title": "Welcome to Our Town!",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  }
+]
