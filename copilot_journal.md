@@ -1,3 +1,14 @@
+# 2026-02-06 13:45:00 - Custom Header Implementation
+
+> "I'm running into a problem where on the sheet music, the title and composer/arranger are sometimes overlapping..."
+
+**Summary of Changes:**
+- **UI/Feature**: Replaced Verovio's internal metadata header with a robust custom implementation for better layout control.
+    - Updated `App.tsx` tracking `currentSong` in state.
+    - Configured Verovio with `header: 'none'` to suppress overlapping SVG text.
+    - Added a responsive HTML/React header component above the score display area.
+    - Updated PDF generation logic (`handleDownloadPdf`) to manually inject Title/Composer text into the PDF using `jsPDF`, preserving the metadata in downloads.
+
 # 2026-02-06 13:30:00 - Separate Deployment Workflow for QuartetPlay
 
 > "Select Instrument modal still has the download buttons... Remove them... QuartetPlay did not [deploy correctly]... I expect it to be at public_html/esquartet/quartetplay"

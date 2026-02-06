@@ -44,9 +44,9 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
 
                 <div className="flex-1 overflow-y-auto p-6">
                     <div className="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                        <h3 className="font-bold text-blue-900 mb-2">Welcome to DuetPlay!</h3>
+                        <h3 className="font-bold text-blue-900 mb-2">Welcome!</h3>
                         <p className="text-sm text-blue-800 mb-2">
-                            Have you ever wanted to play duets, but didn't have sheet music for your instruments? DuetPlay can accommodate a wide variety of instruments, so you can duet to your heart's desire.
+                            Have you ever wanted to play with a small ensemble, but didn't have sheet music for your instruments? We can can accommodate a wide variety of instruments, so you can play to your heart's desire.
                         </p>
                     </div>
 
@@ -65,7 +65,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                             <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><FileMusic size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">2. Configure Instruments</strong>
-                                <p className="text-sm text-gray-600">Open <strong>Select Instruments</strong> to choose your instrument for Part 1 and Part 2. The score will automatically transpose!</p>
+                                <p className="text-sm text-gray-600">Open <strong>Select Instruments</strong> to choose your instrument for each Part. The score will automatically transpose!</p>
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                             <div className="bg-white p-2 rounded h-fit shrink-0 shadow-sm border border-blue-100"><Eye size={20} className="text-blue-500" /></div>
                             <div>
                                 <strong className="block text-gray-800">4. Display Score or Parts</strong>
-                                <p className="text-sm text-gray-600">Click on the <strong>Score</strong> button to toggle between displaying the score or invidiual parts. This is useful if you're playing on two separate devices.</p>
+                                <p className="text-sm text-gray-600">Click on the <strong>Score</strong> button to toggle between displaying the score or invidiual parts. This is useful if each person is playing on a separate device.</p>
                             </div>
                         </div>                        
 
@@ -132,7 +132,7 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                     </div>
                     
                     <div className="text-center text-xs text-gray-400 mt-12 mb-4">
-                        v{import.meta.env.VITE_APP_VERSION || '1.0.2'}
+                        v{import.meta.env.VITE_APP_VERSION || '1.0.4'}
                     </div>
                 </div>
             </div>

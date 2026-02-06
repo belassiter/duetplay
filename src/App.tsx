@@ -28,6 +28,7 @@ function App() {
   
   // Songs Data
   const [songs, setSongs] = useState<Song[]>([]);
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isLoadingSongs, setIsLoadingSongs] = useState(true);
 
   // Update Page Title and Favicon based on Config
@@ -216,7 +217,9 @@ function App() {
                     adjustPageHeight: true,
                     pageWidth: Math.floor((safeWidth * 100) / scale),
                     pageHeight: 60000,
-                    transpose: ''
+                    transpose: '',
+                    header: 'none',
+                    footer: 'none'
                 });
 
                 verovioToolkit.loadData(processedXML);
@@ -293,20 +296,37 @@ function App() {
 
         const orientation = w > h ? 'l' : 'p';
         
+        // Reserve space for custom header
+        const HEADER_HEIGHT = 100;
+        
         const doc = new jsPDF({
             orientation: orientation,
             unit: 'pt',
-            format: [w, h]
+            format: [w, h + HEADER_HEIGHT]
         });
+
+        if (currentSong) {
+            doc.setFont("times", "bold");
+            doc.setFontSize(24);
+            doc.text(currentSong.title, w / 2, 50, { align: "center" });
+
+            doc.setFont("times", "italic");
+            doc.setFontSize(12);
+            doc.text(currentSong.composer, w - 50, 70, { align: "right" });
+            if (currentSong.arranger) {
+                doc.text(`arr. ${currentSong.arranger}`, w - 50, 84, { align: "right" });
+            }
+        }
 
         await svg2pdf(svgElement, doc, {
             x: 0,
-            y: 0,
+            y: HEADER_HEIGHT,
             width: w,
             height: h
         });
 
-        doc.save(`${songs.find(s => s.filename === (fileDataRef.current ? 'current' : ''))?.title || 'score'}.pdf`);
+        const fileName = currentSong ? currentSong.title.replace(/[\s\W]+/g, '_').toLowerCase() : 'score';
+        doc.save(`${fileName}.pdf`);
     } catch (e) {
         console.error("PDF Generation failed:", e);
         alert("Failed to generate PDF. Please try printing the page instead.");
@@ -345,6 +365,8 @@ function App() {
   const handleSongSelect = useCallback((song: Song) => {
         // Scroll to top
         if (containerRef.current) containerRef.current.scrollTop = 0;
+        
+        setCurrentSong(song);
 
         // Initialize Parts Array
         const newParts: PartState[] = [];
@@ -692,13 +714,32 @@ function App() {
         </div>
       )}
 
-      <div ref={containerRef} className="w-full flex-1 overflow-auto">
+      <div ref={containerRef} className="w-full flex-1 overflow-auto bg-gray-100 p-2 flex justify-center">
           {!loading && svg && (
             <div
-              className="border border-gray-300 p-1 shadow-sm rounded bg-white h-auto"
-              style={{ overflowX: 'hidden' }}
-              dangerouslySetInnerHTML={{ __html: svg }}
-            />
+              className="border border-gray-300 shadow-lg rounded bg-white h-auto relative"
+              style={{ overflowX: 'hidden', maxWidth: '100%' }}
+            >
+                {/* Custom HTML Header to avoid Verovio Overlap */}
+                {currentSong && (
+                    <div className="flex flex-col pt-6 px-8 font-serif select-none pointer-events-none">
+                        <h1 className="text-2xl md:text-4xl text-center font-bold text-gray-900 leading-tight mb-2">
+                            {currentSong.title}
+                        </h1>
+                        <div className="flex justify-between text-sm md:text-base italic text-gray-800">
+                             <span></span>
+                             <div className="text-right flex flex-col items-end">
+                                 <span>{currentSong.composer}</span>
+                                 {currentSong.arranger && <span className="text-sm">arr. {currentSong.arranger}</span>}
+                             </div>
+                        </div>
+                    </div>
+                )}
+
+                <div
+                    dangerouslySetInnerHTML={{ __html: svg }}
+                />
+            </div>
           )}
       </div>
     </div>
