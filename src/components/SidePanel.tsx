@@ -21,10 +21,11 @@ interface SidePanelProps {
     // Reset
     onReset?: () => void;
     isMobile?: boolean;
+    isLandscape?: boolean;
 }
 
 const OctaveControl = ({ value, onChange }: { value: number, onChange: (val: number) => void }) => (
-    <div className="flex items-center gap-2 mt-2 mb-6 text-sm text-gray-700">
+    <div className="flex items-center gap-2 mt-2 mb-2 text-sm text-gray-700">
         <span className="font-medium mr-1">Adjust range:</span>
         <button 
            onClick={() => onChange(Math.max(value - 1, -5))}
@@ -55,7 +56,8 @@ const SidePanel: React.FC<SidePanelProps> = ({
     onGlobalTransposeChange,
     xmlString,
     onReset,
-    isMobile
+    isMobile,
+    isLandscape
 }) => {
     const [activeSelectorId, setActiveSelectorId] = React.useState<number | null>(null);
 
@@ -74,15 +76,24 @@ const SidePanel: React.FC<SidePanelProps> = ({
     };
 
     const getLabel = (partId: number, originalInstrument: string) => {
-        const base = `Part ${partId} Instrument`;
+        const base = `Part ${partId}`;
         if (originalInstrument && originalInstrument !== 'none') {
             const inst = instruments.find(i => i.value === originalInstrument);
             if (inst) {
-                 return `${base} (original is ${inst.name})`;
+                 return `${base} (Orig: ${inst.name})`;
             }
         }
-        return base;
+        return `Part ${partId}`;
     };
+
+    // Width class
+    const widthClass = (isMobile && !isLandscape) ? 'w-[80%]' : 'w-[60%]';
+    
+    // Layout class
+    // Desktop OR Mobile Landscape: Row layout
+    // Mobile Portrait: Column layout
+    const isRowLayout = !isMobile || isLandscape;
+    const contentLayoutClass = isRowLayout ? 'flex-row' : 'flex-col';
 
     return (
         <>
@@ -95,10 +106,10 @@ const SidePanel: React.FC<SidePanelProps> = ({
             )}
             
             {/* Panel */}
-            <div className={`fixed top-0 right-0 h-full ${isMobile ? 'w-[60%]' : 'w-[40%]'} bg-[#f5faff] shadow-xl transform transition-transform duration-300 z-50 ${
+            <div className={`fixed top-0 right-0 h-full ${widthClass} bg-[#f5faff] shadow-xl transform transition-transform duration-300 z-50 flex flex-col ${
                 isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}>
-                <div className="flex justify-between items-center p-4 border-b bg-blue-100">
+                <div className="flex justify-between items-center p-4 border-b bg-blue-100 shrink-0">
                     <div className="flex items-center gap-2">
                         <h2 className="text-lg font-bold text-gray-800">Select Instruments</h2>
                         {onReset && (
@@ -116,16 +127,44 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     </button>
                 </div>
                 
-                <div className="p-4 h-[calc(100vh-60px)] overflow-y-auto pb-20">
+                {/* Content Area */}
+                {/* Scrollable Container for the *entire* content if in vertical mode, or handled per column?
+                    User request: "Each part is scrolling separately. Make them scroll as one unit." 
+                    BUT also: "Give [mobile horizontal] a similar column format to desktop."
+                    
+                    Desktop format: `flex-row`.
+                    Column format (mobile portrait): `flex-col`.
+                    
+                    Scrolling:
+                    If Row Layout (Desktop/Landscape): 
+                        We want the main container to be non-scrollable, but columns inside to be scrollable?
+                        Or main container scrollable?
+                        Usually in columns, maybe we want individual scrolling? 
+                        User: "mobile vertical... Make them scroll as one unit." -> implied single scroll container.
+                        User: "mobile horizontal... scrolling separately... Give it a similar column format to desktop."
+                        
+                        Current Desktop Impl: `overflow-hidden` on parent, `overflow-y-auto` on CHILDREN.
+                        
+                        Proposed:
+                        Mobile Portrait (Column Layout): Parent `overflow-y-auto`. Children `overflow-visible` (flex-none).
+                        Desktop/Landscape (Row Layout): Parent `overflow-hidden`. Children `overflow-y-auto` (flex-1).
+                */}
+                <div className={`flex-1 relative flex ${contentLayoutClass} ${!isRowLayout ? 'overflow-y-auto' : 'overflow-hidden'}`}>
                     {parts.map((part) => (
-                        <div key={part.id} className="mb-6">
-                            <InstrumentSelector 
-                                label={getLabel(part.id, part.originalInstrument)}
-                                selectedValue={part.instrument}
-                                onSelect={(val) => onPartChange(part.id, 'instrument', val)}
-                                isOpen={activeSelectorId === part.id}
-                                onToggle={() => handleToggle(part.id)}
-                            />
+                        <div key={part.id} className={`p-4 ${isRowLayout ? 'flex-1 overflow-y-auto border-r last:border-0' : 'border-b last:border-0'}`}>
+                            <h3 className="font-bold text-gray-700 mb-2 border-b pb-1">
+                                {getLabel(part.id, part.originalInstrument)}
+                            </h3>
+                            
+                            <div className="mb-4">
+                                <InstrumentSelector 
+                                    label="Instrument"
+                                    selectedValue={part.instrument}
+                                    onSelect={(val) => onPartChange(part.id, 'instrument', val)}
+                                    isOpen={activeSelectorId === part.id}
+                                    onToggle={() => handleToggle(part.id)}
+                                />
+                            </div>
                             
                             <OctaveControl 
                                 value={part.octave} 
@@ -145,35 +184,32 @@ const SidePanel: React.FC<SidePanelProps> = ({
                                     isMobile={isMobile}
                                 />
                             )}
-                            <hr className="my-4 border-gray-100" />
                         </div>
                     ))}
+                </div>
 
-                    <hr className="my-2 border-gray-200" />
-                    
-                    <div className="mb-4">
-                        <div className="flex justify-between items-center mb-2">
-                             <label className="text-sm font-bold text-gray-800">Adjust key (Global):</label>
-                             <span className="text-sm font-medium text-blue-600 w-12 text-right">
-                                {globalTranspose > 0 ? '+' : ''}{globalTranspose}
-                             </span>
-                        </div>
-                        <input 
-                            type="range" 
-                            min="-12" 
-                            max="12" 
-                            step="1"
-                            value={globalTranspose}
-                            onChange={(e) => onGlobalTransposeChange(parseInt(e.target.value))}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                        />
-                        <div className="flex justify-between text-xs text-gray-500 mt-1 px-1">
-                            <span>-12</span>
-                            <span>0</span>
-                            <span>+12</span>
-                        </div>
+                {/* Footer: Key Control */}
+                <div className="p-4 border-t bg-gray-50 shrink-0">
+                    <div className="flex justify-between items-center mb-2">
+                            <label className="text-sm font-bold text-gray-800">Adjust Key (Global):</label>
+                            <span className="text-sm font-medium text-blue-600 w-12 text-right">
+                            {globalTranspose > 0 ? '+' : ''}{globalTranspose}
+                            </span>
                     </div>
-
+                    <input 
+                        type="range" 
+                        min="-12" 
+                        max="12" 
+                        step="1"
+                        value={globalTranspose}
+                        onChange={(e) => onGlobalTransposeChange(parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                    />
+                    <div className="flex justify-between text-xs text-gray-500 mt-1 px-1">
+                        <span>-12</span>
+                        <span>0</span>
+                        <span>+12</span>
+                    </div>
                 </div>
             </div>
         </>

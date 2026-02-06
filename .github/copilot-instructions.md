@@ -14,4 +14,4 @@ Before telling the user a task is complete, you MUST perform these 3 steps in or
 
 ## Documentation
 *   You must maintain `copilot_journal.md`. 
-*   After the verification steps pass, add an entry to the journal quoting the user's exact prompt text (do not paraphrase) and summarizing the changes, using standard file editing commands. Include the date and time for each entry, and add new entries to the top of the file.
+*   After the verification steps pass, add an entry to the journal quoting the user's exact prompt text (do not paraphrase or ellipsis) and summarizing the changes, using standard file editing commands. Include the date and time for each entry, and add new entries to the top of the file.

@@ -1,3 +1,35 @@
+# 2026-02-05 20:15
+User: "1) Mobile vertical and mobile horizontal, I'm seeing 2 hamburger menus, and neither works 2) use duetplay_logo.png to generate favico..."
+Summary:
+1.  **Fixed Mobile Menu**: Removed the duplicate/broken hamburger menu button from `src/App.tsx` and implemented a functioning Left-Side Drawer (Sidebar) that behaves correctly (opens 60% width, has backdrop, closes on selection).
+2.  **Favicon**: Updated `index.html` to use `duetplay_logo.png` as the site favicon.
+3.  **App.tsx**: Updated `lucide-react` imports to include `X` icon for the menu close button.
+4.  **Verification**: Passed `lint`, `test`, and `build`.
+
+# 2026-02-05 19:45
+User: "1. For mobile layouts, move the menu hamburger button to left-justified. 
+2. Retaining instrument selection only applies if the user has selected... otherwise default.
+3. Reload sheet music... scrolled to the top.
+4. Remove text 'isLandscape='...
+5. SidePanel mobile horizontal... column format... mobile vertical... scroll as one unit"
+Summary:
+1.  **Mobile Layout**: Aligned the Menu button to the left using `mr-auto` in `App.tsx`.
+2.  **Instrument Persistence**: 
+    - Updated logic to *only* persist instruments if the user explicitly selected them (`isUserSelected` flag in `PartState`).
+    - If never touched, switching songs resets to the new song's default (usually 'none').
+    - Verified with a dedicated test `src/__tests__/App_instrument_retention.test.tsx`.
+3.  **Scroll Reset**: Added `containerRef.current.scrollTop = 0` to `handleSongSelect` to force scroll to top on song change.
+4.  **UI Cleanup**: Removed stray debug text "isLandscape=" from `App.tsx`.
+5.  **SidePanel Layout**:
+    - Mobile Portrait: **80% width**, unified scrolling (one scrollbar for whole panel).
+    - Mobile Landscape: **60% width**, split scrolling (header fixed, content scrolls), row layout.
+    - Desktop: **60% width**, split scrolling, row layout with divider.
+6.  **Verification**: Passed `lint`, `test`, `build`.
+
+# 2026-02-05 19:00
+User: "OK 2 changes: 1) SidePanel width on mobile vertical is too narrow, make it 80%. When on desktop/landscape, make it 60%.  Also on Desktop, put Part 1 and Part 2 next to each other in columns with a vertical line in between (keep Key adjust at bottom spanning full width). 2) Logic: Currently if I select Instrument for Part 1 (say "Alto Sax") and then switch to a new Song, everything resets. I want to be able to pick my instrument (e.g. Alto Sax for part 1) and when I pick a new song, keep that choice (if Part 1 exists in new song). But reset the octave adjustments and key transpose."
+Summary: Updated `SidePanel.tsx` to use dynamic widths (80% mobile portrait, 60% otherwise) and implemented a flex-row layout with divider for desktop parts view. Updated `App.tsx` logic in `handleSongSelect` to persist `instrument` selection from the previous state while resetting `octave` and `globalTranspose`. Verified with logic review (existing tests pass).
+
 # 2026-02-05 17:16
 User: "restore Range Preview to look like it did before (notes on staff + text)"
 Summary:

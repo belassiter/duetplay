@@ -8,7 +8,7 @@ import SongSelectorPanel from './components/SongSelectorPanel';
 import HelpPanel from './components/HelpPanel';
 import { instruments } from './constants/instruments';
 import type { Song, PartState } from './types/song';
-import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu } from 'lucide-react';
+import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu, X } from 'lucide-react';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
@@ -273,35 +273,51 @@ function App() {
   }, []);
 
   const handleSongSelect = useCallback((song: Song) => {
+        // Scroll to top
+        if (containerRef.current) containerRef.current.scrollTop = 0;
+
         // Initialize Parts Array
         const newParts: PartState[] = [];
         
         // If song.instruments is missing or empty, assume 2 (default/legacy)
         const instList = (song.instruments && song.instruments.length > 0) 
             ? song.instruments 
-            : ['', '']; // Dummy empty strings to trigger 2 iterations
+            : ['', '']; 
 
         instList.forEach((instName, index) => {
-             const val = mapInstrumentNameToValue(instName);
+             const originalVal = mapInstrumentNameToValue(instName);
+
+             const existingPart = parts[index];
+             
+             // Retention Logic Refined:
+             // Only retain if the user has explicitly selected an instrument (isUserSelected === true).
+             // Otherwise, default to the new song's instrument (originalVal).
+             
+             let instrumentToUse = originalVal;
+             let isUserSelected = false;
+
+             if (existingPart && existingPart.isUserSelected) {
+                 instrumentToUse = existingPart.instrument;
+                 isUserSelected = true; // Keep status
+             }
+
              newParts.push({
                  id: index + 1,
-                 instrument: val,
-                 originalInstrument: val,
-                 octave: 0
+                 instrument: instrumentToUse,
+                 originalInstrument: originalVal,
+                 octave: 0, // Reset octave
+                 isUserSelected: isUserSelected
              });
         });
 
-        // If for some reason we have a 1-part song that is Grand Staff (Piano), logic might be tricky.
-        // But for now we trust `instruments` array length.
-        
         setParts(newParts);
-        setGlobalTranspose(0);
+        setGlobalTranspose(0); // Reset Global Transpose
         setViewMode('score');
         
         loadScore(song.filename);
         setIsSongPanelOpen(false);
-  }, [mapInstrumentNameToValue, loadScore]);
-
+  }, [mapInstrumentNameToValue, loadScore, parts]);
+  
   const hasInitialLoad = useRef(false);
 
   // Initial Load
@@ -319,7 +335,14 @@ function App() {
   const handlePartChange = (id: number, field: keyof PartState, value: string | number) => {
        setParts(prev => prev.map(p => {
            if (p.id !== id) return p;
-           return { ...p, [field]: value };
+           
+           // If instrument is changed, mark as User Selected
+           const updates: Partial<PartState> = { [field]: value };
+           if (field === 'instrument') {
+               updates.isUserSelected = true;
+           }
+           
+           return { ...p, ...updates };
        }));
   };
   
@@ -401,15 +424,17 @@ function App() {
 
           <div className="flex items-center gap-2 flex-wrap md:flex-nowrap flex-1 justify-end">
             
-            {/* Menu Button (Mobile) */}
+            {/* Mobile Menu Button - Left Justified */}
             {isMobile && (
-                <button
-                    onClick={() => setIsMenuOpen(true)}
-                    className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm h-[38px] w-[38px]"
-                    title="Menu"
-                >
-                    <Menu size={20} />
-                </button>
+                <div className="flex-none mr-auto md:hidden">
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm h-[38px] w-[38px]"
+                        title="Menu"
+                    >
+                        <Menu size={20} />
+                    </button>
+                </div>
             )}
 
             {/* Zoom Control */}
@@ -483,42 +508,52 @@ function App() {
                 <HelpCircle size={20} />
             </button>
 
-            {/* Mobile Menu Button */}
-            <button 
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden flex items-center justify-center p-2 rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm"
-            >
-                <Menu size={20} />
-            </button>
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Drawer */}
         {isMenuOpen && (
-            <div className="absolute bottom-16 right-4 w-48 bg-white rounded-lg shadow-xl border border-gray-200 p-2 flex flex-col gap-2 md:hidden z-50">
-                <button 
-                    onClick={() => { setIsMenuOpen(false); setIsSongPanelOpen(true); }}
-                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
-                >
-                    <Music size={18} />
-                    <span>Select Song</span>
-                </button>
+            <>
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={() => setIsMenuOpen(false)}
+                />
+                
+                <div className="fixed top-0 left-0 h-full w-[60%] bg-white shadow-2xl z-50 flex flex-col gap-4 p-4 md:hidden border-r border-gray-200 animate-in slide-in-from-left duration-200">
+                    <div className="flex justify-between items-center mb-2">
+                        <h2 className="font-bold text-lg text-gray-800">Menu</h2>
+                        <button 
+                            onClick={() => setIsMenuOpen(false)} 
+                            className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
 
-                <button 
-                    onClick={() => { setIsMenuOpen(false); setIsSidePanelOpen(true); }}
-                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
-                >
-                    <span className="text-lg leading-none">🎷</span>
-                    <span>Select Instruments</span>
-                </button>
+                    <button 
+                        onClick={() => { setIsMenuOpen(false); setIsSongPanelOpen(true); }}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full text-left"
+                    >
+                        <Music size={18} className="shrink-0" />
+                        <span>Select Song</span>
+                    </button>
 
-                <button 
-                    onClick={() => { setIsMenuOpen(false); setIsHelpPanelOpen(true); }}
-                    className="flex items-center gap-2 px-3 py-3 rounded text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full"
-                >
-                    <HelpCircle size={18} />
-                    <span>Help</span>
-                </button>
-            </div>
+                    <button 
+                        onClick={() => { setIsMenuOpen(false); setIsSidePanelOpen(true); }}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full text-left"
+                    >
+                        <span className="text-lg leading-none shrink-0">🎷</span>
+                        <span>Instruments</span>
+                    </button>
+
+                    <button 
+                        onClick={() => { setIsMenuOpen(false); setIsHelpPanelOpen(true); }}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm w-full text-left"
+                    >
+                        <HelpCircle size={18} className="shrink-0" />
+                        <span>Help</span>
+                    </button>
+                </div>
+            </>
         )}
       </div>
 
