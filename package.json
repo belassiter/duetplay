@@ -1,8 +1,10 @@
 {
   "name": "temp_app",
   "private": true,
+  "author": "Brian Lassiter",
   "version": "0.0.0",
   "type": "module",
+  "license": "GPL-3.0",
   "scripts": {
     "dev": "node scripts/generate-manifest.js --input public_duet --output public_duet/songs.json && node scripts/copy-assets.cjs public_duet/songs.json public/songs.json && vite",
     "dev:quartet": "node scripts/generate-manifest.js --input ../esquartet/sheetmusic --output public/quartet-songs.json --optional && vite --mode quartet",

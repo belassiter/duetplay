@@ -1,8 +1,26 @@
-# 2026-02-06 13:45:00 - Custom Header Implementation
+# 2026-02-06 14:04
+> I want the License section of the help modal to be at the bottom, not in the middle of the FAQ. Also, please confirm that we've met all the conditions of GPLv3...
 
-> "I'm running into a problem where on the sheet music, the title and composer/arranger are sometimes overlapping..."
+- **UI/Cleanup**: 
+    - Moved the License section in `HelpPanel.tsx` to the very bottom of the content area, after all FAQs, for better visual hierarchy.
+    - Added explicit "Copyright (C) 2026 Brian Lassiter" notice to the License display.
+- **Compliance**:
+    - Added `author: "Brian Lassiter"` to `package.json`.
+    - Added Copyright notice to `README.md`.
+    - Verified GPLv3 requirements: The app now includes the full license text (`LICENSE`), a clear startup/UI notice (`HelpPanel`), and appropriate copyright attribution. Note: Strict compliance often suggests adding copyright headers to every source file, but the current configuration meets the primary obligations for distribution.
 
-**Summary of Changes:**
+# 2026-02-06 14:00 
+> I'd like to add GPLv3 license to this app. Please take all necessary actions for this, including in the source code, GitHub, and in the app UI, and elsewhere if needed.
+
+- **Legal**: Added GNU GPLv3 License to the project.
+    - Created `LICENSE` file with the full text of GPLv3.
+    - Updated `package.json` to specify `license: "GPL-3.0"`.
+    - Updated `README.md` with a License section linking to the file.
+    - Updated `HelpPanel.tsx` to display the license statement, ensuring transparency within the app UI.
+
+# 2026-02-06 13:45 
+> I'm running into a problem where on the sheet music, the title and composer/arranger are sometimes overlapping..."
+
 - **UI/Feature**: Replaced Verovio's internal metadata header with a robust custom implementation for better layout control.
     - Updated `App.tsx` tracking `currentSong` in state.
     - Configured Verovio with `header: 'none'` to suppress overlapping SVG text.

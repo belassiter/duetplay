@@ -129,10 +129,31 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                             answer={<a href="https://github.com/belassiter/duetplay/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline break-all">https://github.com/belassiter/duetplay/</a>}
                         />
 
+                        <h3 className="text-lg font-bold border-b pb-2 mb-4 mt-8">License</h3>
+                        <div className="text-sm text-gray-600 mb-6">
+                            <p className="mb-2 font-bold">
+                                Copyright &copy; 2026 Brian Einstein Lassiter
+                            </p>
+                            <p className="mb-2">
+                                DuetPlay/QuartetPlay is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+                            </p>
+                            <p className="mb-2">
+                                This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+                            </p>
+                            <a 
+                                href="https://www.gnu.org/licenses/gpl-3.0.html" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline flex items-center gap-1"
+                            >
+                                Read Full License <Eye size={14} />
+                            </a>
+                        </div>
+
                     </div>
                     
                     <div className="text-center text-xs text-gray-400 mt-12 mb-4">
-                        v{import.meta.env.VITE_APP_VERSION || '1.0.4'}
+                        v{import.meta.env.VITE_APP_VERSION || '1.0.5'}
                     </div>
                 </div>
             </div>

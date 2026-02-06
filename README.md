@@ -48,6 +48,13 @@ DuetPlay is a web-based tool adapting duets for any pairing of instruments. Choo
 
 -   `src/`: React source code.
 -   `public/`: Static assets (MusicXML files).
+
+## License
+
+Copyright (C) 2026 Brian Lassiter
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
 -   `public/temp/`: Local tools (Search UI) - *Not deployed*.
 
 ## CSV Search Tool (Local Only)
