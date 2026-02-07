@@ -1,3 +1,13 @@
+# 2026-02-08 07:45
+> Range Preview double-counts transposition (Octave down = down 2 octaves in preview).
+> Logic: The range preview analyzes the *already transposed* score XML, but I recently added logic to manually apply valid shifts *again*. 
+> Fix: Remove manual shift logic in `RangePreview` and let it just analyze the provided XML.
+
+- **Range Preview Logic**:
+    - `src/components/RangePreview.tsx`: Removed the manual calculation of `totalSemis`. 
+    - Updated `getPartRange` call to pass `0` (or implicit default) for transposition shift.
+    - This ensures the preview reflects exactly what is on screen, which is already transposed by `App.tsx`.
+
 # 2026-02-07 20:45
 > 1. Remove ALL padding/background from main sheet music container.
 > 2. Fix Spacebar/PageDown scrolling.

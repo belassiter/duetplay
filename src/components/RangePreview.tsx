@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { getPartRange, getInstrumentTranspositionSemitones } from '../utils/scoreAnalysis';
+import { getPartRange } from '../utils/scoreAnalysis';
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } from 'vexflow';
 import { instruments } from '../constants/instruments';
 
@@ -50,10 +50,7 @@ const RangePreview: React.FC<RangePreviewProps> = ({
     clef = 'treble', 
     label, 
     instrumentValue,
-    originalInstrumentValue, // New prop
-    partId,
-    octaveShift,
-    transposeSemitones
+    partId
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const effectiveStaffId = staffId || partId || '1';
@@ -61,31 +58,14 @@ const RangePreview: React.FC<RangePreviewProps> = ({
     const range = useMemo(() => {
         if (!xmlString) return null;
         try {
-           // Calculate total transposition needed
-           let totalSemis = 0;
-           
-           if (instrumentValue && originalInstrumentValue) {
-               const targetInst = instruments.find(i => i.value === instrumentValue);
-               const origInst = instruments.find(i => i.value === originalInstrumentValue);
-               
-               if (targetInst && origInst) {
-                   const tSemis = getInstrumentTranspositionSemitones(targetInst);
-                   const oSemis = getInstrumentTranspositionSemitones(origInst);
-                   // Logic: OriginalWritten -> Concert -> TargetWritten
-                   // Shift = Target.transpose - Original.transpose
-                   totalSemis += (tSemis - oSemis);
-               }
-           }
-           
-           if (octaveShift) totalSemis += (octaveShift * 12);
-           if (transposeSemitones) totalSemis += transposeSemitones;
-
-           return getPartRange(xmlString, effectiveStaffId, totalSemis);
+           // The xmlString passed in (fullScoreXml) is ALREADY transposed by App.tsx logic.
+           // So we just need to analyze it directly. No additional shifts needed.
+           return getPartRange(xmlString, effectiveStaffId, 0);
         } catch (e) {
            console.error("Range calculation failed", e);
            return null;
         }
-    }, [xmlString, effectiveStaffId, instrumentValue, originalInstrumentValue, octaveShift, transposeSemitones]);
+    }, [xmlString, effectiveStaffId]);
 
     // Calculate Colors
     const rangeAnalysis = useMemo(() => {
