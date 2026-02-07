@@ -5,6 +5,15 @@
     - Implemented a custom inline Vite plugin `exclude-temp-folder`.
     - The plugin uses the `closeBundle` hook to delete the `temp` directory from the output folder (`dist` or `dist-quartet`) immediately after the build completes, effectively excluding it from the final artifact.
 
+# 2026-02-06 14:15
+> I ran npm run build:quartet, but it didn't add new mxl files. Fix that... Then run it, then run the script to take data from repertoire.html
+
+- **Build Configuration**: Updated `package.json` so that `npm run build:quartet` now executes `generate-manifest.js --optional` before building. This ensures that if local sheet music files exist (in `../esquartet/sheetmusic`), they are automatically indexed into `quartet-songs.json`.
+- **Data Update**:
+    - Ran `npm run build:quartet`, which successfully detected and added new songs (e.g., `alright_ok.mxl`, `ghostbusters.mxl`) to the manifest.
+    - Ran `scripts/update-quartet-metadata.js` to enrich the `quartet-songs.json` with Style and Difficulty data parsed from `temp/repertoire_reference.html`.
+    - Result: `public/quartet-songs.json` is now fully up-to-date with new files and metadata.
+
 # 2026-02-06 14:10
 > Make sure when QuartetPlay is deployed, it's not deploying the temp/ folder.
 

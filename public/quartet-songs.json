@@ -105,6 +105,21 @@
     "style": "Jazz"
   },
   {
+    "id": "battlefield_1942",
+    "filename": "battlefield_1942.mxl",
+    "title": "Battlefield 1942",
+    "composer": "Joel Eriksson (2002)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano",
+      "Alto",
+      "Tenor",
+      "Bari Sax"
+    ],
+    "difficulty": "Easy",
+    "style": "Video Game"
+  },
+  {
     "id": "beethovens_5th_a_la_chopin_satb",
     "filename": "beethovens_5th_a_la_chopin_SATB.mxl",
     "title": "Beethoven's 5th Symphony",
@@ -551,6 +566,21 @@
     "style": "Classical"
   },
   {
+    "id": "eleanor_rigby",
+    "filename": "eleanor_rigby.mxl",
+    "title": "Eleanor Rigby",
+    "composer": "Lennon/McCartney (1966)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Pop"
+  },
+  {
     "id": "evans_let_it_snow_4bari",
     "filename": "evans_let_it_snow_4bari.mxl",
     "title": "Let It Snow! (Evans)",
@@ -609,6 +639,51 @@
     ],
     "difficulty": "Medium",
     "style": "Classical"
+  },
+  {
+    "id": "ghostbusters",
+    "filename": "ghostbusters.mxl",
+    "title": "Ghostbusters",
+    "composer": "Ray Parker Jr. (1984)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Film"
+  },
+  {
+    "id": "godchild",
+    "filename": "godchild.mxl",
+    "title": "Godchild",
+    "composer": "Gerry Mulligan",
+    "arranger": "",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Jazz"
+  },
+  {
+    "id": "halo_opening",
+    "filename": "halo_opening.mxl",
+    "title": "Halo",
+    "composer": "Martin O'Donnell/Michael Salvatori (2001)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   },
   {
     "id": "hark_the_herald_3bari",
@@ -682,6 +757,36 @@
       "Bari Sax"
     ],
     "difficulty": "Medium",
+    "style": "Jazz"
+  },
+  {
+    "id": "isfahan",
+    "filename": "isfahan.mxl",
+    "title": "Isfahan",
+    "composer": "Ellington/Strayhorn",
+    "arranger": "",
+    "instruments": [
+      "Alto Sax 1",
+      "Alto Sax 2",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Jazz"
+  },
+  {
+    "id": "i_cant_give_you",
+    "filename": "i_cant_give_you.mxl",
+    "title": "I Can't Give You Anything But Love",
+    "composer": "McHugh/Fields (1928)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
     "style": "Jazz"
   },
   {
@@ -773,6 +878,21 @@
     "style": "Holiday"
   },
   {
+    "id": "kens_theme",
+    "filename": "kens_theme.mxl",
+    "title": "Ken's Theme",
+    "composer": "Yoko Shimomura",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Alto Sax 1",
+      "Alto Sax 2",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
+  },
+  {
     "id": "land_of_make_believe_sax_quartet_satb",
     "filename": "land_of_make_believe_sax_quartet_SATB.mxl",
     "title": "Land of Make Believe",
@@ -816,6 +936,21 @@
     ],
     "difficulty": "Medium",
     "style": "Classical"
+  },
+  {
+    "id": "mario_paint_flyswatter",
+    "filename": "mario_paint_flyswatter.mxl",
+    "title": "Flyswatter Game",
+    "composer": "Tanaka/Yoshitomi/Totaka (1992)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Alto Sax 1",
+      "Alto Sax 2",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   },
   {
     "id": "misty_4bari",
@@ -863,6 +998,21 @@
     "style": "Jazz"
   },
   {
+    "id": "moore_slaw",
+    "filename": "moore_slaw.mxl",
+    "title": "Moore Slaw",
+    "composer": "Brian Einstein Lassiter",
+    "arranger": "",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Jazz"
+  },
+  {
     "id": "my_little_drum_sax_quartet_satb",
     "filename": "my_little_drum_sax_quartet_SATB.mxl",
     "title": "My Little Drum",
@@ -893,11 +1043,26 @@
     "style": "Jazz"
   },
   {
-    "id": "pink_panther_original_sax_quartet_satb",
-    "filename": "pink_panther_original_sax_quartet_SATB.mxl",
-    "title": "The Pink Panther Theme",
-    "composer": "Henry Mancini (1963)",
-    "arranger": "",
+    "id": "pebble_beach",
+    "filename": "pebble_beach.mxl",
+    "title": "Pebble Beach",
+    "composer": "Vince Guaraldi",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "TV"
+  },
+  {
+    "id": "perhaps",
+    "filename": "perhaps.mxl",
+    "title": "Perhaps, Perhaps, Perhaps",
+    "composer": "Osvaldo Farres (1947)",
+    "arranger": "Brian Einstein Lassiter",
     "instruments": [
       "Soprano Sax",
       "Alto Sax",
@@ -905,7 +1070,22 @@
       "Bari Sax"
     ],
     "difficulty": "Medium",
-    "style": "Classical"
+    "style": "Pop"
+  },
+  {
+    "id": "pink_panther_original_sax_quartet_satb",
+    "filename": "pink_panther_original_sax_quartet_SATB.mxl",
+    "title": "The Pink Panther Theme",
+    "composer": "Henry Mancini (1963)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Film"
   },
   {
     "id": "pink_panther_sax_quartet_satb",
@@ -1101,6 +1281,21 @@
     "style": "TV"
   },
   {
+    "id": "serenade_to_a_cuckoo",
+    "filename": "serenade_to_a_cuckoo.mxl",
+    "title": "Serenade to a Cuckoo",
+    "composer": "Roland Kirk (1965)",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Jazz"
+  },
+  {
     "id": "serenade_to_a_cuckoo_sax_quartet_satb",
     "filename": "serenade_to_a_cuckoo_sax_quartet_SATB.mxl",
     "title": "Serenade to a Cuckoo",
@@ -1265,6 +1460,21 @@
     "style": "TV"
   },
   {
+    "id": "star_wars_stripes_forever_sax_quartet",
+    "filename": "star_wars_stripes_forever_sax_quartet.mxl",
+    "title": "The Star Wars Stripes Forever",
+    "composer": "John Philip Sousa/John Williams",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Film"
+  },
+  {
     "id": "super_mario_world_ending_sax_quartet_satb",
     "filename": "super_mario_world_ending_sax_quartet_SATB.mxl",
     "title": "Super Mario World: Ending Medley",
@@ -1277,6 +1487,36 @@
       "Bari Sax"
     ],
     "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
+    "id": "take_it_all_away",
+    "filename": "take_it_all_away.mxl",
+    "title": "Take It All Away",
+    "composer": "John McCrea",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Pop"
+  },
+  {
+    "id": "tetris_a",
+    "filename": "tetris_a.mxl",
+    "title": "Tetris 'A'",
+    "composer": "Traditional",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
     "style": "Video Game"
   },
   {
@@ -1293,6 +1533,21 @@
     ],
     "difficulty": "Easy",
     "style": "Holiday"
+  },
+  {
+    "id": "trogdor",
+    "filename": "trogdor.mxl",
+    "title": "Trogdor",
+    "composer": "Strong Bad",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Alto Sax 1",
+      "Alto Sax 2",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "TV"
   },
   {
     "id": "we_wish_you_3bari",
