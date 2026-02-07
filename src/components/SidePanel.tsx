@@ -180,6 +180,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                                     staffId={part.id.toString()}
                                     clef={getClef(part.instrument)} 
                                     instrumentValue={part.instrument}
+                                    originalInstrumentValue={part.originalInstrument}
                                     partId={part.id.toString()}
                                     octaveShift={part.octave}
                                     transposeSemitones={globalTranspose}

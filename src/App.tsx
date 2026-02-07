@@ -11,6 +11,7 @@ import type { Song, PartState } from './types/song';
 import { Loader2, Music, RotateCcw, Eye, HelpCircle, Menu, X, Download } from 'lucide-react';
 import { jsPDF } from "jspdf";
 import { svg2pdf } from "svg2pdf.js";
+import { loadFonts } from './utils/pdfFonts';
 
 function App() {
   const { verovioToolkit, loading } = useVerovio();
@@ -130,7 +131,7 @@ function App() {
             // Decrease padding on mobile side edges (safeWidth)
             // Desktop: 20 (10px padding each side)
             // Mobile: 2 (1px padding each side approx)
-            const sidePadding = isMobile ? 2 : 20;
+            const sidePadding = isMobile ? 10 : 20;
             const safeWidth = Math.max(containerWidth - sidePadding, 100);
 
             // Always treat as XML now
@@ -217,6 +218,8 @@ function App() {
                     adjustPageHeight: true,
                     pageWidth: Math.floor((safeWidth * 100) / scale),
                     pageHeight: 60000,
+                    pageMarginLeft: 10,  // Reduced from default 50 to maximize space
+                    pageMarginRight: 10, // Ensure symmetry
                     transpose: '',
                     header: 'none',
                     footer: 'none'
@@ -270,66 +273,165 @@ function App() {
   }, []);
 
   const handleDownloadPdf = async () => {
-    if (!svg) return;
+    if (!verovioToolkit) return;
+    const originalStatus = status;
+    
+    // UI Update loop trick to let React render the spinner before we block the thread
+    setStatus('Generating PDF...');
+    setIsRendering(true);
+
+    // Give UI a moment to update
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     try {
-        // Parse SVG string to Element
-        const parser = new DOMParser();
-        const svgDoc = parser.parseFromString(svg, "image/svg+xml");
-        const svgElement = svgDoc.documentElement;
+        // --- 1. Re-Layout for Letter Size Paper ---
+        // Letter: 8.5in x 11in
+        // We target a "Print Scale" (mag) that is readable. 40 is standard usage.
+        const PDF_WIDTH_INCH = 8.5;
+        const PDF_HEIGHT_INCH = 11;
+        const DPI = 96; // Screen DPI base
+        const PRINT_SCALE = 44; // Trial & Error: 44 for better readability
+        // Margins for Layout (Verovio units)
+        // 50 Verovio units padding
+        
+        // Calculate Pixel dimensions for Verovio
+        // formula: verovio_units = pixels * 100 / scale
+        const pxWidth = PDF_WIDTH_INCH * DPI;
+        const pxHeight = PDF_HEIGHT_INCH * DPI;
+        
+        const verovioWidth = Math.floor((pxWidth * 100) / PRINT_SCALE);
+        // Reduce height slightly to ensure footer/margin space creates a break
+        const verovioHeight = Math.floor((pxHeight * 100) / PRINT_SCALE) - 80; // Adjusted from -200 to -80 to reduce top blank space on p2+ 
 
-        // Get dimensions from SVG
-        const viewBox = svgElement.getAttribute('viewBox');
-        let w = 595.28; // A4
-        let h = 841.89;
-        
-        if (viewBox) {
-            const [, , vbW, vbH] = viewBox.split(' ').map(parseFloat);
-            w = vbW;
-            h = vbH;
-        } else {
-             const wAttr = svgElement.getAttribute('width');
-             const hAttr = svgElement.getAttribute('height');
-             if (wAttr) w = parseFloat(wAttr);
-             if (hAttr) h = parseFloat(hAttr);
-        }
-
-        const orientation = w > h ? 'l' : 'p';
-        
-        // Reserve space for custom header
-        const HEADER_HEIGHT = 100;
-        
-        const doc = new jsPDF({
-            orientation: orientation,
-            unit: 'pt',
-            format: [w, h + HEADER_HEIGHT]
+        // Apply Print Options
+        verovioToolkit.setOptions({
+            scale: PRINT_SCALE,
+            adjustPageHeight: false, // Force pagination
+            pageWidth: verovioWidth,
+            pageHeight: verovioHeight,
+            pageMarginTop: 0,
+            pageMarginBottom: 0,
+            pageMarginLeft: 0,
+            pageMarginRight: 0,
+            header: 'none',
+            footer: 'none',
+            breaks: 'auto',
+            transpose: '' // Should match current XML, which is already transposed
         });
+        
+        // Re-process layout
+        verovioToolkit.redoLayout();
+        
+        // --- 2. Setup JS PDF ---
+        const doc = new jsPDF({
+            orientation: 'p',
+            unit: 'pt',
+            format: 'letter' // 612pt x 792pt
+        });
+        
+        // Load Verovio Fonts (Leipzig/Bravura) to handle special characters
+        await loadFonts(doc);
 
-        if (currentSong) {
-            doc.setFont("times", "bold");
-            doc.setFontSize(24);
-            doc.text(currentSong.title, w / 2, 50, { align: "center" });
+        const pageCount = verovioToolkit.getPageCount();
+        const PAGE_WIDTH_PT = 612;
+        const PAGE_HEIGHT_PT = 792;
+        const MARGIN_PT = 36; // 0.5 inch
 
-            doc.setFont("times", "italic");
-            doc.setFontSize(12);
-            doc.text(currentSong.composer, w - 50, 70, { align: "right" });
-            if (currentSong.arranger) {
-                doc.text(`arr. ${currentSong.arranger}`, w - 50, 84, { align: "right" });
+        // --- 3. Render Pages ---
+        for (let i = 1; i <= pageCount; i++) {
+            if (i > 1) doc.addPage();
+            
+            const svgStr = verovioToolkit.renderToSVG(i, {});
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgStr, "image/svg+xml");
+            const svgElement = svgDoc.documentElement;
+            
+            // Header Space on Page 1
+            const HEADER_HEIGHT_PT = (i === 1) ? 100 : 20;
+
+            // Header Info
+            const songName = currentSong ? currentSong.title : 'Score';
+            const composerName = currentSong ? currentSong.composer : '';
+            const arrangerName = currentSong && currentSong.arranger ? `arr. ${currentSong.arranger}` : '';
+            const partName = getViewLabel();
+
+            // Draw Header on Page 1
+            if (i === 1) {
+                doc.setFont("times", "bold");
+                doc.setFontSize(32); // Increased Font Size (2x previous 18ish? 24->32 is big)
+                doc.text(songName, PAGE_WIDTH_PT / 2, 50, { align: "center" });
+                
+                // Composer / Arranger (Right)
+                doc.setFont("times", "italic");
+                doc.setFontSize(14); // Increased
+                doc.text(composerName, PAGE_WIDTH_PT - MARGIN_PT, 70, { align: "right" });
+                if (arrangerName) {
+                    doc.text(arrangerName, PAGE_WIDTH_PT - MARGIN_PT, 88, { align: "right" });
+                }
+
+                // Part Name (Left)
+                doc.setFont("helvetica", "bold"); 
+                doc.setFontSize(14);
+                doc.text(partName, MARGIN_PT, 70, { align: "left" });
+            }
+
+            // Draw SVG
+            // svg2pdf tries to fit the SVG into the rect. 
+            // Verovio generated the SVG to fit the page dimensions we gave it.
+            // We just map it to the PDF print area.
+            
+            await svg2pdf(svgElement, doc, {
+                x: MARGIN_PT,
+                y: HEADER_HEIGHT_PT,
+                width: PAGE_WIDTH_PT - (MARGIN_PT * 2),
+                height: PAGE_HEIGHT_PT - HEADER_HEIGHT_PT - MARGIN_PT
+            });
+
+            // Attribution Footer (Page 1 Only)
+            if (i === 1) {
+                doc.setFont("helvetica", "italic");
+                doc.setFontSize(9);
+                doc.text("Generated by esquartet.com/quartetplay", PAGE_WIDTH_PT / 2, PAGE_HEIGHT_PT - 15, { align: "center" });
+            }
+
+            // Pagination Footer
+            if (pageCount > 1) {
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.text(`- ${i} -`, PAGE_WIDTH_PT / 2, PAGE_HEIGHT_PT - 25, { align: "center" });
             }
         }
+        
+        // Construct filename: [title]_[part]_[inst].pdf
+        const safeTitle = currentSong ? currentSong.title.replace(/[\s\W]+/g, '_').toLowerCase() : 'score';
+        const finalPartName = getViewLabel();
+        const safePart = finalPartName.replace(/[\s\W]+/g, '_').toLowerCase();
+        
+        // Add instrument name if specific part selected
+        let instName = '';
+        if (viewMode !== 'score') {
+            const partId = parseInt(viewMode.replace('part-', ''));
+            const p = parts.find(pt => pt.id === partId);
+            if (p) {
+                // Find display name
+                const instObj = instruments.find(i => i.value === p.instrument);
+                if (instObj) {
+                     instName = '_' + instObj.name.replace(/[\s\W]+/g, '_').toLowerCase();
+                }
+            }
+        }
+        
+        doc.save(`${safeTitle}_${safePart}${instName}.pdf`);
 
-        await svg2pdf(svgElement, doc, {
-            x: 0,
-            y: HEADER_HEIGHT,
-            width: w,
-            height: h
-        });
-
-        const fileName = currentSong ? currentSong.title.replace(/[\s\W]+/g, '_').toLowerCase() : 'score';
-        doc.save(`${fileName}.pdf`);
     } catch (e) {
         console.error("PDF Generation failed:", e);
-        alert("Failed to generate PDF. Please try printing the page instead.");
+        alert("Failed to generate PDF.");
+    } finally {
+        // Restore Screen View
+        setStatus(originalStatus);
+        setIsRendering(false);
+        // We must re-render to restore screen layout options (infinite height, scale, etc.)
+        renderScore();
     }
   };
 
@@ -491,12 +593,23 @@ function App() {
 
         const scrollAmount = containerRef.current.clientHeight * 0.9; // 90% of page height
 
-        if (e.code === 'Space' || e.code === 'PageDown') {
+        if (e.code === 'Space' || e.key === ' ' || e.code === 'PageDown' || e.key === 'PageDown') {
             e.preventDefault();
-            containerRef.current.scrollBy({ top: scrollAmount, behavior: 'smooth' });
-        } else if (e.code === 'PageUp') {
+            // Check shift key to determine direction
+            if (e.shiftKey) {
+                containerRef.current.scrollTop -= scrollAmount;
+            } else {
+                containerRef.current.scrollTop += scrollAmount;
+            }
+        } else if (e.code === 'PageUp' || e.key === 'PageUp') {
             e.preventDefault();
-            containerRef.current.scrollBy({ top: -scrollAmount, behavior: 'smooth' });
+            containerRef.current.scrollTop -= scrollAmount;
+        } else if (e.code === 'ArrowDown' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            containerRef.current.scrollTop += 50; // Small step
+        } else if (e.code === 'ArrowUp' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            containerRef.current.scrollTop -= 50;
         }
     };
 
@@ -714,10 +827,10 @@ function App() {
         </div>
       )}
 
-      <div ref={containerRef} className="w-full flex-1 overflow-auto bg-gray-100 p-2 flex justify-center">
+      <div ref={containerRef} className="w-full flex-1 overflow-auto bg-white p-0 flex justify-center outline-none" tabIndex={0}>
           {!loading && svg && (
             <div
-              className="border border-gray-300 shadow-lg rounded bg-white h-auto relative"
+              className={`bg-white h-auto relative ${isMobile ? 'pr-1' : ''}`}
               style={{ overflowX: 'hidden', maxWidth: '100%' }}
             >
                 {/* Custom HTML Header to avoid Verovio Overlap */}

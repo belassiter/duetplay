@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { getPartRange } from '../utils/scoreAnalysis';
+import { getPartRange, getInstrumentTranspositionSemitones } from '../utils/scoreAnalysis';
 import { Renderer, Stave, StaveNote, Voice, Formatter, Accidental } from 'vexflow';
 import { instruments } from '../constants/instruments';
 
@@ -9,6 +9,7 @@ interface RangePreviewProps {
     clef?: string;
     label?: string;
     instrumentValue?: string;
+    originalInstrumentValue?: string;
     
     // Props passed by SidePanel (ignored for logic as xmlString is already transposed)
     partId?: string;
@@ -49,7 +50,10 @@ const RangePreview: React.FC<RangePreviewProps> = ({
     clef = 'treble', 
     label, 
     instrumentValue,
-    partId
+    originalInstrumentValue, // New prop
+    partId,
+    octaveShift,
+    transposeSemitones
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const effectiveStaffId = staffId || partId || '1';
@@ -57,11 +61,31 @@ const RangePreview: React.FC<RangePreviewProps> = ({
     const range = useMemo(() => {
         if (!xmlString) return null;
         try {
-           return getPartRange(xmlString, effectiveStaffId);
-        } catch {
+           // Calculate total transposition needed
+           let totalSemis = 0;
+           
+           if (instrumentValue && originalInstrumentValue) {
+               const targetInst = instruments.find(i => i.value === instrumentValue);
+               const origInst = instruments.find(i => i.value === originalInstrumentValue);
+               
+               if (targetInst && origInst) {
+                   const tSemis = getInstrumentTranspositionSemitones(targetInst);
+                   const oSemis = getInstrumentTranspositionSemitones(origInst);
+                   // Logic: OriginalWritten -> Concert -> TargetWritten
+                   // Shift = Target.transpose - Original.transpose
+                   totalSemis += (tSemis - oSemis);
+               }
+           }
+           
+           if (octaveShift) totalSemis += (octaveShift * 12);
+           if (transposeSemitones) totalSemis += transposeSemitones;
+
+           return getPartRange(xmlString, effectiveStaffId, totalSemis);
+        } catch (e) {
+           console.error("Range calculation failed", e);
            return null;
         }
-    }, [xmlString, effectiveStaffId]);
+    }, [xmlString, effectiveStaffId, instrumentValue, originalInstrumentValue, octaveShift, transposeSemitones]);
 
     // Calculate Colors
     const rangeAnalysis = useMemo(() => {

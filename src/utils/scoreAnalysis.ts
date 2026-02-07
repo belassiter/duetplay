@@ -1,11 +1,38 @@
-import { Note } from 'tonal';
+import { Note, Interval } from 'tonal';
+import type { Instrument } from '../constants/instruments';
 
 interface RangeResult {
     min: string;
     max: string;
 }
 
-export const getPartRange = (xmlString: string, staffId: string): RangeResult | null => {
+const getInstrumentTranspositionSemitones = (inst: Instrument): number => {
+    let t = inst.transpose;
+    if (!t || t === 'P1') return 0;
+    
+    let direction = 1;
+    if (t.startsWith('-')) {
+        direction = -1;
+        t = t.substring(1);
+    } 
+    
+    let octaves = 0;
+    if (t.includes('8va')) {
+        octaves = 1;
+        t = t.replace('+8va', '').replace('8va', '');
+    }
+    
+    if (!t) return octaves * 12 * direction; // e.g. "-8va" became ""
+    
+    const semis = Interval.semitones(t);
+    if (semis === null) return 0; // fallback
+    
+    return (semis + (octaves * 12)) * direction;
+};
+
+export { getInstrumentTranspositionSemitones };
+
+export const getPartRange = (xmlString: string, staffId: string, transposeSemitones: number = 0): RangeResult | null => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "application/xml");
     
@@ -87,6 +114,15 @@ export const getPartRange = (xmlString: string, staffId: string): RangeResult | 
     });
 
     if (!found) return null;
+
+    if (transposeSemitones !== 0) {
+        const interval = Interval.fromSemitones(transposeSemitones);
+        if (interval) {
+            minNote = Note.simplify(Note.transpose(minNote, interval));
+            maxNote = Note.simplify(Note.transpose(maxNote, interval));
+        }
+    }
+
     return { min: minNote, max: maxNote };
 };
 

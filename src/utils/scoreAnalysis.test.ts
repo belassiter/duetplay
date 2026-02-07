@@ -69,4 +69,12 @@ describe('scoreAnalysis - getPartRange', () => {
         expect(range.max).toBe('G5');
     }
  });
+
+  it('should transpose range correctly when semitones provided', () => {
+    // Original: C4 to G4
+    // Transpose +2 (Major 2nd) -> D4 to A4
+    const range = getPartRange(multiPartXml, '1', 2);
+    expect(range?.min).toBe('D4');
+    expect(range?.max).toBe('A4');
+  });
 });

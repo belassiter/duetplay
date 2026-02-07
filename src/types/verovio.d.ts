@@ -10,6 +10,7 @@ declare module 'verovio' {
         loadZipDataBuffer(data: ArrayBuffer): void;
         renderToSVG(page: number, options: Record<string, any>): string;
         redoLayout(): void;
+        getPageCount(): number;
     }
 }
 
@@ -25,5 +26,6 @@ declare module 'verovio/esm' {
         loadZipDataBuffer(data: ArrayBuffer): void;
         renderToSVG(page: number, options: Record<string, any>): string;
         redoLayout(): void;
+        getPageCount(): number;
     }
 }

@@ -93,6 +93,12 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
                             answer="Not at the moment. The first priority was to generate custom sheet music for duets."
                         />
                         
+                         <FAQItem 
+                            icon={Info}
+                            question="Why doesn't the music look as good as your published PDFs?"
+                            answer={<>The sheet music renderer I'm using, Verovio, is pretty good at making readable notation. But it can't match the quality of my hand-adjusted PDF parts generated from Finale. So it's a trade-off here of sacrificing a bit of visual quality to get the flexibility of transpositions.</>}
+                        />
+
                         <FAQItem 
                             icon={Info}
                             question="Did you know it's incorrectly dealing with mid-song key changes for transposed parts?"
