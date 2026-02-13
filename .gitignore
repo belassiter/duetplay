@@ -10,11 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-quartet
 *.local
-public/temp/*
-!public/temp/*.html
-!public/temp/*.js
-!public/temp/*.css
+public/temp/
+public/songs.json
+public/quartet-songs.json
 
 # Editor directories and files
 .vscode/*

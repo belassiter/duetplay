@@ -1,5 +1,18 @@
 [
   {
+    "id": "abba_medley",
+    "filename": "abba_medley.mxl",
+    "title": "Untitled",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "B♭ Trumpet",
+      "Baritone Saxophone"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "accumula_town_pokemon_bw",
     "filename": "accumula_town_pokemon_bw.mxl",
     "title": "Accumula Town from Pokemon B/W",
@@ -156,6 +169,19 @@
     "style": "Classical"
   },
   {
+    "id": "duett_mit_zwei_obligaten_augenglasern",
+    "filename": "duett_mit_zwei_obligaten_augenglasern.mxl",
+    "title": "Duett mit zwei obligaten Augengläsern",
+    "composer": "Ludwig Van Beethoven",
+    "arranger": "",
+    "instruments": [
+      "Viola",
+      "Violoncello"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "fantasia_no_2_telemann",
     "filename": "fantasia_no_2_telemann.mxl",
     "title": "Fanstasia No. 2",
@@ -180,6 +206,19 @@
     ],
     "difficulty": "Medium",
     "style": "Video Game"
+  },
+  {
+    "id": "funiculi_funicula",
+    "filename": "funiculi_funicula.mxl",
+    "title": "Funiculì, funiculà",
+    "composer": "Luigi Denza",
+    "arranger": "Alex Evstyugov",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
   },
   {
     "id": "happy_birthday_dennis",
@@ -351,6 +390,19 @@
     "style": ""
   },
   {
+    "id": "rondo_of_the_sunflower_house_from_ponyo",
+    "filename": "Rondo of the Sunflower House From Ponyo.mxl",
+    "title": "Rondo of the Sunflower House",
+    "composer": "Joe Hisaishi",
+    "arranger": "",
+    "instruments": [
+      "Flute",
+      "Oboe"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "six_duos_no1_Ernst_Paudert",
     "filename": "six_duos_no1_Ernst_Paudert.mxl",
     "title": "Six Duets, No. 1: Allegro moderato",
@@ -374,6 +426,19 @@
       "Violin"
     ],
     "difficulty": "Medium-Easy",
+    "style": "Classical"
+  },
+  {
+    "id": "sonata_for_two_violins_op3_no1_leclair",
+    "filename": "sonata_for_two_violins_op3_no1_Leclair.mxl",
+    "title": "Sonata for Two Violins in G Major",
+    "composer": "",
+    "arranger": "",
+    "instruments": [
+      "Violin",
+      "Violin"
+    ],
+    "difficulty": "Medium",
     "style": "Classical"
   },
   {

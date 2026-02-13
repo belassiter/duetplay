@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { X, Search, Music2, ArrowUpDown, ArrowUp, ArrowDown, ChevronDown, Filter, Check, Download } from 'lucide-react';
+import { logEvent } from '../utils/analytics';
 import type { Song } from '../types/song';
 
 interface MultiSelectDropdownProps {
@@ -122,6 +123,9 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
 
     const handleDownloadMxl = (e: React.MouseEvent, song: Song) => {
         e.stopPropagation();
+        
+        logEvent({ type: 'download_mxl', filename: song.filename });
+
         const baseUrl = import.meta.env.VITE_ASSETS_BASE_URL || import.meta.env.BASE_URL;
         const url = `${baseUrl}${song.filename}`;
         

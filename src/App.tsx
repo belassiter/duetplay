@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
 import { transposeMusicXML, isolatePart } from './utils/xmlTranspose';
+import { logEvent, getConfigurationDiff } from './utils/analytics';
 import JSZip from 'jszip';
 import './App.css'
 import SidePanel from './components/SidePanel';
@@ -31,6 +32,22 @@ function App() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isLoadingSongs, setIsLoadingSongs] = useState(true);
+
+  // Analytics: Page View & Global Error
+  useEffect(() => {
+    // Log Page View
+    logEvent({ type: 'page_view', details: document.referrer });
+
+    // Global Error Handler
+    const handleError = (event: ErrorEvent) => {
+        logEvent({ 
+            type: 'error', 
+            details: `${event.message} at ${event.filename}:${event.lineno}` 
+        });
+    };
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
 
   // Update Page Title and Favicon based on Config
   useEffect(() => {
@@ -275,6 +292,8 @@ function App() {
   const handleDownloadPdf = async () => {
     if (!verovioToolkit) return;
     const originalStatus = status;
+
+    logEvent({ type: 'download_pdf', filename: currentSong?.filename });
     
     // UI Update loop trick to let React render the spinner before we block the thread
     setStatus('Generating PDF...');
@@ -465,6 +484,11 @@ function App() {
   }, []);
 
   const handleSongSelect = useCallback((song: Song) => {
+        // Log Song Load, but skip initial auto-load
+        if (hasInitialLoad.current) {
+            logEvent({ type: 'load_song', filename: song.filename });
+        }
+
         // Scroll to top
         if (containerRef.current) containerRef.current.scrollTop = 0;
         
@@ -519,7 +543,6 @@ function App() {
     if (hasInitialLoad.current || isLoadingSongs || songs.length === 0) return;
 
     if (!loading && verovioToolkit && !fileDataRef.current) {
-        hasInitialLoad.current = true;
         
         // Determine default song based on mode (inferred from title or existence)
         const appTitle = import.meta.env.VITE_APP_TITLE || 'DuetPlay';
@@ -532,6 +555,8 @@ function App() {
         // Try to find the preferred default, otherwise fall back to first song
         const defaultSong = songs.find(s => s.id === defaultId) || songs[0];
         if (defaultSong) handleSongSelect(defaultSong);
+        
+        hasInitialLoad.current = true;
     }
   }, [loading, verovioToolkit, songs, isLoadingSongs, handleSongSelect]); // Removing deps that caused loops
   
@@ -792,7 +817,17 @@ function App() {
 
       <SidePanel 
         isOpen={isSidePanelOpen} 
-        onClose={() => setIsSidePanelOpen(false)}
+        onClose={() => {
+            setIsSidePanelOpen(false);
+            const diff = getConfigurationDiff(parts, globalTranspose);
+            if (diff && currentSong) {
+                logEvent({
+                    type: 'configuration_change',
+                    filename: currentSong.filename,
+                    details: diff
+                });
+            }
+        }}
         parts={parts}
         onPartChange={handlePartChange}
         globalTranspose={globalTranspose}

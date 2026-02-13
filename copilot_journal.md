@@ -1,3 +1,50 @@
+# 2026-02-12 11:10
+> "No, it's something else... in Source Control, it looks like dist-quartet is its own repo or something. Which I think is not correct"
+
+The confusion was because `dist-quartet/` contained a `.git` folder, making it a nested git repository. This can happen if a deployment script initializes a repo inside the `dist` folder to push to GitHub Pages.
+
+Fix:
+- Deleted the `.git` folder inside `dist-quartet/`.
+- Combined with the previous `.gitignore` update, this ensures `dist-quartet` is completely ignored and not tracked.
+
+# 2026-02-12 11:05
+> "Something's wrong, there's 513 files changed. And they're mostly in a different commit structure, dist-quartet. please explain"
+
+This is happening because the build process for QuartetPlay (`npm run build:quartet` or `npm run dev:quartet`) generates a `dist-quartet/` folder, which was not being ignored by git.
+
+Fix:
+- Added `dist-quartet` to `.gitignore`.
+- Added `public/songs.json` and `public/quartet-songs.json` to `.gitignore` (as they are generated artifacts).
+
+# 2026-02-12 11:00
+> "npm run dev ... EEXIST: file already exists, mkdir '...public/songs.json'"
+
+Fixed `scripts/copy-assets.cjs` to support single-file copying:
+- The script was unconditionally treating the source as a directory and trying to `mkdir` the destination path.
+- Updated the script to check `fs.stat(src)`:
+    - If it's a file, it uses `copyFile` (ensuring the parent dir exists).
+    - If it's a directory, it proceeds with the existing recursive copy logic.
+
+# 2026-02-12 10:53
+> "The MXL download button should be in the song selection modal."
+
+Added analytics logging to the existing MXL download button:
+- Modified `SongSelectorPanel.tsx`:
+  - Imported `logEvent`.
+  - Updated `handleDownloadMxl` to call `logEvent({ type: 'download_mxl', ... })` before triggering the download.
+
+# 2026-02-12 09:44
+> "For all of the parameters in the Select Instrument modal, how about this to make the data more meaningful: when the modal closes, log all of the parameters (instruments, octaves, key) that are are not the default value. So then we don't log every time the user shifts the key to try and find the right one, just when they're done. Also, should this log the mxl file that's active? Logging errors sounds like a good idea. Also, i pasted repertoire.html and google_app_script.js into public/temp folder. The js is the code I pasted into Google sheets, if you need that as a reference."
+
+Integrated Google Analytics tracking:
+- Created `src/utils/analytics.ts` to handle logging events to Google Apps Script.
+- Updated `public/temp/google_apps_script.js` with a new version that supports the `details` column and robust parameter handling (for user to deploy).
+- Modified `App.tsx`:
+    - Added `appReadyToLog` ref to prevent logging the initial auto-loaded song, ensuring only user actions are tracked.
+    - Added `page_view` and Global Error logging in `useEffect`.
+    - Added `download_pdf` logging in `handleDownloadPdf`.
+    - Added `configuration_change` logging in `SidePanel` `onClose` callback, which diffs the current settings against the defaults (using new `getConfigurationDiff` utility).
+
 # 2026-02-08 07:45
 > Range Preview double-counts transposition (Octave down = down 2 octaves in preview).
 > Logic: The range preview analyzes the *already transposed* score XML, but I recently added logic to manually apply valid shifts *again*. 
