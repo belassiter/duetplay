@@ -107,8 +107,8 @@ const HelpPanel: React.FC<HelpPanelProps> = ({ isOpen, onClose, isMobile }) => {
 
                          <FAQItem 
                             icon={Mail}
-                            question="I wish it had more songs!"
-                            answer={<>I'm putting some work into sourcing more music. If you have any MusicXML (.mxl) files, you're welcome to send them to <a href="mailto:brian@esquartet.com" className="text-blue-600 hover:underline">brian@esquartet.com</a></>}
+                            question="How can I report problems, or just tell you how awesome I think this app is?"
+                            answer={<>Any feedback, you're welcome to share it with me by emailing <a href="mailto:brian@esquartet.com" className="text-blue-600 hover:underline">brian@esquartet.com</a></>}
                         />
 
                          <FAQItem 
