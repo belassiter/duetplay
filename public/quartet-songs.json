@@ -111,9 +111,9 @@
     "composer": "Joel Eriksson (2002)",
     "arranger": "Brian Einstein Lassiter",
     "instruments": [
-      "Soprano",
-      "Alto",
-      "Tenor",
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
       "Bari Sax"
     ],
     "difficulty": "Easy",
@@ -186,10 +186,10 @@
     "composer": "Bernie Miller",
     "arranger": "Lee Evans",
     "instruments": [
-      "Alto 1",
-      "Alto 2",
-      "Tenor",
-      "Bari"
+      "Alto Sax 1",
+      "Alto Sax 2",
+      "Tenor Sax",
+      "Bari Sax"
     ],
     "difficulty": "Medium",
     "style": "Jazz"
@@ -394,9 +394,9 @@
     "composer": "Nobuo Uematsu",
     "arranger": "Brian Einstein Lassiter",
     "instruments": [
-      "Soprano",
-      "Alto",
-      "Tenor",
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
       "Bari Sax"
     ],
     "difficulty": "Medium-Hard",
