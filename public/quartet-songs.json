@@ -524,7 +524,7 @@
     "id": "dudley_do_right_4bari",
     "filename": "dudley_do_right_4bari.mxl",
     "title": "Dudley Do-Right (theme from)",
-    "composer": "Composed by ???",
+    "composer": "Composed by Fred Steiner",
     "arranger": "Albert Einstein Lassiter (10/26/1998)",
     "instruments": [
       "Bari Sax 1",
@@ -1473,21 +1473,6 @@
     ],
     "difficulty": "Medium-Hard",
     "style": "Film"
-  },
-  {
-    "id": "super_mario_world_ending_sax_quartet_satb",
-    "filename": "super_mario_world_ending_sax_quartet_SATB.mxl",
-    "title": "Super Mario World: Ending Medley",
-    "composer": "Koji Kondo (1990)",
-    "arranger": "Brian Einstein Lassiter",
-    "instruments": [
-      "Soprano Sax",
-      "Alto Sax",
-      "Tenor Sax",
-      "Bari Sax"
-    ],
-    "difficulty": "Medium-Hard",
-    "style": "Video Game"
   },
   {
     "id": "take_it_all_away",
