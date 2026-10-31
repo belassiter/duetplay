@@ -3,6 +3,7 @@
 ## Definition of Done
 - **Confirm the intended changes are actually present**.
 - **Run the validation suite**: After any code changes, before declaring any task complete, run `npm run validate` (which runs `npm run check`, `npm test`, and `npm run build`). All checks and tests must pass with 0 failures and 0 warnings.
+- **Clean up temporary files**
 
 ## Architecture & Core Application Rules
 
@@ -27,6 +28,19 @@
   - Always use `--mode quartet` equivalents (`npm run dev:quartet`, `npm run build:quartet`) when testing quartet functionality.
   - Local quartet dev relies on sibling directory `../esquartet/sheetmusic` via Vite server filesystem allow rules (`server.fs.allow: ['..']`).
 - **Generated Assets**: `public/songs.json`, `public/quartet-songs.json`, `dist/`, and `dist-quartet/` are build artifacts. Do not manually edit or check them into git.
+
+### 5. Ensemble Types & Notation Conventions
+- **Standard Saxophone Quartet**:
+  - `SATB`: Soprano Sax, Alto Sax, Tenor Sax, Baritone Sax.
+  - `(A)SATB`: Standard SATB quartet with an extra alternate part where an Alto Sax substitutes for Soprano Sax (Parts: Alto 1 sub / Soprano, Alto 2, Tenor, Bari).
+  - `AATB`: Alto Sax 1, Alto Sax 2, Tenor Sax, Baritone Sax.
+  - `(S)AATB`: AATB quartet with an extra alternate part where a Soprano Sax substitutes for Alto Sax 1.
+- **Baritone Saxophone Ensembles (Distinct from Sax Quartet)**:
+  - `BBBB` / `4-Bari`: 4-Baritone Saxophone Quartet. This is a distinct ensemble type with unique low-register voicings; never interchange or mix files, links, or metadata between `BBBB` and standard `SATB` arrangements.
+  - `BBB` / `3-Bari`: 3-Baritone Saxophone Trio.
+- **Other Chamber Ensembles**:
+  - `BassClarinets`: Bass Clarinet Quartet.
+  - Other distinct groups in the library include Clarinet Quartet, Clarinet Quintet, and Sax Choir.
 
 ## Testing Philosophy: High-Value, Pragmatic Testing
 - **Test real business logic**: Focus tests on data transformations (MusicXML manipulations, transposition algorithms, range calculations, font loader edge cases). Do not test third-party UI libraries.

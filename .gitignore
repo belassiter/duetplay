@@ -13,6 +13,7 @@ dist-ssr
 dist-quartet
 *.local
 public/temp/
+temp/
 public/songs.json
 public/quartet-songs.json
 

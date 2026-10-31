@@ -1,3 +1,79 @@
+# 2026-10-31 10:07
+> "yes"
+
+- Added Section 5 ("Ensemble Types & Notation Conventions") to `AGENTS.md`.
+- Documented:
+  - Standard Saxophone Quartet conventions (`SATB`, `(A)SATB`, `AATB`, `(S)AATB`) including substitute parts.
+  - Baritone Saxophone Ensembles (`BBBB` / 4-Bari, `BBB` / 3-Bari) and the strict rule to never interchange files/links between `BBBB` and `SATB`.
+  - Other chamber ensembles (Bass Clarinet Quartet, Clarinet Quartet, Clarinet Quintet, Sax Choir).
+- Ran `npm run validate` and confirmed 0 failures and 0 warnings.
+
+# 2026-10-31 10:02
+> "Let me clarify that "sax quartet" and "4 bari" are 2 different ensemble types, so we shouldn't mix 
+`Prayer for Ukraine BBBB links corrected from prayer_for_ukraine_sax_quartet to prayer_for_ukraine_4bari.pdf and prayer_for_ukraine_4bari.mxl.`
+BBBB is 4-bari."
+
+- Acknowledged and verified ensemble distinction between standard Saxophone Quartet (SATB / AATB) and 4-Baritone Saxophone Quartet (BBBB).
+- Audited `repertoire.html` across all rows to ensure no other 4-bari (BBBB) or 3-bari (BBB) links point to sax quartet files or vice-versa.
+- Discovered and corrected an ensemble label typo in *Blue Christmas* (row 89): updated `<a href="sheetmusic/blue_christmas_sax_quartet_4bari.pdf">SATB</a>` so the link text displays `BBBB`.
+
+# 2026-10-31 09:58
+> "First, clean up the temporary files, or make the folder they're in gitignore-ed.
+Let's start with repertiore.html, the broken links and "coming soon" where we have the files."
+
+- Added `temp/` to `.gitignore` and cleaned up all temporary analysis scripts and data artifacts from `temp/`.
+- Fixed all broken local sheetmusic and playalong links in `esquartet/repertoire.html`:
+  - Added missing `.mxl` extensions to `eine_kleine_nachtmusik_sax_quartet_SATB.mxl` and `final_fantasy_vii_main_theme_sax_quartet_SATB.mxl`.
+  - Removed broken link to nonexistent `final_fantasy_VII_main_theme_bass_clarinet_quartet.mxl`.
+  - Re-pointed 8 playalong MXL links (`trogdor.mxl`, `take_it_all_away.mxl`, `ghostbusters.mxl`, `kens_theme.mxl`, `tetris_a.mxl`, `mario_paint_flyswatter.mxl`, `halo_opening.mxl`, `battlefield_1942.mxl`) to `sheetmusic/` where the files actually reside.
+  - Fixed typo in Jingle Bell Rock SATB MXL link (`jingle_bell_rock_SATB.mxl`).
+  - Fixed Prayer for Ukraine 4-Bari PDF and MXL links to point to `prayer_for_ukraine_4bari.pdf` and `prayer_for_ukraine_4bari.mxl`.
+  - Fixed Table 2 Final Fantasy VII links to point to `final_fantasy_vii_main_theme_sax_quartet_SATB.musx` and `.mxl`.
+- Replaced 15 "coming soon" entries in `repertoire.html` with active `.mxl` links corresponding to their respective sheet music files:
+  - *25 or 6 to 4* (`(S)AATB`)
+  - *Land of Make Believe* (`(A)SATB`)
+  - *Alright, OK, You Win* (`(A)SATB`)
+  - *A Foggy Day* (`(S)AATB`)
+  - *Pink Panther* (`SATB`)
+  - *Juba* (`(S)AATB`)
+  - *Hit That Jive, Jack* (`AATB`)
+  - *Joy to the World* (`(A)SATB`)
+  - *Let It Snow!* (`(A)SATB`)
+  - *Silent Night* (`(A)SATB`)
+  - *Silent Night in Tunisia* (`SATB`)
+  - *Silver Bells* (`(A)SATB`)
+  - *The Christmas Song* (`(A)SATB`)
+  - *Castle Damcyan* (`(A)SATB`)
+  - *Creature Creator* (`(A)SATB`)
+- Verified that 100% of the 499 local sheetmusic and playalong links in `repertoire.html` resolve to files on disk (0 broken links remaining).
+- Executed `npm run validate` and confirmed 0 failures and 0 warnings.
+
+# 2026-10-31 07:58
+> "Quartetplay: I want to see if we have any mxl files in esquartet that aren't loaded in quartetplay.
+esquartet\ folder is also present in this workspace, and has its own mxl files. (repertoire.html has metadata on them)
+I want to do a diff of what is present in quartetplay vs esquartet
+I want them categorized by Instrumentation.
+For esquartet, refer to repertiore.html's hyperlink text.
+For example `<a href="sheetmusic/i_cant_give_you.mxl">(A)SATB</a>`
+Make SATB, (A)SATB, AATB, and (S)AATB in the same bucket (these are all sax quartet)
+Write up a md file as a report.
+Any questions?"
+
+- Analyzed all 124 `.mxl` files in `esquartet/` (111 in `sheetmusic/` and 13 in `playalongs/`), 107 MusicXML links across `repertoire.html`, and 109 loaded songs in `duetplay/public/quartet-songs.json`.
+- Categorized all pieces by instrumentation:
+  - Saxophone Quartet (`SATB`, `(A)SATB`, `AATB`, `(S)AATB`)
+  - 4 Baritone Saxophones (`BBBB`)
+  - 3 Baritone Saxophones (`BBB`)
+  - Bass Clarinet Quartet (`BassClarinets`)
+- Identified:
+  - 2 files in `sheetmusic/` not loaded in QuartetPlay: `dudley_do_right_sax_quartet_SATB.mxl` (uncompressed raw XML named `.mxl`) and `super_mario_world_ending_sax_quartet_SATB.mxl` (valid MXL added after last manifest run).
+  - 4 unique songs in `playalongs/` not in `sheetmusic/` and not loaded in QuartetPlay (`Happy`, `I Get Around`, `Pinball Number Count`, `Sugar Rum Cherry`).
+  - 8 alternate playalong MXL files in `playalongs/` with longer names.
+  - 21 pieces loaded in QuartetPlay where `repertoire.html` still says "coming soon".
+  - 11 broken or misdirected links in `repertoire.html`.
+- Generated detailed inventory and diff report saved to `mxl_diff_report.md` and brain artifacts.
+- Ran validation checks (`npm run check` and `npm test`).
+
 # 2026-10-31 07:45
 > "Yes"
 
