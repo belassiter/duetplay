@@ -1,3 +1,34 @@
+# 2026-10-31 07:45
+> "Yes"
+
+- Added Section 4 ("DuetPlay vs. QuartetPlay (Dual Variant Architecture)") to `AGENTS.md`.
+- Explicitly documented:
+  - Avoiding hardcoded 2-part assumptions so 4-part SATB scores in QuartetPlay are preserved.
+  - Sourcing and manifest differences (`public_duet/` & `songs.json` vs remote `esquartet` & `quartet-songs.json`).
+  - Dev/build commands and local sibling directory resolution (`--mode quartet`, `../esquartet/sheetmusic`).
+- Ran `npm run validate` and confirmed 0 failures and 0 warnings.
+
+# 2026-10-31 07:42
+> "Let's do #2.
+Also, look at agents.md and evaluate if there's anything we should add related to this application."
+
+- Updated `.github/copilot-instructions.md` to point directly to `AGENTS.md` as the canonical guidelines source.
+- Expanded `AGENTS.md` with domain and architecture guidelines tailored to DuetPlay:
+  - Verovio WASM lifecycle and instance preservation constraints.
+  - MusicXML & Transposition pipeline (using `tonal`, grand staff splitting, avoiding double-transposition in RangePreview).
+  - PDF generation requirements (SMuFL fonts `Leipzig.ttf` and `Bravura.ttf` embedding to prevent mojibake).
+  - Dual build targets (DuetPlay vs. QuartetPlay) and generated artifact hygiene.
+- Executed `npm run validate` and confirmed 0 errors and 0 warnings.
+
+# 2026-10-31 07:35
+> "Add it. 
+Also, does the current copilot-instructions file work for Antigravity IDE? Or do I need to copy it to agents.md?"
+
+Added validation scripts to `package.json`:
+- Added `"check": "tsc -b && eslint ."` to perform typechecking and linting.
+- Added `"validate": "npm run check && npm test && npm run build"` to execute check, test, and build in sequence.
+- Verified that `npm run validate` passes with 0 failures and 0 warnings.
+
 # 2026-02-12 11:10
 > "No, it's something else... in Source Control, it looks like dist-quartet is its own repo or something. Which I think is not correct"
 

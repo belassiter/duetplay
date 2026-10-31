@@ -12,8 +12,10 @@
     "build:quartet": "node scripts/generate-manifest.js --input ../esquartet/sheetmusic --output public/quartet-songs.json --optional && tsc -b && vite build --mode quartet",
     "gen-manifest": "node scripts/generate-manifest.js",
     "lint": "eslint .",
+    "check": "tsc -b && eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "validate": "npm run check && npm test && npm run build",
     "preview": "vite preview",
     "preview:quartet": "vite preview --outDir dist-quartet"
   },
