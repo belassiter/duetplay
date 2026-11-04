@@ -1,3 +1,185 @@
+# 2026-11-03 20:36
+> "It looks like there's older entries with dates/years in the composer or arranger fields. Can you go through and remove all of the ` (YEAR)` entries in those fields?"
+
+- Cleaned parenthetical date and year patterns across `composer` and `arranger` fields in `public/quartet-songs.json` (92 songs updated), `public_duet/songs.json` (2 songs updated), and `public/songs.json`:
+  - Stripped single years (e.g. `(1967)`, `(2009)`), year ranges (e.g. `(1770-1827)`), question-marked dates (e.g. `(1969?)`), full dates (e.g. `(10/16/1996)`, `(06/29/1996)`), and century descriptions (e.g. `(16th century)`, `(19th century)`).
+  - Preserved multi-line adaptation credits intact (e.g. `Albert Einstein Lassiter\r\nAdapted from Lee Evans`).
+- Passed full validation suite (`npm run validate` + `npm run build:quartet`: tsc, eslint, 29/29 Vitest tests, builds) with 0 errors.
+
+# 2026-11-03 20:33
+> "For the composer and arranger, can we have it clean up the text a bit? For example, "Wolfgang Amadeus Mozart (1772)" should be ingested as "Wolfgang Amadeus Mozart"
+"Arr. Brian Einstein Lassiter" as "Brian Einstein Lassiter"
+I don't want to re-ingest the current items, I'll fix them by hand. But let's update the code to fix this in the future.
+Is that clear enough, so should we discuss?"
+
+- Added `cleanComposer` and `cleanArranger` normalization functions to `scripts/generate-manifest.js`:
+  - `cleanComposer`: Strips parenthetical dates/years (e.g. `(1772)`, `(1943)`, `(16th century)`), trims whitespace, and normalizes line breaks.
+  - `cleanArranger`: Strips leading arrangement prefixes (`Arr. `, `Arranged by `, etc.) and parenthetical dates (`(1980)`, `(12/1997)`), while preserving multi-line adaptation credits (e.g. `Lee Evans\r\nAdapted by Brian Einstein Lassiter`).
+  - Wrapped `composer` and `arranger` in `newSong` generation with these cleaners for all future ingests, preserving all existing items in `public/quartet-songs.json` untouched.
+  - Guarded CLI execution of `generate()` so `scripts/generate-manifest.js` can be imported by tests without side effects.
+- Added regression tests in `src/__tests__/manifest_integrity.test.ts` verifying `cleanComposer` and `cleanArranger` behavior.
+- Passed full validation suite (`npm run validate`: tsc, eslint, 29/29 Vitest tests, build) with 0 errors.
+
+# 2026-11-03 20:20
+> "Where was the "arranger" field extracted from?"
+> "Make that update. repertoire.html doesn't have the arranager data."
+
+- Updated `scripts/generate-manifest.js`:
+  - Removed incorrect mapping from `repertoire.html`'s "Artist" column into the `arranger` field.
+  - Re-routed `arranger` to be extracted directly from the MusicXML `<creator type="arranger">` tag (with smart remapping of `Arr. AEL` to `Albert Einstein Lassiter` when placed in the composer tag).
+  - Regenerated `public/quartet-songs.json` so all 54 newly added pieces now carry authentic arranger attributions (e.g. Tom Antles, Terrill Tanaka, Albert Einstein Lassiter, Brent Edstrom, Roger Nichols, Strayhorn/Lassiter, Brian Einstein Lassiter) instead of ensemble names.
+- Validated via full test and build suite:
+  - Passed `npm run validate` (tsc, eslint, 27/27 Vitest tests, production build) with 0 errors.
+  - Passed `npm run build:quartet` with 163 songs.
+
+# 2026-11-03 13:35
+> "Ok, I'm interested in adding category 1, 2, and 3. 
+Something that's crucial is getting the metadata correct. 
+If the instrument is discovered incorrectly, it makes the whole song broken in the UI.
+For example, see the fixes I added in ad6a10f84ef0e87595ecdb71904a83daf758ec96.
+Let's discuss how we can make this happen correctly."
+> "That all makes sense. 
+I'm ok with needing to go in and do some manual edits, I just need to be notified as such.
+Let's proceed and see how this goes."
+
+- Added 54 new pieces to QuartetPlay (`public/quartet-songs.json`), expanding catalog from 109 to 163 songs:
+  - **Category 1 (Standard SATB / AATB Sax Quartets)**: 19 songs (`adusty_fi_sax_quartet_SATB.mxl`, `carol_of_the_bells_antles_sax_quartet_SATB.mxl`, `do_you_hear_sax_quartet_SATB.mxl`, `dreidel_song_sax_quartet_SATB.mxl`, `god_arrest_ye_sax_quartet_SATB.mxl`, `have_yourself_sax_quartet_SATB.mxl`, `here_comes_santa_sax_quartet_SATB.mxl`, `here_we_come_a_wassailing_sax_quartet_SATB.mxl`, `it_came_upon_a_midnight_clear_sax_quartet_SATB.mxl`, `jingle_all_the_way_sax_quartet_SATB.mxl`, `jolly_old_sax_quartet_SATB.mxl`, `mission_of_the_bells_SATB.mxl`, `nuthin_but_holy_nite_sax_quartet_SATB.mxl`, `o_little_town_sax_quartet_SATB.mxl`, `save_them_sax_quartet_SATB.mxl`, `sleigh_ride_sax_quartet_SATB.mxl`, `sugar_rum_cherry_sax_quartet_SATB.mxl`, `we_four_tigers_of_orient_rag_sax_quartet_SATB.mxl`, `what_child_is_this_sax_quartet_SATB.mxl`).
+  - **Category 2 (4-Baritone Saxophone Quartets BBBB)**: 25 songs (`adusty_fi_4bari.mxl`, `blue_christmas_sax_quartet_4bari.mxl`, `divertimento_K137-II_4bari.mxl`, `do_you_hear_4-bari.mxl`, `dreidel_song_4bari.mxl`, `god_arrest_ye_4-bari.mxl`, `have_yourself_4bari.mxl`, `here_comes_santa_4bari.mxl`, `here_we_come_a_wassailing_4bari.mxl`, `isfahan_4bari.mxl`, `it_came_upon_a_midnight_clear_4bari.mxl`, `jingle_all_the_way_4bari.mxl`, `jingle_jump_jive_4_baris.mxl`, `jolly_old_4bari.mxl`, `joy_to_the_world_4_bari_sax.mxl`, `let_it_snow_4bari.mxl`, `mission_of_the_bells_4bari.mxl`, `o_little_town_4bari.mxl`, `silent_night_4-bari.mxl`, `silver_bells_4bari.mxl`, `sleigh_ride_sax_quartet_4bari.mxl`, `sugar_rum_cherry_sax_quartet_4bari.mxl`, `the_christmas_song_4-bari.mxl`, `we_four_tigers_of_orient_rag_4bari.mxl`, `we_wish_you_4bari.mxl`).
+  - **Category 3 (3-Baritone Saxophone Trios BBB)**: 10 songs (`god_arrest_ye_3-bari.mxl`, `have_yourself_3bari.mxl`, `here_comes_santa_3bari.mxl`, `joy_to_the_world_3_bari_sax.mxl`, `let_it_snow_3bari.mxl`, `linus_and_lucy_3bari.mxl`, `o_little_town_3bari.mxl`, `silent_night_3-bari.mxl`, `silver_bells_3bari.mxl`, `sugar_rum_cherry_sax_quartet_3bari.mxl`).
+- Implemented 3-Pillar instrument resolution and metadata architecture:
+  - **Pillar 1 (`scripts/generate-manifest.js`)**: Implemented `loadRepertoireMetadata()` and `normalizeInstruments()`. Enriched Title, Composer, Arranger, Style (`Holiday`), and Difficulty directly from `repertoire.html`. Automatically normalized 4-Bari, 3-Bari, and SATB saxophone naming shorthand. Excluded non-quartet scores (13-part choir, 1-part incomplete, raw XML, duplicate files, and mixed trios).
+  - **Pillar 2 (`src/constants/instruments.ts`)**: Added fallback aliases for Soprano Sax, Alto Sax, Tenor Sax, Bari Sax, Bass Sax, and Trombone (`Tenor Trombone`) to prevent resolution failure to `'none'` in `App.tsx`.
+  - **Pillar 3 (`src/__tests__/manifest_integrity.test.ts`)**: Added automated regression unit tests asserting 100% resolution of every instrument in `public/quartet-songs.json` and `public_duet/songs.json`.
+- Passed full validation suite (`npm run validate` + `npm run build:quartet`: tsc, eslint, 27 vitest tests, build) with 0 errors.
+
+# 2026-11-03 12:54
+> "Can you search through my youtube page (https://www.youtube.com/@EinsteiniumQuartet) and see if there's any video links we could add?
+Don't add them, give me a proposed list"
+> "Implement Priority 1 for everything that doesn't have an existing valid link. Don't changes ones that already do (Satin Doll, Ken's Theme)"
+
+- Audited all 91 videos from YouTube channel `@EinsteiniumQuartet` against `H:\Documents\GitHub\esquartet\repertoire.html`.
+- Implemented Priority 1 video links for all 5 pieces lacking valid video links in `repertoire.html` (leaving existing valid links like Satin Doll and Ken's Theme untouched):
+  - **Prayer for Ukraine**: Added 4-bari video link (`https://youtu.be/nbG-MEcAEJI`).
+  - **Hark! The Herald Angel Sings**: Added 3-bari video link (`https://youtu.be/M9gcyKZ2BJQ`).
+  - **Jingle Bells**: Added 3-bari video link (`https://youtu.be/jl2_fKjB9sU`).
+  - **Christmas Time is Here**: Replaced empty `href=""` placeholder with active 4-bari video link (`https://youtu.be/G0cpPFxxU3g`).
+  - **Jolly Old Saint Nicholas**: Added 3-bari video link (`https://youtu.be/MInsZz6P2-U`).
+- Verified all sheet music and media links in `repertoire.html`.
+- Re-verified coverage catalog (`node catalog_repertoire.js`).
+- Passed full validation suite (`npm run validate`: tsc, eslint, vitest, build) with 0 errors.
+
+# 2026-11-03 07:28
+> "I noticed one of the parts were bad (sheet music was very small on the page. this happens occasionally in Finale output).
+Please redo this
+1. Antles Carol of the Bells (3WM) - quartet"
+> "Ok, we can keep the format improvements.
+I replaced the existing bad PDF, same name and location"
+
+- Re-compiled `carol_of_the_bells_antles_sax_quartet_SATB.pdf` (8 pages) in `H:\Documents\GitHub\esquartet\sheetmusic/`:
+  - Located the user's updated full-scale (100% scale, 379 KB) `Antles Carol of the Bells (3WM) - Alto (sub for soprano).pdf` in `H:\Documents\Dropbox\Music\Sax Quartet\PDFs\xmas - quartet\alto (sub for soprano)/`.
+  - Re-merged Score (3 pp), Soprano (1 p), Alto (1 p), Tenor (1 p), Baritone (1 p), and the fixed Alto sub (1 p).
+  - Verified vector font metrics and system scaling across all 8 pages (`/F1 31.939400 Tf`).
+- Confirmed retention of formatting improvements in `H:\Documents\GitHub\esquartet\repertoire.html` (all 101 pieces intact, 452 links verified with 0 broken links).
+- Re-verified coverage catalog (`node catalog_repertoire.js`).
+- Passed full validation suite (`npm run validate`: tsc, eslint, vitest, build) with 0 errors.
+
+# 2026-11-03 07:05
+> "Ok, do Tier 1 and Tier 2"
+
+- Programmatically merged individual score and part PDFs from Dropbox (`H:\Dropbox\Music\Sax Quartet\PDFs`) into single publication-ready PDFs (Score + S, A, T, B + Alto-sub) using `pdf-lib` and copied matching MusicXML (`.mxl`) files from Google Drive (`H:\Google Drive\Music\Sax Quartet\3WM\xmas (remastered)`) into `H:\Documents\GitHub\esquartet\sheetmusic/`:
+  - **Here We Come A-Wassailing**:
+    - Merged SATB PDF (`here_we_come_a_wassailing_sax_quartet_SATB.pdf`, 11 pages) and copied SATB MXL (`here_we_come_a_wassailing_sax_quartet_SATB.mxl`).
+    - Merged 4-Bari PDF (`here_we_come_a_wassailing_4bari.pdf`, 10 pages) and copied 4-Bari MXL (`here_we_come_a_wassailing_4bari.mxl`).
+  - **It Came Upon a Midnight Clear**:
+    - Merged SATB PDF (`it_came_upon_a_midnight_clear_sax_quartet_SATB.pdf`, 8 pages) and copied SATB MXL (`it_came_upon_a_midnight_clear_sax_quartet_SATB.mxl`).
+    - Merged 4-Bari PDF (`it_came_upon_a_midnight_clear_4bari.pdf`, 8 pages) and copied 4-Bari MXL (`it_came_upon_a_midnight_clear_4bari.mxl`).
+  - **Jingle All the Way**:
+    - Merged SATB PDF (`jingle_all_the_way_sax_quartet_SATB.pdf`, 15 pages) and copied SATB MXL (`jingle_all_the_way_sax_quartet_SATB.mxl`).
+    - Merged 4-Bari PDF (`jingle_all_the_way_4bari.pdf`, 15 pages) and copied 4-Bari MXL (`jingle_all_the_way_4bari.mxl`).
+  - **Jolly Old Saint Nicholas**:
+    - Copied SATB MXL (`jolly_old_sax_quartet_SATB.mxl`) and 4-Bari MXL (`jolly_old_4bari.mxl`) to match existing publication PDFs (`jolly_old_sax_quartet_SATB.pdf` and `jolly_old_4bari.pdf`).
+  - **We Four Tigers of Orient Rag**:
+    - Merged SATB PDF (`we_four_tigers_of_orient_rag_sax_quartet_SATB.pdf`, 8 pages) and copied SATB MXL (`we_four_tigers_of_orient_rag_sax_quartet_SATB.mxl`).
+    - Merged 4-Bari PDF (`we_four_tigers_of_orient_rag_4bari.pdf`, 7 pages) and copied 4-Bari MXL (`we_four_tigers_of_orient_rag_4bari.mxl`).
+  - **What Child Is This**:
+    - Merged SATB PDF (`what_child_is_this_sax_quartet_SATB.pdf`, 9 pages) and copied SATB MXL (`what_child_is_this_sax_quartet_SATB.mxl`).
+  - **nuthin' but Holy Nite**:
+    - Merged SATB PDF (`nuthin_but_holy_nite_sax_quartet_SATB.pdf`, 15 pages) and copied SATB MXL (`nuthin_but_holy_nite_sax_quartet_SATB.mxl`).
+  - **Carol of the Bells (Antles SATB)**:
+    - Merged SATB PDF (`carol_of_the_bells_antles_sax_quartet_SATB.pdf`, 8 pages) and copied SATB MXL (`carol_of_the_bells_antles_sax_quartet_SATB.mxl`).
+- Updated `H:\Documents\GitHub\esquartet\repertoire.html`:
+  - Added full rows for the 7 new holiday titles.
+  - Added `(A)SATB` PDF and MXL links to `Carol of the Bells`.
+  - Corrected table column alignment for `Mission of the Bells`.
+- Audited all 452 sheet music links in `repertoire.html` with 0 broken links.
+- Re-ran `node catalog_repertoire.js --markdown`:
+  - Library-wide arrangements increased from 181 to 194.
+  - Available MXLs increased from 159 to 172 (89% complete).
+  - Saxophone Quartet reached 92% (86/95 complete).
+  - 4-Baritone reached 96% (43/45 complete).
+- Passed full validation suite (`npm run validate`: tsc, eslint, vitest, build) with 0 errors.
+
+# 2026-11-02 22:47
+> "Do option 1 and option 2."
+
+- Ingested 9 additional MusicXML (`.mxl`) scores from `H:\Google Drive\Music\Sax Quartet` into `H:\Documents\GitHub\esquartet\sheetmusic/`:
+  - **Option 1 (Direct Gaps)**:
+    - `isfahan_4bari.mxl` (from `4 bari/Isfahan.mxl`, 105 mm 4-bari)
+    - `divertimento_K137-II_4bari.mxl` (from `4 bari/Divertimento K137 (Mozart) - Allegro di molto.mxl`, 66 mm 4-bari)
+    - `save_them_sax_quartet_SATB.mxl` (from `Geek/FF/FFVI/Save Them v4.mxl`, 43 mm SATB)
+    - `star_wars_stripes_forever_sax_quartet_sax_choir.mxl` (from `Sax Choir/The Star Wars Stripes Forever - Sax Choir.mxl`, 201 mm 13-part Sax Choir)
+  - **Option 2 (Mixed Trio Scores)**:
+    - `adusty_fi_trio.mxl` (from `3WM/xmas (remastered)/Trio/Adusty Fi.mxl`, SAT)
+    - `joy_to_the_world_trio.mxl` (from `3WM/xmas (remastered)/Trio/Joy to the World - 3 part.mxl`, Tpt/Alto/Tenor)
+    - `o_little_town_trio.mxl` (from `3WM/xmas (remastered)/Trio/O Little Town.mxl`, Tpt/Tenor/Bari)
+    - `silent_night_trio.mxl` (from `3WM/xmas (remastered)/Trio/Silent Night - 3 part.mxl`, Tpt/Tenor/Bari)
+    - `silver_bells_trio.mxl` (from `3WM/xmas (remastered)/Trio/Silver Bells.mxl`, SAT)
+- Updated 9 corresponding rows in `H:\Documents\GitHub\esquartet\repertoire.html` with active hyperlinks to all newly added MusicXML arrangements.
+- Verified all 559 local file links in `repertoire.html` (0 broken file links).
+- Re-ran `node catalog_repertoire.js --markdown`:
+  - Overall MusicXML coverage increased from **83% to 88% (159/181)**.
+  - 4-Baritone Saxophone (BBBB) reached **95%** (37/40 complete).
+  - Saxophone Quartet (SATB) reached **91%** (77/87 complete).
+  - Mixed Trio (trio) jumped from **0% to 56%** (5/9 complete).
+  - Total missing MXLs library-wide reduced to 22.
+- Passed full test and validation suite via `npm run validate` (typecheck, lint, 25 tests, production build).
+
+# 2026-11-02 19:33
+> "Great. Copy these files into the appropriate filename in the sheetmusic folder, and update repertiore.html"
+
+- Ingested 39 MusicXML (`.mxl`) scores from the external Google Drive archive `H:\Google Drive\Music\Sax Quartet\3WM\xmas (remastered)` into `H:\Documents\GitHub\esquartet\sheetmusic/` with standardized naming:
+  - **Saxophone Quartet (SATB)** (9 files): `Do You Hear What I Hear v2`, `God Arrest Ye`, `Have Yourself`, `Adusty Fi`, `O Little Town`, `Sleigh Ride (3WM)`, `Dreidel Song (digital version)`, `Here Comes Santa Claus`, `Mission of the Bells`.
+  - **4-Baritone Saxophone (BBBB)** (18 files): `Do You Hear What I Hear v2`, `God Arrest Ye v2`, `Have Youself v2`, `Jingle, Jump and Jive (Tanaka)`, `Joy to the World`, `Adusty Fi`, `Let It Snow - v3`, `O Little Town v2`, `Silent Night v2`, `Silver Bells v3`, `Sleigh Ride`, `Sugar Rum Cherry`, `The Christmas Song v2`, `We Wish You`, `Dreidel Song`, `Here Comes Santa Claus`, `Blue Christmas`, `Mission of the Bells`.
+  - **3-Baritone Saxophone (BBB)** (12 files): `God Arrest Ye`, `Have Youself`, `Joy to the World`, `Adusty Fi`, `Let It Snow`, `O Little Town v`, `Silent Night v2`, `Silver Bells`, `Sugar Rum Cherry (publish version)`, `The Christmas Song`, `Linus and Lucy`, `Here Comes Santa Claus`.
+- Copied `playalongs/sugar_rum_cherry_sax_quartet_SATB.mxl` to `sheetmusic/` to complete the full 3-ensemble Sugar Rum Cherry suite.
+- Updated 19 corresponding rows in `H:\Documents\GitHub\esquartet\repertoire.html` with active hyperlinks to all newly added MusicXML arrangements.
+- Verified all 554 links in `repertoire.html` (550 file links with 0 broken links).
+- Re-ran `node catalog_repertoire.js --markdown`:
+  - Overall MusicXML coverage increased from **61% (108/181) to 83% (150/181)**.
+  - 4-Baritone Saxophone (BBBB) reached **90%** (35/40 complete).
+  - 3-Baritone Saxophone (BBB) reached **96%** (25/26 complete).
+  - Saxophone Quartet (SATB) reached **90%** (76/87 complete).
+- Passed full test and validation suite via `npm run validate` (typecheck, lint, 25 tests, production build).
+
+# 2026-10-31 13:38
+> "Sounds good, implement"
+
+- Implemented `esquartet/catalog_repertoire.js`, a standalone zero-dependency CLI cataloging script that audits `repertoire.html` against `sheetmusic/` and `playalongs/`.
+- Computes metrics at the arrangement level across all ensemble categories:
+  - Saxophone Quartet (`SATB` / `AATB`)
+  - 4-Baritone Saxophone (`BBBB`)
+  - 3-Baritone Saxophone (`BBB`)
+  - Mixed Trio (`trio`)
+  - Bass Clarinet Quartet (`BassClarinets`)
+  - Clarinet Ensemble, Sax Choir / Quintet, Concert Band
+- Implemented:
+  - Visual terminal progress bar and coverage matrix (PDFs, Complete, Unlinked on disk, In playalongs, Missing, % MXL).
+  - "Top High-Yield Songs" section ranking pieces with the highest number of missing MXL files.
+  - `--todo` flag to display actionable category-by-category checklists with expected filenames.
+  - `--markdown` flag to generate and export `repertoire_mxl_catalog.md`.
+- Updated `esquartet/README.md` with CLI usage instructions.
+- Verified execution of all flags (`node catalog_repertoire.js`, `--todo`, `--markdown`).
+
 # 2026-10-31 10:07
 > "yes"
 

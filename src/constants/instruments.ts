@@ -63,6 +63,7 @@ export const instruments: Instrument[] = [
         value: 'soprano_sax', 
         transpose: 'M2', 
         clef: 'treble',
+        aliases: ['Soprano', 'Soprano Saxophone'],
         instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' }
     },
     { 
@@ -71,11 +72,12 @@ export const instruments: Instrument[] = [
         value: 'alto_sax', 
         transpose: 'M6', 
         clef: 'treble',
+        aliases: ['Alto', 'Alto Saxophone'],
         instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' }
     },
-    { name: 'Tenor Sax', label: 'Tenor Sax (sounds -M9, treble clef)', value: 'tenor_sax', transpose: 'M9', clef: 'treble', instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' } },
-    { name: 'Bari Sax', label: 'Bari Sax (sounds -M13, treble clef)', value: 'bari_sax', transpose: 'M6+8va', clef: 'treble', aliases: ['Baritone Sax'], instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'A3', hardHigh: 'F#6' } }, // M13 is M6+8va
-    { name: 'Bass Sax', label: 'Bass Sax (sounds -M16, treble clef)', value: 'bass_sax', transpose: 'M9+8va', clef: 'treble', instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' } },
+    { name: 'Tenor Sax', label: 'Tenor Sax (sounds -M9, treble clef)', value: 'tenor_sax', transpose: 'M9', clef: 'treble', aliases: ['Tenor', 'Tenor Saxophone'], instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' } },
+    { name: 'Bari Sax', label: 'Bari Sax (sounds -M13, treble clef)', value: 'bari_sax', transpose: 'M6+8va', clef: 'treble', aliases: ['Baritone Sax', 'Bari', 'Baritone', 'Bari Saxophone', 'Baritone Saxophone'], instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'A3', hardHigh: 'F#6' } }, // M13 is M6+8va
+    { name: 'Bass Sax', label: 'Bass Sax (sounds -M16, treble clef)', value: 'bass_sax', transpose: 'M9+8va', clef: 'treble', aliases: ['Bass Saxophone'], instrumentRange: { easyLow: 'D4', easyHigh: 'D6', hardLow: 'Bb3', hardHigh: 'F#6' } },
     { name: 'C Trumpet', label: 'C Trumpet', value: 'c_trumpet', transpose: 'P1', clef: 'treble', instrumentRange: { easyLow: 'C4', easyHigh: 'G5', hardLow: 'F#3', hardHigh: 'C6' } },
     { 
         name: 'Bb Trumpet', 
@@ -89,7 +91,7 @@ export const instruments: Instrument[] = [
     { name: 'Horn in F', label: 'Horn in F (sounds -P5, treble clef)', value: 'horn_f', transpose: 'P5', clef: 'treble', instrumentRange: { easyLow: 'C3', easyHigh: 'E5', hardLow: 'F2', hardHigh: 'C6' } },
     { name: 'Euphonium', label: 'Euphonium (bass clef)', value: 'euphonium', transpose: 'P1', clef: 'bass', aliases: ['Baritone BC', 'Baritone Bass Clef'], instrumentRange: { easyLow: 'Bb2', easyHigh: 'F4', hardLow: 'E2', hardHigh: 'Bb4' } },
     { name: 'Baritone', label: 'Baritone (sounds -M9, treble clef)', value: 'baritone', transpose: 'M9', clef: 'treble', aliases: ['Baritone', 'Baritone TC'], instrumentRange: { easyLow: 'C4', easyHigh: 'G5', hardLow: 'F#3', hardHigh: 'C6' } },
-    { name: 'Trombone', label: 'Trombone', value: 'trombone', transpose: 'P1', clef: 'bass', instrumentRange: { easyLow: 'Bb2', easyHigh: 'F4', hardLow: 'E2', hardHigh: 'Bb4' } },
+    { name: 'Trombone', label: 'Trombone', value: 'trombone', transpose: 'P1', clef: 'bass', aliases: ['Tenor Trombone'], instrumentRange: { easyLow: 'Bb2', easyHigh: 'F4', hardLow: 'E2', hardHigh: 'Bb4' } },
     { name: 'Bass Trombone', label: 'Bass Trombone', value: 'bass_trombone', transpose: 'P1', clef: 'bass', instrumentRange: { easyLow: 'Bb1', easyHigh: 'F4', hardLow: 'E1', hardHigh: 'Bb4' } },
     { name: 'Tuba', label: 'Tuba', value: 'tuba', transpose: 'P1', clef: 'bass', instrumentRange: { easyLow: 'Bb1', easyHigh: 'F3', hardLow: 'E1', hardHigh: 'Bb3' } },
     { 
