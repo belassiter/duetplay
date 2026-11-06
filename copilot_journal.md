@@ -1,3 +1,23 @@
+# 2026-11-06 06:56
+> "Oh, `Clear` applies to the filters too. 
+Yes, implement Approach A."
+
+- Updated filter bar layout in `src/components/SongSelectorPanel.tsx`:
+  - Grouped dropdown buttons on the left with consistent spacing (`flex gap-2 sm:gap-4 items-center w-full`).
+  - Added `ml-auto` to the `Clear` button on mobile portrait so it floats to the right margin without altering the position of the dropdowns.
+  - Aligned both `Styles` and `Difficulty` dropdown menus with `align="left"`, opening inwards toward the center of the viewport.
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
+# 2026-11-06 06:45
+> "Implement Fix 1 and Fix 2."
+
+- Updated `MultiSelectDropdown` in `src/components/SongSelectorPanel.tsx`:
+  - Added optional `align?: 'left' | 'right'` prop (defaulting to `'left'`).
+  - Positioned popover dynamically using `left-0` or `right-0` based on `align`.
+  - Added defensive viewport constraint `max-w-[calc(100vw-2rem)]` to prevent horizontal clipping on narrow viewports.
+  - Set `align="left"` for the Styles dropdown and `align="right"` for the Difficulty dropdown.
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
 # 2026-11-06 06:34
 > "yes, proceed"
 

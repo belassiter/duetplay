@@ -23,9 +23,17 @@ DuetPlay is a web-based tool adapting duets for any pairing of instruments. Choo
     ```
 
 2.  **Run locally**:
-    ```bash
-    npm run dev
-    ```
+    
+    
+    *   **DuetPlay** (Default):
+      ```bash
+      npm run dev
+      ```
+      
+    **QuartetPlay** (Variant):
+      ```bash
+      npm run dev:quartet
+      ```
 
 3.  **Build**:
     

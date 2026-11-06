@@ -8,9 +8,10 @@ interface MultiSelectDropdownProps {
     options: string[];
     selectedValues: string[];
     onChange: (vals: string[]) => void;
+    align?: 'left' | 'right';
 }
 
-const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({ label, options, selectedValues, onChange }) => {
+const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({ label, options, selectedValues, onChange, align = 'left' }) => {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +49,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({ label, option
             </button>
             
             {isOpen && (
-                <div className="absolute right-0 mt-1 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto p-1">
+                <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} mt-1 w-56 max-w-[calc(100vw-2rem)] bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto p-1`}>
                     {options.map(opt => (
                         <div 
                             key={opt} 
@@ -227,7 +228,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />
                     </div>
-                    <div className={`flex gap-4 items-center ${isMobile && !isLandscape ? 'justify-between' : ''}`}>
+                    <div className={`flex gap-2 sm:gap-4 items-center ${isMobile && !isLandscape ? 'w-full' : ''}`}>
                         {/* Mobile: Keep Dropdowns */}
                         {(isMobile || (isMobile && isLandscape)) && (
                             <>
@@ -236,6 +237,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                     options={styles as string[]}
                                     selectedValues={styleFilters}
                                     onChange={setStyleFilters}
+                                    align="left"
                                 />
                                 
                                 <MultiSelectDropdown 
@@ -243,6 +245,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                                     options={difficulties as string[]}
                                     selectedValues={difficultyFilters}
                                     onChange={setDifficultyFilters}
+                                    align="left"
                                 />
                             </>
                         )}
@@ -318,7 +321,7 @@ const SongSelectorPanel: React.FC<SongSelectorPanelProps> = ({ isOpen, onClose, 
                         {(searchTerm || styleFilters.length > 0 || difficultyFilters.length > 0) && (
                             <button 
                                 onClick={() => { setSearchTerm(''); setStyleFilters([]); setDifficultyFilters([]); }}
-                                className="text-sm text-blue-600 hover:underline self-center"
+                                className={`text-sm text-blue-600 hover:underline self-center shrink-0 ${isMobile && !isLandscape ? 'ml-auto' : ''}`}
                             >
                                 Clear
                             </button>
