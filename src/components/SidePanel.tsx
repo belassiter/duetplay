@@ -77,15 +77,17 @@ const SidePanel: React.FC<SidePanelProps> = ({
         setActiveSelectorId(prev => prev === id ? null : id);
     };
 
-    const getLabel = (partId: number, originalInstrument: string) => {
-        const base = `Part ${partId}`;
-        if (originalInstrument && originalInstrument !== 'none') {
-            const inst = instruments.find(i => i.value === originalInstrument);
+    const getLabel = (part: PartState) => {
+        if (part.partName && part.partName.trim()) {
+            return part.partName.trim();
+        }
+        if (part.originalInstrument && part.originalInstrument !== 'none') {
+            const inst = instruments.find(i => i.value === part.originalInstrument);
             if (inst) {
-                 return `${base} (Orig: ${inst.name})`;
+                 return inst.name;
             }
         }
-        return `Part ${partId}`;
+        return `Part ${part.id}`;
     };
 
     // Width class
@@ -155,7 +157,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
                     {parts.map((part) => (
                         <div key={part.id} className={`p-4 ${isRowLayout ? 'flex-1 overflow-y-auto border-r last:border-0' : 'border-b last:border-0'}`}>
                             <h3 className="font-bold text-gray-700 mb-2 border-b pb-1">
-                                {getLabel(part.id, part.originalInstrument)}
+                                {getLabel(part)}
                             </h3>
                             
                             <div className="mb-4">

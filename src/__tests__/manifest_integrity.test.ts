@@ -5,7 +5,7 @@ import path from 'path';
 
 function mapInstrumentNameToValue(name: string): string {
     if (!name) return 'none';
-    const cleanName = name.replace(/\s*\d+$/, '').trim().toLowerCase();
+    const cleanName = name.replace(/\s*\([^)]*\)/g, '').replace(/\s*\d+$/, '').trim().toLowerCase();
     
     let inst = instruments.find(i => i.value.toLowerCase() === cleanName);
     if (inst) return inst.value;

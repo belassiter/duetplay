@@ -344,6 +344,20 @@
     "style": "Holiday"
   },
   {
+    "id": "carol_of_the_bells_trumpet_trio",
+    "filename": "carol_of_the_bells_trumpet_trio.mxl",
+    "title": "Carol of the Bells",
+    "composer": "Traditional",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
     "id": "castle_damcyan_sax_quartet_satb",
     "filename": "castle_damcyan_sax_quartet_SATB.mxl",
     "title": "Castle Damcyan",
@@ -479,7 +493,7 @@
   {
     "id": "deck_the_halls_4bari",
     "filename": "deck_the_halls_4bari.mxl",
-    "title": "Deck the  HaLls",
+    "title": "Deck the Halls",
     "composer": "Traditional/Thomas Oliphant",
     "arranger": "Albert Einstein Lassiter/Lee Evans",
     "instruments": [
@@ -494,7 +508,7 @@
   {
     "id": "deck_the_halls_satb",
     "filename": "deck_the_halls_SATB.mxl",
-    "title": "Deck the  HaLls",
+    "title": "Deck the Halls",
     "composer": "Traditional/Thomas Oliphant",
     "arranger": "Albert Einstein Lassiter/Lee Evans",
     "instruments": [
@@ -850,6 +864,21 @@
     "style": "Holiday"
   },
   {
+    "id": "god_arrest_ye_trumpet_trio",
+    "filename": "god_arrest_ye_trumpet_trio.mxl",
+    "title": "God Arrest Ye",
+    "composer": "Traditional",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trumpet 4 (optional)"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
     "id": "halo_opening",
     "filename": "halo_opening.mxl",
     "title": "Halo",
@@ -1057,6 +1086,21 @@
     "style": "Jazz"
   },
   {
+    "id": "home_for_the_holidays_sax_quartet_satb",
+    "filename": "home_for_the_holidays_sax_quartet_SATB.mxl",
+    "title": "Home for the Holidays",
+    "composer": "Allen Stillman",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
     "id": "isfahan",
     "filename": "isfahan.mxl",
     "title": "Isfahan",
@@ -1206,6 +1250,21 @@
     "style": "Classical"
   },
   {
+    "id": "jingle_bell_rock_trumpet_trio",
+    "filename": "jingle_bell_rock_trumpet_trio.mxl",
+    "title": "Jingle Bell Rock",
+    "composer": "Bobby Helms/Hank Garland",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trumpet 4 (optional)"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Holiday"
+  },
+  {
     "id": "jingle_jump_jive_4_baris",
     "filename": "jingle_jump_jive_4_baris.mxl",
     "title": "Jingle, Jump, and Jive!",
@@ -1290,6 +1349,21 @@
       "Alto Sax",
       "Tenor Sax",
       "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "joy_to_the_world_trumpet_trio",
+    "filename": "joy_to_the_world_trumpet_trio.mxl",
+    "title": "Joy to the World",
+    "composer": "Isaac Watts/Hoyt Axton",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trumpet 4 (optional)"
     ],
     "difficulty": "Medium",
     "style": "Holiday"
@@ -1398,6 +1472,21 @@
     "style": "Holiday"
   },
   {
+    "id": "let_it_snow_trumpet_trio",
+    "filename": "let_it_snow_trumpet_trio.mxl",
+    "title": "Let It Snow!",
+    "composer": "Sammy Cahn/Jule Styne",
+    "arranger": "Terril Tanaka/Albert Einstein Lassiter",
+    "instruments": [
+      "Trumpet 1",
+      "Trumpet 2",
+      "Trumpet 3",
+      "Trumpet 4 (optional)"
+    ],
+    "difficulty": "Easy",
+    "style": "Holiday"
+  },
+  {
     "id": "linus_and_lucy_3bari",
     "filename": "linus_and_lucy_3bari.mxl",
     "title": "Linus and Lucy",
@@ -1409,6 +1498,21 @@
       "Bari Sax 3"
     ],
     "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "little_turkish_drummer_boy_sax_quartet_satb",
+    "filename": "little_turkish_drummer_boy_sax_quartet_SATB.mxl",
+    "title": "Little Turkish Drummer Boy",
+    "composer": "Davis / Brubeck",
+    "arranger": "Terrill Tanaka",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Hard",
     "style": "Holiday"
   },
   {
@@ -1544,6 +1648,21 @@
       "Bari Sax"
     ],
     "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "need_a_little_xmas_sax_quartet_satb",
+    "filename": "need_a_little_xmas_sax_quartet_SATB.mxl",
+    "title": "We Need a Little Christmas",
+    "composer": "Jerry Herman",
+    "arranger": "Terrill Tanaka",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
     "style": "Holiday"
   },
   {
@@ -1992,6 +2111,21 @@
     "style": "Holiday"
   },
   {
+    "id": "silver_bells_bass_clarinet_quartet",
+    "filename": "silver_bells_bass_clarinet_quartet.mxl",
+    "title": "Silver Bells",
+    "composer": "Livingston/Evans",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
+    ],
+    "difficulty": "Easy",
+    "style": "Holiday"
+  },
+  {
     "id": "silver_bells_sax_quartet_satb",
     "filename": "silver_bells_sax_quartet_SATB.mxl",
     "title": "Silver Bells",
@@ -2048,6 +2182,21 @@
       "Bari Sax"
     ],
     "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "sleigh_ride_bass_clarinet_quartet",
+    "filename": "sleigh_ride_bass_clarinet_quartet.mxl",
+    "title": "Sleigh Ride",
+    "composer": "Leroy Anderson",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
+    ],
+    "difficulty": "Medium-Hard",
     "style": "Holiday"
   },
   {
@@ -2245,6 +2394,21 @@
     "style": "Holiday"
   },
   {
+    "id": "the_christmas_song_bass_clarinet_quartet",
+    "filename": "the_christmas_song_bass_clarinet_quartet.mxl",
+    "title": "The Christmas Song",
+    "composer": "Robert Wells/ Mel Tormé",
+    "arranger": "Albert Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
+    ],
+    "difficulty": "Easy",
+    "style": "Holiday"
+  },
+  {
     "id": "the_christmas_song_sax_quartet_satb",
     "filename": "the_christmas_song_sax_quartet_SATB.mxl",
     "title": "The Christmas Song",
@@ -2364,6 +2528,21 @@
     "style": "Holiday"
   },
   {
+    "id": "what_child_is_this_tanaka_sax_quartet_satb",
+    "filename": "what_child_is_this_tanaka_sax_quartet_SATB.mxl",
+    "title": "What Child Is This (Tanaka)",
+    "composer": "Traditional / Desmond",
+    "arranger": "Terrill Tanaka",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Holiday"
+  },
+  {
     "id": "winter_wonderland_3bari",
     "filename": "winter_wonderland_3bari.mxl",
     "title": "Winter Wonderland",
@@ -2388,6 +2567,51 @@
       "Bari Sax 2",
       "Bari Sax 3",
       "Bari Sax 4"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "winter_wonderland_satb",
+    "filename": "winter_wonderland_SATB.mxl",
+    "title": "Winter Wonderland",
+    "composer": "F. Bernard",
+    "arranger": "Terrill Tanaka",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "youre_a_mean_one_bass_clarinet_quartet",
+    "filename": "youre_a_mean_one_bass_clarinet_quartet.mxl",
+    "title": "You're a Mean One, Mr. Grinch",
+    "composer": "Albert Hague",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
+    ],
+    "difficulty": "Medium",
+    "style": "Holiday"
+  },
+  {
+    "id": "youre_a_mean_one_sax_quartet_satb",
+    "filename": "youre_a_mean_one_sax_quartet_SATB.mxl",
+    "title": "You're a Mean One, Mr. Grinch",
+    "composer": "Albert Hague",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
     ],
     "difficulty": "Medium",
     "style": "Holiday"
@@ -2421,5 +2645,20 @@
     ],
     "difficulty": "Medium",
     "style": "Pop"
+  },
+  {
+    "id": "zooz_deck_the_halls_4bari",
+    "filename": "zooz_deck_the_halls_4bari.mxl",
+    "title": "Zooz Deck the Halls",
+    "composer": "Traditional",
+    "arranger": "Too Many Zooz / Brian Einstein Lassiter",
+    "instruments": [
+      "Bari Sax 1",
+      "Bari Sax 2",
+      "Bari Sax 3",
+      "Bari Sax 4"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Holiday"
   }
 ]

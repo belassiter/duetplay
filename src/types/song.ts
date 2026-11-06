@@ -13,6 +13,7 @@ export interface PartState {
     id: number;
     instrument: string;
     originalInstrument: string;
+    partName?: string;
     octave: number;
     isUserSelected?: boolean;
 }

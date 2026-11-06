@@ -1,3 +1,102 @@
+# 2026-11-06 06:34
+> "yes, proceed"
+
+- Deduplicated *Winter Wonderland* in `esquartet/repertoire.html`:
+  - Consolidated the main row (line 1001) with Arranger set to `Terrill Tanaka` and added `<a href="sheetmusic/winter_wonderland_SATB.mxl">SATB</a>` to the Free Sheet Music column alongside `BBBB` and `BBB`.
+  - Removed the duplicate Tanaka row previously added at line 1605.
+- Standardized sheet music filenames:
+  - Copied `sheetmusic/winter_wonderland_tanaka_sax_quartet_SATB.mxl` to `sheetmusic/winter_wonderland_SATB.mxl`.
+  - Removed redundant `winter_wonderland_tanaka_sax_quartet_SATB.mxl` and `winter_wonderland_tanaka_sax_quartet_SATB.pdf`.
+- Regenerated `esquartet/repertoire_mxl_catalog.md` via `catalog_repertoire.js --markdown` (marked SATB arrangement complete).
+- Ingested canonical `winter_wonderland_SATB.mxl` into QuartetPlay manifest `public/quartet-songs.json`.
+- Ran full validation suites (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
+# 2026-11-06 06:28
+> "I agree, just `[part name]`
+Make that update, and the generation update (to allow `(optional)`)
+Also, update quartet-songs.json directly.
+Any questions?"
+
+- Updated `PartState` in `src/types/song.ts` and `src/App.tsx` to include `partName` initialized from the song's original part list (`song.instruments[index]`).
+- Updated `SidePanel.tsx`'s `getLabel` to display `[part name]` directly as the column header (e.g. `Trumpet 4 (optional)`, `Soprano Sax`, `Piano RH`), falling back to instrument name or `Part ${id}` if not present.
+- Updated `scripts/generate-manifest.js` to preserve `(optional)` qualifiers when normalizing instruments.
+- Updated `public/quartet-songs.json` directly to restore `Trumpet 4 (optional)` for `god_arrest_ye_trumpet_trio`, `jingle_bell_rock_trumpet_trio`, `joy_to_the_world_trumpet_trio`, and `let_it_snow_trumpet_trio`.
+- Updated test assertions in `src/__tests__/App_instrument_retention.test.tsx` and `src/__tests__/App_transpose.test.tsx` to match the new `[part name]` header format.
+- Ran validation suite (`npm run validate` and `npm run build:quartet`) with all 29 tests passing and 0 errors.
+
+# 2026-11-06 06:03
+> "Please regenerate joy_to_the_world_trumpet_trio.pdf -- one of the parts was bad, and I updated the existing file."
+
+- Regenerated `esquartet/sheetmusic/joy_to_the_world_trumpet_trio.pdf` (8 pages) using `pdf-lib` from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs\xmas - trumpet trio`:
+  - `Joy to the World - Score.pdf` (3 pages)
+  - `Joy to the World - Trumpet Trio - Trumpet (part 1 of 3).pdf` (updated part 1, 2 pages)
+  - `Joy to the World - Trumpet Trio - Trumpet (part 2 of 3).pdf` (1 page)
+  - `Joy to the World - Trumpet Trio - Trumpet (part 3 of 3).pdf` (1 page)
+  - `Joy to the World - Trumpet (part 4, optional).pdf` (1 page)
+- Ran validation suite (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
+# 2026-11-06 05:54
+> "I closed Adobe, proceed"
+
+- Replaced all 5 Trumpet Trio PDFs in `esquartet/sheetmusic/` with the merged versions containing full scores:
+  - `carol_of_the_bells_trumpet_trio.pdf` (5 pages: Score + 3 Trumpet parts)
+  - `god_arrest_ye_trumpet_trio.pdf` (6 pages: Score + 4 Trumpet parts)
+  - `jingle_bell_rock_trumpet_trio.pdf` (8 pages: Score + 4 Trumpet parts)
+  - `joy_to_the_world_trumpet_trio.pdf` (8 pages: Score + 4 Trumpet parts)
+  - `let_it_snow_trumpet_trio.pdf` (7 pages: Score + 4 Trumpet parts)
+- Fixed instrument resolution for optional/numbered trumpet parts:
+  - Added Trumpet aliases (`Trumpet 1` through `Trumpet 4`, `Trumpet 4 (optional)`, etc.) to `bb_trumpet` in `src/constants/instruments.ts`.
+  - Updated `mapInstrumentNameToValue` in `src/App.tsx` and `src/__tests__/manifest_integrity.test.ts` to strip parenthetical qualifiers (e.g. `(optional)`).
+  - Updated `normalizeInstruments` in `scripts/generate-manifest.js` to normalize `Trumpet \d+` parts.
+  - Normalized 4 songs in `public/quartet-songs.json` from `Trumpet 4 (optional)` to `Trumpet 4`.
+- Passed full test and build suites (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
+# 2026-11-05 21:40
+> "for trumpet trio, added 5 scores and 5 mxl, in the usual folders."
+
+- Copied all 5 newly exported Trumpet Trio MusicXML files from `H:\Google Drive\Music\Sax Quartet\3WM\xmas (remastered)\Trio\Trumpet trio` to `esquartet/sheetmusic/`:
+  - `carol_of_the_bells_trumpet_trio.mxl`
+  - `god_arrest_ye_trumpet_trio.mxl`
+  - `jingle_bell_rock_trumpet_trio.mxl`
+  - `joy_to_the_world_trumpet_trio.mxl`
+  - `let_it_snow_trumpet_trio.mxl`
+- Updated `esquartet/repertoire.html` to add Free Sheet Music (Notation/MXL) links for all 5 Trumpet Trio pieces.
+- Merged the newly added score PDFs from `xmas - trumpet trio` with parts using `pdf-lib` (prepared `.tmp` files for in-place swap upon PDF reader release).
+- Re-ran `catalog_repertoire.js --markdown` (Trumpet Trio category reached 100% MusicXML coverage: 5/5 complete; overall coverage increased to 88% / 190 complete).
+- Ingested all 5 Trumpet Trios into QuartetPlay (`public/quartet-songs.json` expanded from 174 to 179 songs).
+- Passed full test and build suites (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
+# 2026-11-04 11:37
+> "Yes, add all of those, including new songs, PDF, and mxl."
+
+- Created `repertoire_ignore.json` in `esquartet/` to exclude commercial/purchased arrangements (*Catalonian Christmas Carol*) and discarded charts (*God Rest Ye [Dap-Kings]*).
+- Merged Dropbox part PDFs with `pdf-lib` and copied corresponding MusicXML files from `H:\Google Drive\Music\Sax Quartet` into `esquartet/sheetmusic/` for 22 arrangements:
+  - **New Rows Added to `repertoire.html`**:
+    - *Zooz Deck the Halls* (4-Bari, PDF + MXL)
+    - *What Child Is This (Tanaka)* (SATB, PDF + MXL)
+    - *Silent Night (Tanaka)* (SATB, PDF + MXL)
+    - *You're a Mean One, Mr. Grinch* (SATB & Bass Clarinet Quartet, PDF + MXL)
+    - *Little Turkish Drummer Boy* (SATB, PDF + MXL)
+    - *We Need a Little Christmas* (SATB, PDF + MXL)
+    - *Home for the Holidays* (SATB, PDF + MXL)
+    - *Winter Wonderland (Tanaka)* (SATB, PDF + MXL)
+  - **Ensembles Added to Existing Rows in `repertoire.html`**:
+    - *Jingle, Jump, and Jive!*: Added SATB (Tanaka, PDF + MXL)
+    - *Silver Bells*: Added Bass Clarinet Quartet (PDF + MXL)
+    - *Sleigh Ride*: Added Bass Clarinet Quartet (PDF + MXL)
+    - *The Christmas Song*: Added Bass Clarinet Quartet (PDF + MXL)
+    - *Joy to the World*: Added Trombone Quartet & Trumpet Trio (PDFs)
+    - *Rudolph*: Added Trombone Quartet (PDF)
+    - *Sugar Rum Cherry*: Added Trombone Quartet (PDF)
+    - *Winter Wonderland*: Added Trombone Quartet (PDF)
+    - *Carol of the Bells*: Added Trumpet Trio (PDF)
+    - *God Arrest Ye*: Added Trumpet Trio (PDF)
+    - *Jingle Bell Rock*: Added Trumpet Trio (PDF)
+    - *Let It Snow!*: Added Trumpet Trio (PDF)
+- Updated `catalog_repertoire.js` in `esquartet/` with `Trombone Quartet` and `Trumpet Trio` categorization, and re-generated `repertoire_mxl_catalog.md` (coverage increased to 216 arrangements, 185 complete MXLs).
+- Ingested new pieces into QuartetPlay (`public/quartet-songs.json` expanded from 163 to 174 songs).
+- Passed full test and build suites (`npm run validate` and `npm run build:quartet`) with 0 errors.
+
 # 2026-11-03 20:36
 > "It looks like there's older entries with dates/years in the composer or arranger fields. Can you go through and remove all of the ` (YEAR)` entries in those fields?"
 

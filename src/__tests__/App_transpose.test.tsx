@@ -99,7 +99,7 @@ describe('App Transpose', () => {
         // We look for the display text which might be in the selector.
         // The InstrumentSelector component shows just the name.
         const triggers = await screen.findAllByText('Flute');
-        const part1Trigger = triggers[0];
+        const part1Trigger = triggers.find(el => el.tagName === 'SPAN') || triggers[0];
         await user.click(part1Trigger);
 
         // 3. Search for "Trumpet"

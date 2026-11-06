@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import useVerovio from './hooks/useVerovio';
 import { transposeMusicXML, isolatePart } from './utils/xmlTranspose';
 import { logEvent, getConfigurationDiff } from './utils/analytics';
@@ -263,8 +263,8 @@ function App() {
 
   const mapInstrumentNameToValue = useCallback((name: string): string => {
       if (!name) return 'none';
-      // Normalize: remove trailing nuparts, globalTranspose, viewMode, zoomLevel, isMobile, isLandscap
-      const cleanName = name.replace(/\s*\d+$/, '').trim().toLowerCase();
+      // Normalize: remove parentheticals like (optional) and trailing numbers
+      const cleanName = name.replace(/\s*\([^)]*\)/g, '').replace(/\s*\d+$/, '').trim().toLowerCase();
       
       // Use "find" carefully - specificity matters. 
       // 1. Exact match on value
@@ -523,6 +523,7 @@ function App() {
                  id: index + 1,
                  instrument: instrumentToUse,
                  originalInstrument: originalVal,
+                 partName: instName,
                  octave: 0, // Reset octave
                  isUserSelected: isUserSelected
              });

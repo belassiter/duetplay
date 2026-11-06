@@ -85,7 +85,7 @@ export const instruments: Instrument[] = [
         value: 'bb_trumpet', 
         transpose: 'M2', 
         clef: 'treble', 
-        aliases: ['Trumpet','B♭ Trumpet'],
+        aliases: ['Trumpet', 'B♭ Trumpet', 'Trumpet 1', 'Trumpet 2', 'Trumpet 3', 'Trumpet 4', 'Trumpet 4 (optional)', 'Trumpet (optional)'],
         instrumentRange: { easyLow: 'C4', easyHigh: 'G5', hardLow: 'F#3', hardHigh: 'C6' }
     },
     { name: 'Horn in F', label: 'Horn in F (sounds -P5, treble clef)', value: 'horn_f', transpose: 'P5', clef: 'treble', instrumentRange: { easyLow: 'C3', easyHigh: 'E5', hardLow: 'F2', hardHigh: 'C6' } },

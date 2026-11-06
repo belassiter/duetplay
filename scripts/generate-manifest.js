@@ -178,15 +178,18 @@ function normalizeInstruments(rawInstruments, filename) {
     // Standard normalization for SATB / AATB / other ensembles
     return rawInstruments.map(raw => {
         const name = (raw || '').trim();
-        if (/^soprano$/i.test(name)) return 'Soprano Sax';
-        if (/^alto$/i.test(name)) return 'Alto Sax';
-        if (/^alto\s*1$/i.test(name)) return 'Alto Sax 1';
-        if (/^alto\s*2$/i.test(name)) return 'Alto Sax 2';
-        if (/^tenor$/i.test(name)) return 'Tenor Sax';
-        if (/^tenor\s*1$/i.test(name)) return 'Tenor Sax 1';
-        if (/^tenor\s*2$/i.test(name)) return 'Tenor Sax 2';
-        if (/^bari$/i.test(name) || /^baritone$/i.test(name) || /^baritone\s*sax$/i.test(name)) return 'Bari Sax';
-        if (/^bari\s*(\d+)$/i.test(name)) return `Bari Sax ${name.match(/\d+/)[0]}`;
+        const isOpt = /\boptional\b/i.test(name) ? ' (optional)' : '';
+        if (/^soprano$/i.test(name)) return `Soprano Sax${isOpt}`;
+        if (/^alto$/i.test(name)) return `Alto Sax${isOpt}`;
+        if (/^alto\s*1$/i.test(name)) return `Alto Sax 1${isOpt}`;
+        if (/^alto\s*2$/i.test(name)) return `Alto Sax 2${isOpt}`;
+        if (/^tenor$/i.test(name)) return `Tenor Sax${isOpt}`;
+        if (/^tenor\s*1$/i.test(name)) return `Tenor Sax 1${isOpt}`;
+        if (/^tenor\s*2$/i.test(name)) return `Tenor Sax 2${isOpt}`;
+        if (/^bari$/i.test(name) || /^baritone$/i.test(name) || /^baritone\s*sax$/i.test(name)) return `Bari Sax${isOpt}`;
+        if (/^bari\s*(\d+)$/i.test(name)) return `Bari Sax ${name.match(/\d+/)[0]}${isOpt}`;
+        if (/^trumpet\s*(\d+)/i.test(name) || /^trumpet\s*\(part\s*(\d+)/i.test(name)) return `Trumpet ${name.match(/\d+/)[0]}${isOpt}`;
+        if (/^trumpet/i.test(name)) return `Trumpet${isOpt}`;
         return name;
     });
 }

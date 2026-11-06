@@ -99,8 +99,8 @@ describe('App Instrument Retention', () => {
         const instrumentButton = screen.getByTitle('Select Instruments');
         await user.click(instrumentButton);
         
-        // Label should be "Part 1 (Orig: Oboe)"
-        await screen.findByText(/Part 1 \(Orig: Oboe\)/);
+        // Label should be "Oboe"
+        await screen.findByRole('heading', { name: /oboe/i });
         
         // Check Trigger Value. Should trigger be "Oboe"?
         // Find trigger text.
@@ -132,7 +132,7 @@ describe('App Instrument Retention', () => {
         // 5. Verify Part 1 is STILL "Alto Sax" (User Choice Retained)
         // Even though First Song default is Flute.
         await user.click(instrumentButton);
-        await screen.findByText(/Part 1 \(Orig: Flute\)/); // Label reflects song original
+        await screen.findByRole('heading', { name: /flute/i }); // Label reflects song original
         
         await waitFor(() => {
              const retainedTrigger = screen.queryByText('Alto Sax', { selector: 'span' });
