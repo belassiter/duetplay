@@ -1,5 +1,9 @@
 # Developer & Agent Guidelines
 
+## Read-Only / Proposal Mode & Explicit Approval Gate
+- **Respect "Make no changes" / "Propose" / "Discuss"**: When the user asks to inspect, propose, or discuss without making changes, do not create, edit, move, or rename any files.
+- **Require explicit written approval**: After presenting a proposal in read-only mode, NEVER treat an empty continuation, UI resume, or ambiguous prompt in a subsequent turn as approval to execute the proposal. Wait until the user explicitly approves the changes in plain text. If you're unsure, ask for confirmation.
+
 ## Definition of Done
 - **Confirm the intended changes are actually present**.
 - **Run the validation suite**: After any code changes, before declaring any task complete, run `npm run validate` (which runs `npm run check`, `npm test`, and `npm run build`). All checks and tests must pass with 0 failures and 0 warnings.

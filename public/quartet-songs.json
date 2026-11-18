@@ -2230,6 +2230,36 @@
     "style": "Holiday"
   },
   {
+    "id": "spinach_rag_clarinet_quartet_sssb",
+    "filename": "spinach_rag_clarinet_quartet_SSSB.mxl",
+    "title": "Spinach Rag (Final Fantasy VI)",
+    "composer": "Nobou Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Clarinet 1",
+      "Clarinet 2",
+      "Clarinet 3",
+      "Bass Clarinet"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
+    "id": "spinach_rag_sax_quartet_satb",
+    "filename": "spinach_rag_sax_quartet_SATB.mxl",
+    "title": "Spinach Rag (Final Fantasy VI)",
+    "composer": "Nobou Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
     "id": "star_trek_tas_satb",
     "filename": "star_trek_TAS_SATB.mxl",
     "title": "Star Trek: The Animated Series",
@@ -2645,6 +2675,20 @@
     ],
     "difficulty": "Medium",
     "style": "Pop"
+  },
+  {
+    "id": "zooz_deck_the_halls_3bari",
+    "filename": "zooz_deck_the_halls_3bari.mxl",
+    "title": "Zooz Deck the Halls",
+    "composer": "Traditional",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Bari Sax 1",
+      "Bari Sax 2",
+      "Bari Sax 3"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Holiday"
   },
   {
     "id": "zooz_deck_the_halls_4bari",
