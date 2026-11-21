@@ -1,3 +1,90 @@
+# 2026-11-20 16:59
+> "Add this for media on repertiore.html: https://esquartet.bandcamp.com/track/the-star-spangled-banner-in-the-style-of-prokofiev (sax quartet rehearsal recording)"
+
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Populated the Media column for `The Star Spangled Banner (in the style of Prokofiev)` with the Bandcamp rehearsal link: `<a href="https://esquartet.bandcamp.com/track/the-star-spangled-banner-in-the-style-of-prokofiev">sax quartet rehearsal recording</a>`.
+
+# 2026-11-20 16:28
+> "Ok, let's add `The Star Spangled Banner (in the style of Prokofiev)`
+Files for sax quartet, 4bari, and bass clarinet quartet should be under `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` (pdfs and mxl)
+Please rename the files for the website appropriately, similar to the other filenames.
+Also add to quartetplay
+Questions?"
+
+- Merged score and individual part PDFs and copied `.mxl` files from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` to `H:\Documents\GitHub\esquartet\sheetmusic`:
+  - `the_star_spangled_banner_prokofiev_sax_quartet_SATB.pdf` (6 pages) & `.mxl`
+  - `the_star_spangled_banner_prokofiev_4bari.pdf` (6 pages) & `.mxl`
+  - `the_star_spangled_banner_prokofiev_bass_clarinet_quartet.pdf` (6 pages) & `.mxl`
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Added table row for `The Star Spangled Banner (in the style of Prokofiev)` with links for `SATB`, `BBBB`, and `BassClarinets` sheet music PDFs and MusicXML files.
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (coverage increased to 199 MXL files across 219 arrangements, 91%).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 264; unreleased candidate count reduced to 167 pieces).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with manifest entries for all 3 arrangements:
+  - `the_star_spangled_banner_prokofiev_sax_quartet_satb`
+  - `the_star_spangled_banner_prokofiev_4bari`
+  - `the_star_spangled_banner_prokofiev_bass_clarinet_quartet`
+- Ran validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
+# 2026-11-20 07:38
+> "don't filter out `(original version)`, that's something different."
+
+- Updated `H:\Documents\GitHub\esquartet\catalog_musx.js`:
+  - Adjusted `isOriginalSource()` to explicitly preserve files with `(original version)` (such as `The Christmas Song (original version).musx` and `Pink Panther (original version).musx`), recognizing them as valid arrangement editions rather than unadapted raw source material.
+  - Reduced filtered unadapted source count from 30 to 28 files.
+- Regenerated [`musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md):
+  - Total scanned `.musx`: 466.
+  - Filtered unadapted source files: 28.
+  - Both preserved `(original version)` files were matched against `repertoire.html` (raising on-site count to 262).
+  - Unreleased candidate pieces remain at 168 unique arrangements (98 vetted in Dropbox).
+
+# 2026-11-20 07:29
+> "One other note. Files with "original" at the end are typically the original source material (e.g. a piano score), before I started adapting for sax quartet. I'm not sure if those are already filtered out."
+
+- Updated `H:\Documents\GitHub\esquartet\catalog_musx.js`:
+  - Added filter `isOriginalSource()` to identify and skip raw source material files ending in `original` (e.g. `Song - original.musx`, `Song (original version).musx`, `Song - original notation.musx`) from Google Drive scans before arrangement deduplication.
+  - Excluded 30 unadapted source material files from the candidate pool.
+  - Added metric display in console and summary table for filtered unadapted source files.
+- Regenerated [`musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md):
+  - Total scanned `.musx`: 464 (30 source material files excluded).
+  - Unreleased candidate files: 204.
+  - Unique pieces to add: 168 (across 26 buckets).
+  - Vetted with Dropbox PDFs (Played): 98 pieces.
+
+# 2026-11-20 07:18
+> "Let's refine the duplicates. You're finding a lot of files that are the same song, but different instrumentation. That's not a duplicate. I want to find ones that have the exact same file.
+Let's add another dimension. Which of the above are present in `H:\Dropbox\Music\Sax Quartet\PDFs` ? I'm thinking now that's probably a better indicator of possibly being ready to add to the website, because those are ones I've actually played with the quartet at least once.
+Make those updates, then regenerate"
+
+- Updated `H:\Documents\GitHub\esquartet\catalog_musx.js`:
+  - **Refined Duplicate Detection**: Constrained cross-folder duplicate matching to files with the exact same title *and* instrumentation, eliminating false-positive duplicates across different ensemble arrangements (e.g. 3-bari vs 4-bari vs Bass Clarinet Quartet).
+  - **Dropbox PDFs Integration**: Scanned and indexed all 2,380 PDFs in `H:\Dropbox\Music\Sax Quartet\PDFs` to cross-reference which unreleased `.musx` arrangements already have exported, quartet-rehearsed PDFs.
+  - Added a **Top Priority: Vetted Candidates in Dropbox PDFs** section at the top of the report listing all 99 vetted pieces ready for website/QuartetPlay publication.
+  - Added an **In Dropbox PDFs?** status column to all 26 bucket breakdown tables.
+- Regenerated [`musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md):
+  - 173 unique unreleased candidate pieces identified.
+  - 99 pieces confirmed vetted with existing Dropbox PDFs.
+  - Refined genuine cross-folder duplicates down to 6 exact matches.
+
+# 2026-11-20 07:08
+> "1. Let's stick to musx. mus are probably older and not current
+2. Generally parent folder is granular enough, except for 3WM which should be more granular with sub-buckets
+3. I'm not interested in items that are already on the website. This is about helping me find ones to add.
+4. For older items with separate part musx files, let's combine those
+5. Yeah, let's make this re-runnable
+6. Let's try to avoid marking v1, v2 et files as separate entries. Probably just the newest v# is what I want to see
+7. There may be some duplicates across different folders. Identify those"
+
+- Built re-runnable catalog tool `H:\Documents\GitHub\esquartet\catalog_musx.js`:
+  - Recursively scans `H:\Google Drive\Music\Sax Quartet` for `.musx` files (ignoring all `not done` directories).
+  - Cross-references against all 216 PDF arrangements in `repertoire.html`, enforcing instrumentation matching (SATB vs 3-bari vs 4-bari vs Bass Clarinet vs Choir).
+  - Groups candidates into buckets (granular sub-buckets for `3WM`, parent folders for others, with `Geek` divided into `Chrono Trigger`, `FF`, and general `Geek`).
+  - Collapses multiple versions (`v1`, `v2`, `v3`, `(original)`, `(digital)`, etc.) per piece to highlight the newest version and record collapsed older iterations.
+  - Detects cross-folder duplicates and compiles a dedicated cross-folder comparison checklist.
+- Generated comprehensive Markdown report [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md):
+  - 494 total `.musx` files scanned.
+  - 248 already on website; 246 unreleased candidate files.
+  - 190 unique unreleased pieces across 26 buckets.
+
 # 2026-11-18 06:54
 > "I don't see any changed files for quartet play, are you sure you implemented that?"
 

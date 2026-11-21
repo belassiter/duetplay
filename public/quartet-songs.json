@@ -2454,6 +2454,51 @@
     "style": "Holiday"
   },
   {
+    "id": "the_star_spangled_banner_prokofiev_4bari",
+    "filename": "the_star_spangled_banner_prokofiev_4bari.mxl",
+    "title": "The Star Spangled Banner (in the style of Prokofiev)",
+    "composer": "John Stafford Smith, Francis Scott Key",
+    "arranger": "Bruce Adolph",
+    "instruments": [
+      "Bari Sax 1",
+      "Bari Sax 2",
+      "Bari Sax 3",
+      "Bari Sax 4"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "the_star_spangled_banner_prokofiev_bass_clarinet_quartet",
+    "filename": "the_star_spangled_banner_prokofiev_bass_clarinet_quartet.mxl",
+    "title": "The Star Spangled Banner (in the style of Prokofiev)",
+    "composer": "John Stafford Smith, Francis Scott Key",
+    "arranger": "Bruce Adolph",
+    "instruments": [
+      "Bass Clarinet 1",
+      "Bass Clarinet 2",
+      "Bass Clarinet 3",
+      "Bass Clarinet 4"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
+    "id": "the_star_spangled_banner_prokofiev_sax_quartet_satb",
+    "filename": "the_star_spangled_banner_prokofiev_sax_quartet_SATB.mxl",
+    "title": "The Star Spangled Banner (in the style of Prokofiev)",
+    "composer": "John Stafford Smith, Francis Scott Key",
+    "arranger": "Bruce Adolph",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "trogdor",
     "filename": "trogdor.mxl",
     "title": "Trogdor",
