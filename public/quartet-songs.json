@@ -1770,6 +1770,21 @@
     "style": "Pop"
   },
   {
+    "id": "pinky_and_the_brain_sax_quartet_satb",
+    "filename": "pinky_and_the_brain_sax_quartet_SATB.mxl",
+    "title": "Pinky and the Brain",
+    "composer": "Richard Stone/Tom Ruegger",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "TV"
+  },
+  {
     "id": "pink_panther_original_sax_quartet_satb",
     "filename": "pink_panther_original_sax_quartet_SATB.mxl",
     "title": "The Pink Panther Theme",

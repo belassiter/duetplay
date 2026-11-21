@@ -22,6 +22,10 @@
 
 ### 3. PDF Generation & Font Embedding
 - **SMuFL Fonts**: PDF export uses `jsPDF` and `svg2pdf.js`. Musical notation glyphs and metronome marks require SMuFL fonts (`Leipzig.ttf`, `Bravura.ttf`) loaded into `jsPDF`'s virtual file system (`src/utils/pdfFonts.ts`). Do not bypass font loading to prevent character corruption (mojibake).
+- **Page Ordering for Sheet Music Sets**:
+  - Full score is always first.
+  - Primary ensemble parts follow in standard score order (e.g. Soprano, Alto, Tenor, Bari for SATB; Bari 1..4 for 4-bari).
+  - Substitute / alternate parts (e.g. Alto Sax substitute for Soprano) must always be placed last.
 
 ### 4. DuetPlay vs. QuartetPlay (Dual Variant Architecture)
 - **Do not hardcode 2-part assumptions**: While DuetPlay manages 2 parts (often split from a grand staff), QuartetPlay manages 4 distinct parts (SATB). Data manipulation, transposition (`src/utils/xmlTranspose.ts`), and range calculations must support arbitrary part counts (1 through 4+).

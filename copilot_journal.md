@@ -1,3 +1,32 @@
+# 2026-11-20 21:41
+> "In the PDF "sub" (substitute) parts should always be last. 
+Also, I noticed the score was missing. I just added it to the score folder, `H:\Documents\Dropbox\Music\Sax Quartet\PDFs\score` (score should always be first)
+Please update the PDF accordingly"
+
+- Re-assembled [`pinky_and_the_brain_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/pinky_and_the_brain_sax_quartet_SATB.pdf) (8 pages total) with the new score and updated part ordering:
+  - Pages 1–3: Score (`H:\Documents\Dropbox\Music\Sax Quartet\PDFs\score\Pinky and the Brain - Score.pdf`)
+  - Page 4: Soprano Sax
+  - Page 5: Alto Sax
+  - Page 6: Tenor Sax
+  - Page 7: Bari Sax
+  - Page 8: Alto Sax substitute for Soprano (substitute parts placed last)
+- Updated [`AGENTS.md`](file:///H:/Documents/GitHub/duetplay/AGENTS.md) Section 3 (PDF Generation) to formalize page ordering convention: Score first, standard ensemble parts in score order, and substitute/alternate parts last.
+- Ran validation suite (`npm run validate`) with 0 failures and 0 warnings.
+
+# 2026-11-20 18:07
+> "next, Pinky and the Brain. Just sax quartet.
+mxl is `H:\Google Drive\Music\Sax Quartet\Pinky and the Brain`, pdfs are in normal place"
+
+- Ingested files for `Pinky and the Brain` (Sax Quartet, `(A)SATB`):
+  - Merged 5 individual part PDFs from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` (Soprano, Alto sub for Soprano, Alto, Tenor, Bari) into [`pinky_and_the_brain_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/pinky_and_the_brain_sax_quartet_SATB.pdf).
+  - Copied `Pinky and the Brain.mxl` from Google Drive to [`pinky_and_the_brain_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/pinky_and_the_brain_sax_quartet_SATB.mxl).
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Added table row for `Pinky and the Brain` (`(A)SATB`, Artist: `Animaniacs`, Composer: `Richard Stone & Tom Ruegger`, Style: `TV`).
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (220 PDF arrangements, 200 available MXL, 91% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 265; unreleased candidate pieces reduced to 166 across 25 buckets, with the `Pinky and the Brain` bucket fully resolved).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with manifest entry `pinky_and_the_brain_sax_quartet_satb`.
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
 # 2026-11-20 16:59
 > "Add this for media on repertiore.html: https://esquartet.bandcamp.com/track/the-star-spangled-banner-in-the-style-of-prokofiev (sax quartet rehearsal recording)"
 
