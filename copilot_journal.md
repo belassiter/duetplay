@@ -1,3 +1,46 @@
+# 2026-11-21 20:01
+> "More sax quartet additions:
+1. Bill Tell  (has audio: https://esquartet.bandcamp.com/track/william-bill-tell-overture)
+2. Back to the Future"
+
+- Ingested files for `Bill Tell` (Sax Quartet SATB):
+  - Merged score and parts from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` into [`bill_tell_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/bill_tell_sax_quartet_SATB.pdf) (12 pages: Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp).
+  - Copied MXL to [`bill_tell_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/bill_tell_sax_quartet_SATB.mxl).
+  - Added table row to [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html) with Bandcamp recording link.
+- Ingested files for `Back to the Future` (Sax Quartet SATB):
+  - Merged score and parts from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` into [`back_to_the_future_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/back_to_the_future_sax_quartet_SATB.pdf) (12 pages: Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp).
+  - Copied MXL to [`back_to_the_future_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/back_to_the_future_sax_quartet_SATB.mxl).
+  - Added table row to [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html).
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (224 PDF arrangements, 202 available MXL, 91% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 275; unreleased candidates reduced to 160 unique pieces across 23 buckets; vetted Dropbox candidates reduced to 90).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with entries:
+  - `bill_tell_sax_quartet_satb`
+  - `back_to_the_future_sax_quartet_satb`
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
+# 2026-11-21 18:53
+> "Ok, 2 more
+1. Ain't Misbehavin' - just sax quartet
+There's audio here: https://esquartet.bandcamp.com/track/aint-misbehavin
+PDFs/mxl are here: H:\Documents\Dropbox\Music\Sax Quartet\PDFs
+2. Tick Tock Clock - just sax quartet (don't include the `v2` in the new filenames/info
+PDFs/mxl are here: H:\Documents\Dropbox\Music\Sax Quartet\PDFs"
+
+- Ingested files for `Ain't Misbehavin'` (Sax Quartet SATB):
+  - Merged score and parts from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` into [`aint_misbehavin_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/aint_misbehavin_sax_quartet_SATB.pdf) (12 pages: Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp).
+  - Copied MXL to [`aint_misbehavin_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/aint_misbehavin_sax_quartet_SATB.mxl).
+  - Added row to [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html) with Bandcamp recording audio link.
+- Ingested files for `Tick Tock Clock (Mario Kart DS)` (Sax Quartet SATB):
+  - Merged score and parts from `H:\Documents\Dropbox\Music\Sax Quartet\PDFs` into [`tick_tock_clock_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/tick_tock_clock_sax_quartet_SATB.pdf) (6 pages: Score 2pp, Soprano 1p, Alto 1p, Tenor 1p, Bari 1p), omitting `v2` per instruction.
+  - Copied MXL to [`tick_tock_clock_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/tick_tock_clock_sax_quartet_SATB.mxl).
+  - Added row to [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html).
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (222 PDF arrangements, 202 available MXL, 91% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 270; unreleased candidates reduced to 163 unique pieces across 24 buckets; vetted candidates in Dropbox reduced to 94).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with entries:
+  - `aint_misbehavin_sax_quartet_satb`
+  - `tick_tock_clock_sax_quartet_satb`
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
 # 2026-11-20 21:41
 > "In the PDF "sub" (substitute) parts should always be last. 
 Also, I noticed the score was missing. I just added it to the score folder, `H:\Documents\Dropbox\Music\Sax Quartet\PDFs\score` (score should always be first)

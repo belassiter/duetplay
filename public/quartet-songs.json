@@ -45,6 +45,21 @@
     "style": "Holiday"
   },
   {
+    "id": "aint_misbehavin_sax_quartet_satb",
+    "filename": "aint_misbehavin_sax_quartet_SATB.mxl",
+    "title": "Ain't Misbehavin'",
+    "composer": "Thomas Waller and Harry Brooks",
+    "arranger": "Lee Evans, Albert Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Jazz"
+  },
+  {
     "id": "aint_no_mountain_sax_quartet",
     "filename": "aint_no_mountain_sax_quartet.mxl",
     "title": "Ain't No Mountain High Enough",
@@ -135,6 +150,21 @@
     "style": "Jazz"
   },
   {
+    "id": "back_to_the_future_sax_quartet_satb",
+    "filename": "back_to_the_future_sax_quartet_SATB.mxl",
+    "title": "Back to the Future",
+    "composer": "Alan Silvestri",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Pop"
+  },
+  {
     "id": "battlefield_1942",
     "filename": "battlefield_1942.mxl",
     "title": "Battlefield 1942",
@@ -223,6 +253,21 @@
     ],
     "difficulty": "Medium",
     "style": "Jazz"
+  },
+  {
+    "id": "bill_tell_sax_quartet_satb",
+    "filename": "bill_tell_sax_quartet_SATB.mxl",
+    "title": "Bill Tell",
+    "composer": "Gioachino Rossini",
+    "arranger": "Terrill Tanaka/Albert Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
   },
   {
     "id": "blue_charlie_brown_4bari",
@@ -2512,6 +2557,21 @@
     ],
     "difficulty": "Medium",
     "style": "Classical"
+  },
+  {
+    "id": "tick_tock_clock_sax_quartet_satb",
+    "filename": "tick_tock_clock_sax_quartet_SATB.mxl",
+    "title": "Tick Tock Clock (Mario Kart DS)",
+    "composer": "Shinobu Nagata",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
   },
   {
     "id": "trogdor",
