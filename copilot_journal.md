@@ -1,3 +1,60 @@
+# 2026-11-23 14:52
+> "next, some classical sax quartet items:
+Lysenko Quartet in d minor movement II. Medium difficulty.
+Lysenko Quartet in d minor movement III. Medium-hard difficulty. https://esquartet.bandcamp.com/track/lysenko-quartet-in-d-minor-movement-iii"
+
+- Ingested files for 2 classical sax quartet (SATB) arrangements:
+  - `Lysenko Quartet in d minor movement II`: merged score and parts into [`lysenko_string_quartet_II_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/lysenko_string_quartet_II_sax_quartet_SATB.pdf) (20 pages: Score 8pp, Soprano 3pp, Alto 3pp, Tenor 3pp, Bari 3pp); copied MXL to [`lysenko_string_quartet_II_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/lysenko_string_quartet_II_sax_quartet_SATB.mxl).
+  - `Lysenko Quartet in d minor movement III`: merged score and parts into [`lysenko_string_quartet_III_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/lysenko_string_quartet_III_sax_quartet_SATB.pdf) (19 pages: Score 7pp, Soprano 3pp, Alto 3pp, Tenor 3pp, Bari 3pp); copied MXL to [`lysenko_string_quartet_III_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/lysenko_string_quartet_III_sax_quartet_SATB.mxl).
+- Verified all source and merged PDF pages using [`scripts/check-pdf-miniaturization.cjs`](file:///H:/Documents/GitHub/duetplay/scripts/check-pdf-miniaturization.cjs); all passed with normal page bounds.
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Added table rows for Lysenko Quartet in d minor movements II and III with difficulties, composer Mykola Lysenko, arranger EsQ, and Bandcamp rehearsal recording link for movement III.
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (238 PDF arrangements, 218 available MXL, 92% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 315; unreleased candidates reduced to 128 pieces; vetted Dropbox candidates reduced to 63).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with both songs (manifest reached 205 songs).
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
+# 2026-11-23 13:40
+> "Of the recently added items (repertoire.html line 1605-1845), let's organize it a bit. Don't move the earlier table entries. (I want it to generally by chronological, so people can know what's newer)
+Put the Final Fantasy VII ones together, alpha by title, then Final Fantasy VI. So they're clustered.
+Questions?"
+
+- Reorganized recently added items in [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html) (lines 1735–1845):
+  - Clustered Final Fantasy VII pieces alphabetically by title:
+    1. `Descendent of Shinobi (Final Fantasy VII)`
+    2. `Gold Saucer (Final Fantasy VII)`
+    3. `Rufus' Welcome Ceremony (Final Fantasy VII)`
+  - Clustered Final Fantasy VI pieces alphabetically by title:
+    1. `Coin Song (Final Fantasy VI)`
+    2. `Go Go (Final Fantasy VI)`
+    3. `Slam Shuffle (Final Fantasy VI)`
+  - Retained `Ground Carrier (U.N. Squadron)` and `Birth of the People (Actraiser)` at the conclusion of the chronological additions block.
+  - Preserved all prior entries (Star Spangled Banner through Chrono Trigger).
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) and [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md).
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
+# 2026-11-23 13:04
+> "I'll consider that, no changes for now.
+Next, sax quartet:
+Birth of the People (Actraiser). Medium-hard. https://esquartet.bandcamp.com/track/birth-of-the-people-actraiser
+Coin Song (Final Fantasy VI). Medium. https://esquartet.bandcamp.com/track/coin-song-final-fantasy-vi
+Super Mario World Ending Medley. Medium-hard. https://esquartet.bandcamp.com/track/super-mario-world-ending-medley"
+
+- Ingested files for 3 video game sax quartet arrangements:
+  - `Birth of the People (Actraiser)`: merged score and parts into [`birth_of_the_people_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/birth_of_the_people_sax_quartet_SATB.pdf) (6 pages: Score 2pp, Soprano 1p, Alto 1p, Tenor 1p, Bari 1p); copied MXL to [`birth_of_the_people_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/birth_of_the_people_sax_quartet_SATB.mxl).
+  - `Coin Song (Final Fantasy VI)`: merged score and parts into [`coin_song_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/coin_song_sax_quartet_SATB.pdf) (7 pages: Score 3pp, Soprano 1p, Alto 1p, Tenor 1p, Bari 1p); copied MXL to [`coin_song_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/coin_song_sax_quartet_SATB.mxl).
+  - `Super Mario World Ending Medley`: re-merged updated score and parts into [`super_mario_world_ending_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/super_mario_world_ending_sax_quartet_SATB.pdf) (25 pages: Score 9pp, Soprano 4pp, Alto 4pp, Tenor 4pp, Bari 4pp); copied latest complete 4-part MXL to [`super_mario_world_ending_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/super_mario_world_ending_sax_quartet_SATB.mxl).
+- Verified all source and merged PDF pages using [`scripts/check-pdf-miniaturization.cjs`](file:///H:/Documents/GitHub/duetplay/scripts/check-pdf-miniaturization.cjs); all passed.
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Updated `Super Mario World Ending Medley` to add Arranger "EsQ" and Bandcamp rehearsal recording link.
+  - Added new rows for `Birth of the People (Actraiser)` and `Coin Song (Final Fantasy VI)` with titles, difficulties, and Bandcamp rehearsal recording links.
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (236 PDF arrangements, 216 available MXL, 92% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 302; unreleased candidates reduced to 137 pieces; vetted Dropbox candidates reduced to 70).
+- Updated [`duetplay/scripts/generate-manifest.js`](file:///H:/Documents/GitHub/duetplay/scripts/generate-manifest.js):
+  - Removed `super_mario_world_ending_sax_quartet_SATB.mxl` from exclusions since the updated score contains the complete 4-part SATB parts.
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with all 3 songs (manifest reached 203 songs).
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
 # 2026-11-22 21:50
 > "for musx_catalog.md, let's move `Edmund Welles` folder to the excluded list. Also ``Classical\Mario\` folder. and `from random people\` folder. and `Mark Secosh\` folder. 
 These are things owned by other people, and I won't publish them."

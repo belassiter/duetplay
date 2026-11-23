@@ -270,6 +270,21 @@
     "style": "Classical"
   },
   {
+    "id": "birth_of_the_people_sax_quartet_satb",
+    "filename": "birth_of_the_people_sax_quartet_SATB.mxl",
+    "title": "Birth of the People (Actraiser)",
+    "composer": "Yuzo Koshiro",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
     "id": "blue_charlie_brown_4bari",
     "filename": "blue_charlie_brown_4bari.mxl",
     "title": "Blue Charlie Brown",
@@ -475,6 +490,21 @@
     ],
     "difficulty": "Medium",
     "style": "Holiday"
+  },
+  {
+    "id": "coin_song_sax_quartet_satb",
+    "filename": "coin_song_sax_quartet_SATB.mxl",
+    "title": "Coin Song (Final Fantasy VI)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
   },
   {
     "id": "come_rain_come_shine_bass_clarinets",
@@ -1651,6 +1681,36 @@
     "style": "Holiday"
   },
   {
+    "id": "lysenko_string_quartet_iii_sax_quartet_satb",
+    "filename": "lysenko_string_quartet_III_sax_quartet_SATB.mxl",
+    "title": "Lysenko Quartet in d minor movement III",
+    "composer": "Mykola Lysenko",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Classical"
+  },
+  {
+    "id": "lysenko_string_quartet_ii_sax_quartet_satb",
+    "filename": "lysenko_string_quartet_II_sax_quartet_SATB.mxl",
+    "title": "Lysenko Quartet in d minor movement II",
+    "composer": "Mykola Lysenko",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Classical"
+  },
+  {
     "id": "lysenko_string_quartet_i_sax_quartet_satb",
     "filename": "lysenko_string_quartet_I_sax_quartet_SATB.mxl",
     "title": "Lysenko String Quartet in d minor",
@@ -2572,6 +2632,21 @@
     ],
     "difficulty": "Medium-Hard",
     "style": "Holiday"
+  },
+  {
+    "id": "super_mario_world_ending_sax_quartet_satb",
+    "filename": "super_mario_world_ending_sax_quartet_SATB.mxl",
+    "title": "Super Mario World Ending Medley",
+    "composer": "Koji Kondo",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   },
   {
     "id": "take_it_all_away",

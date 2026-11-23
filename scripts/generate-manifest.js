@@ -230,7 +230,6 @@ async function generate() {
         // Known exclusions for QuartetPlay (non-quartets, incomplete scores, duplicate files, or non-sax trios)
         const exclusions = new Set([
             'star_wars_stripes_forever_sax_quartet_sax_choir.mxl', // 13-part sax choir
-            'super_mario_world_ending_sax_quartet_SATB.mxl',       // 1-part incomplete
             'dudley_do_right_sax_quartet_SATB.mxl',               // raw xml format error
             'the_christmas_song_3-bari.mxl',                      // 4-part duplicate of the_christmas_song_4-bari.mxl
             // Category 4 mixed trios (excluded from quartet catalog)
