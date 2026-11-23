@@ -509,8 +509,8 @@
   {
     "id": "creature_creator_sax_quartet_satb",
     "filename": "creature_creator_sax_quartet_SATB.mxl",
-    "title": "Creature Creator",
-    "composer": "Nobuo Uematsu",
+    "title": "Creature Creator (Final Fantasy X-2)",
+    "composer": "Noriko Matsueda / Takahito Eguchi",
     "arranger": "Brian Einstein Lassiter",
     "instruments": [
       "Soprano Sax",
@@ -518,7 +518,7 @@
       "Tenor Sax",
       "Bari Sax"
     ],
-    "difficulty": "Medium-Hard",
+    "difficulty": "Very Hard",
     "style": "Video Game"
   },
   {
@@ -564,6 +564,21 @@
     ],
     "difficulty": "Medium-Easy",
     "style": "Holiday"
+  },
+  {
+    "id": "descendent_of_shinobi_sax_quartet_satb",
+    "filename": "descendent_of_shinobi_sax_quartet_SATB.mxl",
+    "title": "Descendent of Shinobi (Final Fantasy VII)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Shiro Hamaguchi, Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Easy",
+    "style": "Video Game"
   },
   {
     "id": "ding_dong_merrily_4bari",
@@ -922,6 +937,66 @@
     ],
     "difficulty": "Medium",
     "style": "Holiday"
+  },
+  {
+    "id": "gogo_ffvi_sax_quartet_satb",
+    "filename": "gogo_FFVI_sax_quartet_SATB.mxl",
+    "title": "Go Go (Final Fantasy VI)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
+  },
+  {
+    "id": "gold_saucer_sax_quartet_satb",
+    "filename": "gold_saucer_sax_quartet_SATB.mxl",
+    "title": "Gold Saucer (Final Fantasy VII)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Isaac Newton Lassiter, Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
+    "id": "ground_carrier_sax_quartet_satb",
+    "filename": "ground_carrier_sax_quartet_SATB.mxl",
+    "title": "Ground Carrier (U.N. Squadron)",
+    "composer": "Manami Matsumae",
+    "arranger": "Isaac Newton Lassiter, Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
+  },
+  {
+    "id": "guardia_millennial_fair_sax_quartet_satb",
+    "filename": "guardia_millennial_fair_sax_quartet_SATB.mxl",
+    "title": "Guardia Millennial Fair (Chrono Trigger)",
+    "composer": "Yasunori Mitsuda",
+    "arranger": "Isaac Newton Lassiter, Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   },
   {
     "id": "halo_opening",
@@ -1458,6 +1533,21 @@
     "style": "Video Game"
   },
   {
+    "id": "kingdom_trial_sax_quartet_satb",
+    "filename": "kingdom_trial_sax_quartet_SATB.mxl",
+    "title": "Kingdom Trial (Chrono Trigger)",
+    "composer": "Yasunori Mitsuda",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
+  },
+  {
     "id": "land_of_make_believe_sax_quartet_satb",
     "filename": "land_of_make_believe_sax_quartet_SATB.mxl",
     "title": "Land of Make Believe",
@@ -1905,6 +1995,21 @@
     "style": "Classical"
   },
   {
+    "id": "primitive_mountain_sax_quartet_satb",
+    "filename": "primitive_mountain_sax_quartet_SATB.mxl",
+    "title": "Primitive Mountain (Chrono Trigger)",
+    "composer": "Yasunori Mitsuda",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Hard",
+    "style": "Video Game"
+  },
+  {
     "id": "rudolph_3bari",
     "filename": "rudolph_3bari.mxl",
     "title": "Rudolph",
@@ -1947,6 +2052,21 @@
     ],
     "difficulty": "Medium",
     "style": "Holiday"
+  },
+  {
+    "id": "rufus_welcome_ceremony_sax_quartet_satb",
+    "filename": "rufus_welcome_ceremony_sax_quartet_SATB.mxl",
+    "title": "Rufus' Welcome Ceremony (Final Fantasy VII)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
   },
   {
     "id": "santa_claus_3bari",
@@ -2243,6 +2363,21 @@
     ],
     "difficulty": "Medium",
     "style": "Holiday"
+  },
+  {
+    "id": "slam_shuffle_sax_quartet_satb",
+    "filename": "slam_shuffle_sax_quartet_SATB.mxl",
+    "title": "Slam Shuffle (Final Fantasy VI)",
+    "composer": "Nobuo Uematsu",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium",
+    "style": "Video Game"
   },
   {
     "id": "sleigh_ride_bass_clarinet_quartet",
@@ -2735,6 +2870,21 @@
     ],
     "difficulty": "Medium",
     "style": "Holiday"
+  },
+  {
+    "id": "yearnings_of_the_wind_sax_quartet_satb",
+    "filename": "yearnings_of_the_wind_sax_quartet_SATB.mxl",
+    "title": "Yearnings of the Wind (Chrono Trigger)",
+    "composer": "Yasunori Mitsuda",
+    "arranger": "Brian Einstein Lassiter",
+    "instruments": [
+      "Soprano Sax",
+      "Alto Sax",
+      "Tenor Sax",
+      "Bari Sax"
+    ],
+    "difficulty": "Medium-Hard",
+    "style": "Video Game"
   },
   {
     "id": "youre_a_mean_one_bass_clarinet_quartet",

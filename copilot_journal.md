@@ -1,3 +1,91 @@
+# 2026-11-22 21:50
+> "for musx_catalog.md, let's move `Edmund Welles` folder to the excluded list. Also ``Classical\Mario\` folder. and `from random people\` folder. and `Mark Secosh\` folder. 
+These are things owned by other people, and I won't publish them."
+
+- Updated [`esquartet/catalog_musx.js`](file:///H:/Documents/GitHub/esquartet/catalog_musx.js):
+  - Added `EXCLUDED_THIRD_PARTY_FOLDERS` matching `edmund welles`, `classical/mario`, `from random people`, and `mark secosh`.
+  - Directory walk now automatically bypasses these folders and tracks excluded third-party folders.
+  - Added reporting of excluded third-party folders in both the CLI summary and Markdown output.
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md):
+  - Excluded 4 third-party folders (12 .musx files removed from scan).
+  - Unreleased unique candidates reduced from 150 pieces across 23 buckets to 139 pieces across 20 buckets.
+  - Vetted candidates in Dropbox reduced from 78 to 73 pieces.
+- Passed full validation suite (`npm run validate`) with 0 failures and 0 warnings.
+
+# 2026-11-22 20:20
+> "Next sax quartet:
+Creature Creator (Final Fantasy X-2). Difficulty: Very Hard
+Rufus' Welcome Ceremony (Final Fantasy VII). Difficulty: Medium. https://esquartet.bandcamp.com/track/rufus-welcome-ceremony-final-fantasy-vii
+Gold Saucer (Final Fantasy VII). Diffiulty Medium-hard. https://esquartet.bandcamp.com/track/gold-saucer-final-fantasy-vii
+Descendent of Shinobi (Final Fantasy VII). Medium-easy.
+Slam Shuffle (Final Fantasy VI). Medium. https://esquartet.bandcamp.com/track/slam-shuffle-final-fantasy-vi
+Ground Carrier (U.N. Squadron). Medium-hard"
+
+- Ingested files for 6 video game sax quartet arrangements:
+  - `Creature Creator (Final Fantasy X-2)`: re-merged score and parts including Alto substitute for Soprano placed last into [`creature_creator_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/creature_creator_sax_quartet_SATB.pdf) (14 pages: Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp, Alto sub 2pp); copied latest MXL to [`creature_creator_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/creature_creator_sax_quartet_SATB.mxl).
+  - `Rufus' Welcome Ceremony (Final Fantasy VII)`: merged score and parts into [`rufus_welcome_ceremony_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/rufus_welcome_ceremony_sax_quartet_SATB.pdf) (12 pages: Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp); copied MXL to [`rufus_welcome_ceremony_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/rufus_welcome_ceremony_sax_quartet_SATB.mxl).
+  - `Gold Saucer (Final Fantasy VII)`: merged score and parts into [`gold_saucer_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/gold_saucer_sax_quartet_SATB.pdf) (10 pages: Score 3pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 1p); copied MXL to [`gold_saucer_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/gold_saucer_sax_quartet_SATB.mxl).
+  - `Descendent of Shinobi (Final Fantasy VII)`: merged score and parts into [`descendent_of_shinobi_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/descendent_of_shinobi_sax_quartet_SATB.pdf) (18 pages: Score 6pp, Soprano 3pp, Alto 3pp, Tenor 3pp, Bari 3pp); copied MXL to [`descendent_of_shinobi_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/descendent_of_shinobi_sax_quartet_SATB.mxl).
+  - `Slam Shuffle (Final Fantasy VI)`: merged score and parts into [`slam_shuffle_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/slam_shuffle_sax_quartet_SATB.pdf) (7 pages: Score 3pp, Soprano 1p, Alto 1p, Tenor 1p, Bari 1p); copied MXL to [`slam_shuffle_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/slam_shuffle_sax_quartet_SATB.mxl).
+  - `Ground Carrier (U.N. Squadron)`: merged score and parts including Alto substitute for Soprano placed last into [`ground_carrier_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/ground_carrier_sax_quartet_SATB.pdf) (10 pages: Score 3pp, Soprano 2pp, Alto 1p, Tenor 1p, Bari 1p, Alto sub 2pp); copied MXL to [`ground_carrier_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/ground_carrier_sax_quartet_SATB.mxl).
+- Verified all 32 source and merged PDF pages using [`scripts/check-pdf-miniaturization.cjs`](file:///H:/Documents/GitHub/duetplay/scripts/check-pdf-miniaturization.cjs); all passed with normal page bounds.
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Updated `Creature Creator (Final Fantasy X-2)` difficulty to "Very Hard".
+  - Added new rows for Rufus' Welcome Ceremony, Gold Saucer, Descendent of Shinobi, Slam Shuffle, and Ground Carrier with specified titles, difficulties, and Bandcamp rehearsal recording links.
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (234 PDF arrangements, 214 available MXL, 91% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 300; unreleased candidates reduced to 150 pieces; vetted Dropbox candidates reduced to 78).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with all 6 songs (manifest reached 200 songs).
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
+# 2026-11-22 10:49
+> "Guardia had a bad Soprano PDF, which I updated in place. Please regenerate.
+Also, if you can detect the presence of these (notation is small and in the upper-left corner), please add it to your process to check for them."
+
+- Regenerated [`guardia_millennial_fair_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/guardia_millennial_fair_sax_quartet_SATB.pdf):
+  - Merged updated full-scale Soprano part from Dropbox `H:\Documents\Dropbox\Music\Sax Quartet\PDFs\soprano\Guardia Millennial Fair (Chrono Trigger) - Soprano Sax.pdf`.
+  - Re-assembled 12-page SATB set (Score 4pp, Soprano 2pp, Alto 2pp, Tenor 2pp, Bari 2pp) with standard page ordering.
+  - Verified all pages have normal >70% page coverage.
+- Created miniaturization defect detector [`scripts/check-pdf-miniaturization.cjs`](file:///H:/Documents/GitHub/duetplay/scripts/check-pdf-miniaturization.cjs):
+  - Analyzed the content stream coordinate transform signatures characteristic of the Finale export bug (MediaBox standard 612x792 pt, but drawing coordinate bounding box clustered under 38% width and 38% height with scaled-down fonts).
+  - Can be run on single files or directory trees via CLI (`node scripts/check-pdf-miniaturization.cjs <path> [--recursive]`) or imported programmatically.
+- Scanned entire Dropbox library (2,422 PDFs scanned across `H:\Documents\Dropbox\Music\Sax Quartet\PDFs`):
+  - Flagged 6 other defective PDFs with the same upper-left miniaturization bug:
+    - `alto\Charlie Brown Theme (3WM) - Alto Sax.pdf` (Page 1)
+    - `score\Happiness Theme (3WM) - Score.pdf` (Pages 1-6)
+    - `score\It Was a Short Summer, Charlie Brown (3WM) - Score.pdf` (Pages 1-6)
+    - `score\Paquito De Habana (Rick Hirsch) - Score.pdf` (Page 1)
+    - `soprano\Thompson Sax Quartet No 2- soprano.pdf` (Page 1)
+    - `xmas - trio\Part 1 - Alto Sax\Silent Night (AEL) - trio - Alto Sax (part 1 of 3).pdf` (Page 1)
+- Updated [`AGENTS.md`](file:///H:/Documents/GitHub/duetplay/AGENTS.md) under Section 3 (PDF Ingestion & Miniaturization Defect Detection) requiring vector drawing bounds verification before ingesting or publishing any PDF.
+- Cleaned up temporary inspection scripts.
+- Ran full validation suite (`npm run validate` and `npm run build:quartet`); all checks, builds, and vitest suites passed with 0 failures and 0 warnings.
+
+# 2026-11-22 09:12
+> "Next sax quartet:
+Kingdom Trial (Chrono Trigger). Has audio: https://esquartet.bandcamp.com/track/kingdom-trial-chrono-trigger. Difficulty = Medium
+Yearnings of the Wind (Chrono Trigger). Difficulty = Medium-Hard
+Primitive Mountain (Chrono Trigger) - note: Difficulty = Hard
+Guardia Millennial Fair (Chrono Trigger). Difficulty= Medium-Hard
+Go Go (FFVI). Let's call this "Go Go (Final Fantasy VI)". Audio: https://esquartet.bandcamp.com/track/gogo-final-fantasy-vi. Difficulty: Medium."
+
+- Ingested files for 5 video game sax quartet (SATB) arrangements:
+  - `Kingdom Trial (Chrono Trigger)`: merged score and parts into [`kingdom_trial_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/kingdom_trial_sax_quartet_SATB.pdf) (7 pages), copied [`kingdom_trial_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/kingdom_trial_sax_quartet_SATB.mxl).
+  - `Yearnings of the Wind (Chrono Trigger)`: merged score and parts into [`yearnings_of_the_wind_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/yearnings_of_the_wind_sax_quartet_SATB.pdf) (7 pages), copied [`yearnings_of_the_wind_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/yearnings_of_the_wind_sax_quartet_SATB.mxl).
+  - `Primitive Mountain (Chrono Trigger)`: merged score and parts into [`primitive_mountain_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/primitive_mountain_sax_quartet_SATB.pdf) (7 pages), copied [`primitive_mountain_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/primitive_mountain_sax_quartet_SATB.mxl).
+  - `Guardia Millennial Fair (Chrono Trigger)`: merged score and parts into [`guardia_millennial_fair_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/guardia_millennial_fair_sax_quartet_SATB.pdf) (12 pages), copied [`guardia_millennial_fair_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/guardia_millennial_fair_sax_quartet_SATB.mxl).
+  - `Go Go (Final Fantasy VI)`: merged score and parts into [`gogo_FFVI_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/gogo_FFVI_sax_quartet_SATB.pdf) (7 pages), copied [`gogo_FFVI_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/gogo_FFVI_sax_quartet_SATB.mxl).
+- Updated [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html):
+  - Added table rows for all 5 pieces with specified titles, difficulties, and Bandcamp recording audio links for Kingdom Trial and Go Go.
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (229 PDF arrangements, 209 available MXL, 91% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site count increased to 284; unreleased candidate pieces decreased to 155 across 23 buckets; vetted Dropbox candidates reduced to 85; Chrono Trigger candidate bucket resolved down to 1 remaining unreleased piece).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with entries:
+  - `kingdom_trial_sax_quartet_satb`
+  - `yearnings_of_the_wind_sax_quartet_satb`
+  - `primitive_mountain_sax_quartet_satb`
+  - `guardia_millennial_fair_sax_quartet_satb`
+  - `gogo_ffvi_sax_quartet_satb`
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
 # 2026-11-21 20:01
 > "More sax quartet additions:
 1. Bill Tell  (has audio: https://esquartet.bandcamp.com/track/william-bill-tell-overture)
