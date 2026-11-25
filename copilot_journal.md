@@ -1,3 +1,25 @@
+# 2026-11-25 06:25
+> "I'm looking through musx_catalog.md
+1. `Divertimento K137 (Mozart) - Allegro di molto` is the same as Divertimento K137-II (already on website)
+2. Beethoven Sonata No 2 Op 2 No 2 I - Allegro vivace. Sax quartet, added. Difficulty = Medium-Hard.
+3. "Beethoven's Fifth Symphony in the Style of Chopin (Syd R Duke)" already present as "Fifth Symphony, in the style of Chopin"
+4. "Eine kleine Nachtmusic K525 - I" already present as "Eine Kleine Nachtmusik""
+
+- Updated [`esquartet/catalog_musx.js`](file:///H:/Documents/GitHub/esquartet/catalog_musx.js):
+  - Added `checkKnownAlias` to resolve title differences:
+    - `Divertimento K137 (Mozart) - Allegro di molto` matches `Divertimento K137-II`.
+    - `Beethoven's Fifth Symphony in the Style of Chopin (Syd R Duke)` matches `Fifth Symphony, in the style of Chopin` / `beethovens_5th_a_la_chopin_SATB.pdf`.
+    - `Eine kleine Nachtmusic K525 - I` matches `Eine Kleine Nachtmusik`.
+  - Added German spelling normalization (`nachtmusic` -> `nachtmusik`) and asymmetric title coverage matching (`matchCount >= titleWords.length * 0.8`).
+- Ingested files for `Beethoven Sonata No 2 Op 2 No 2 I - Allegro vivace` (Sax Quartet SATB):
+  - Merged score and parts from Dropbox into [`beethoven_sonata_no2_op2_no2_I_sax_quartet_SATB.pdf`](file:///H:/Documents/GitHub/esquartet/sheetmusic/beethoven_sonata_no2_op2_no2_I_sax_quartet_SATB.pdf) (56 pages: Score 27pp, Soprano 7pp, Alto 7pp, Tenor 7pp, Bari 8pp); copied MXL to [`beethoven_sonata_no2_op2_no2_I_sax_quartet_SATB.mxl`](file:///H:/Documents/GitHub/esquartet/sheetmusic/beethoven_sonata_no2_op2_no2_I_sax_quartet_SATB.mxl).
+  - Verified all pages with [`scripts/check-pdf-miniaturization.cjs`](file:///H:/Documents/GitHub/duetplay/scripts/check-pdf-miniaturization.cjs).
+  - Added row in [`esquartet/repertoire.html`](file:///H:/Documents/GitHub/esquartet/repertoire.html) (Difficulty: Medium-Hard, Composer: Ludwig van Beethoven, Arranger: EsQ).
+- Regenerated [`esquartet/repertoire_mxl_catalog.md`](file:///H:/Documents/GitHub/esquartet/repertoire_mxl_catalog.md) (239 PDF arrangements, 219 available MXL, 92% coverage).
+- Regenerated [`esquartet/musx_catalog.md`](file:///H:/Documents/GitHub/esquartet/musx_catalog.md) (on-site arrangements increased to 328; Classical candidates reduced from 9 to 3; total unreleased candidates reduced to 119 pieces; vetted Dropbox candidates reduced to 56).
+- Updated [`duetplay/public/quartet-songs.json`](file:///H:/Documents/GitHub/duetplay/public/quartet-songs.json) with Beethoven Sonata No 2 (manifest reached 206 songs).
+- Passed full validation suite (`npm run validate` and `npm run build:quartet`) with 0 failures and 0 warnings.
+
 # 2026-11-23 14:52
 > "next, some classical sax quartet items:
 Lysenko Quartet in d minor movement II. Medium difficulty.
